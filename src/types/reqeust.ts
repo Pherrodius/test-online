@@ -1,0 +1,53 @@
+import type { QuestionType, Answer, CollectionType } from '@/types/prisma'
+export interface CreateQuestionRequest {
+  type: QuestionType
+  content: string
+  options: {
+    key: Answer
+    text: string
+  }[]
+  answer: Answer | Answer[]
+  bank: string
+  discipline: string
+}
+
+export interface GetQuestionRequest {
+  type?: QuestionType
+  content?: string
+  bank?: string
+  discipline?: string
+  number?: number
+}
+
+export interface CheckAnswerRequest {
+  userId: number
+  questionId: number
+  answer: Answer | Answer[]
+}
+
+export interface CreateCollectionRequest {
+  questionId: number
+  userId: number
+  type?: CollectionType
+}
+
+export interface GetCollectionRequest {
+  id: number
+  type: CollectionType
+  size?: number
+  page?: number
+}
+
+export interface CreateBankRequest {
+  name: string
+  description: string
+  creator: string
+}
+
+export interface GetBankRequest {
+  name?: string
+  description?: string
+  creator?: string
+  size?: number
+  page?: number
+}
