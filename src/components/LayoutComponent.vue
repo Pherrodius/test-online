@@ -2,7 +2,8 @@
   <div class="common-layout">
     <el-container>
       <el-header>
-        <NavibarComponent />
+        <NavibarComponent v-if="meta.home" />
+        <BussinessNavi v-else />
       </el-header>
       <el-main>
         <router-view></router-view>
@@ -13,7 +14,12 @@
 </template>
 
 <script setup lang="ts">
-import NavibarComponent from './NavibarComponent.vue'
+import NavibarComponent from './HomeNavi.vue'
+import BussinessNavi from './BussinessNavi.vue'
+import { useRoute } from 'vue-router'
+import { computed } from 'vue'
+const route = useRoute()
+const meta = computed(() => route.meta)
 </script>
 <style scoped>
 html,
@@ -32,6 +38,7 @@ html,
 
 .el-main {
   padding: 0;
+  background-color: #F5F5F5;
 }
 
 .el-footer {

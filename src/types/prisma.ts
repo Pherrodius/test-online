@@ -1,5 +1,5 @@
 export enum QuestionType {
-  Choice = 'Choice',
+  SingleChoice = 'SingleChoice',
   MultiChoice = 'MultiChoice',
   TrueFalse = 'TrueFalse',
 }
@@ -52,16 +52,17 @@ export interface Question {
 }
 
 export interface Bank {
+  id: number
   name: string
   description: string
-  creator: string
+  creatorId: number
   createdTime: Date
   disciplines?: Discipline[]
 }
 
 export interface Discipline {
+  id: number
   name: string
-  bankName: string
 }
 
 export interface Collection {

@@ -28,7 +28,7 @@
       </div>
       <el-menu class="menu" mode="horizontal" default-active="全部" router>
         <el-menu-item class="menu-item" v-for="tab in tabs" :key="tab.key" :index="tab.key">{{ tab.label
-        }}</el-menu-item>
+          }}</el-menu-item>
       </el-menu>
     </div>
   </div>
@@ -41,11 +41,11 @@ const activeTab = ref('全部')
 
 const tabs = ref([
   { key: '/', label: '全部' },
-  { key: 'questionBank', label: '题库' },
-  { key: 'document', label: '文档' },
-  { key: 'author', label: '作者' },
-  { key: 'collect', label: '收藏' },
-  { key: 'error', label: '错题' },
+  { key: '/bank/category', label: '题库' },
+  { key: '/document', label: '文档' },
+  { key: '/author', label: '作者' },
+  { key: '/collect', label: '收藏' },
+  { key: '/error', label: '错题' },
 ])
 
 const logoImg = new URL('https://resource-cdn.kaoshibao.com/pc/logo/www.kaoshibao.com2.svg', import.meta.url).href

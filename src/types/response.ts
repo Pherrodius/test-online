@@ -5,8 +5,10 @@ import type {
   Question,
   Option,
   Bank,
-  Discipline,
   Collection,
+  MultiChoiceAnswer,
+  SingleAnswer,
+  TrueFalseAnswer,
 } from '@/types/prisma'
 
 export interface CreateQuestionResponse {
@@ -25,17 +27,47 @@ export interface CreateManyQuestionsResponse {
   questions: CreateQuestionResponse[]
 }
 
-export interface GetQuestionsResponse {
+export interface GetQuestionDetailResponse {
   id: number
   type: QuestionType
   content: string
-  bank: string
-  discipline: string
+  bankId: number
+  disciplineId: number
   createdTime: Date
   options: Option[]
+  explanation?: string
+  bank: {
+    id: number
+    name: string
+    createdTime: Date
+    description: string
+  }
+  discipline: {
+    id: number
+    name: string
+  }
+  singleAnswer?: SingleAnswer
+  multiChoiceAnswer?: MultiChoiceAnswer[]
+  trueFalseAnswer?: TrueFalseAnswer
 }
 
-export type GetQuestionResponse = GetQuestionsResponse
+export type GetQuestionsResponse = {
+  id: number
+  type: QuestionType
+  content: string
+  bankId: number
+  disciplineId: number
+  createdTime: Date
+  options: Option[]
+  bank: {
+    id: number
+    name: string
+  }
+  discipline: {
+    id: number
+    name: string
+  }
+}[]
 
 export interface CheckAnswerResponse {
   questionId: number
@@ -57,7 +89,7 @@ export type CreateCollectionResponse = Collection
 export interface GetCollectionResponse {
   userId: number
   type: CollectionType
-  r: Question[]
+  records: Question[]
   page: number
   size: number
   total: number
@@ -68,7 +100,32 @@ export type DeleteCollectionResponse = Collection
 export type CreateBankResponse = Bank
 
 export interface GetBankResponse {
-  records: (Bank & { disciplines: Discipline[] })[]
+  id: number
+  name: string
+  description: string
+  disciplines: {
+    id: number
+    name: string
+  }[]
+  creator: {
+    id: number
+    name: string
+  }
+  questions: {
+    id: number
+    content: string
+    disciplineId: number
+    type: QuestionType
+    collected: {
+      id: number
+      type: CollectionType
+    }
+  }[]
+  createdTime: Date
+}
+
+export interface GetBanksResponse {
+  records: GetBankResponse[]
   total: number
   page: number
   size: number

@@ -14,12 +14,13 @@
                 style="width: 20px; height: 20px; margin-top: 4px;" /> {{ item.label }}
             </h4>
             <p class="detail">
-              <span class="detail-item" v-for="child in item.children" :key="child">{{ child }}</span>
+              <span class="detail-item" v-for="child in item.children" :key="child.key"
+                @click="router.push(`bank/${child.key}`)">{{ child.label }}</span>
             </p>
           </div>
           <div class="right-hidden-section">
-            <div v-for="child in item.children" :key="child" class="detail-item">
-              {{ child }}
+            <div v-for="child in item.children" :key="child.key" class="detail-item">
+              {{ child.label }}
             </div>
           </div>
         </div>
@@ -40,6 +41,8 @@
 </template>
 
 <script setup lang="ts">
+import router from '@/router';
+
 const images = [
   new URL('@/assets/images/1.webp', import.meta.url).href,
   new URL('@/assets/images/2.webp', import.meta.url).href,
@@ -55,31 +58,70 @@ const navlist = [
   {
     key: '考研学科',
     label: '考研学科',
-    children: ['计算机', '金融'],
+    children: [{
+      key: '2',
+      label: '计算机',
+    }, {
+      key: '3',
+      label: '金融',
+    }],
     icon: new URL('@/assets/icon/navi/1.png', import.meta.url).href
   },
   {
     key: '高考刷题',
     label: '高考刷题',
-    children: ['物理', '化学', '生物'],
+    children: [{
+      key: '4',
+      label: '物理',
+    }, {
+      key: '5',
+      label: '化学',
+    }, {
+      key: '6',
+      label: '生物',
+    }],
     icon: new URL('@/assets/icon/navi/2.png', import.meta.url).href
   },
   {
     key: '编程语言',
     label: '编程语言',
-    children: ['java', 'python', 'javascript'],
+    children: [{
+      key: '7',
+      label: 'java',
+    }, {
+      key: '8',
+      label: 'python',
+    }, {
+      key: '9',
+      label: 'javascript',
+    }],
     icon: new URL('@/assets/icon/navi/3.png', import.meta.url).href
   },
   {
     key: '开发框架',
     label: '开发框架',
-    children: ['springboot', 'vue', 'nestjs'],
+    children: [{
+      key: '10',
+      label: 'springboot',
+    }, {
+      key: '11',
+      label: 'vue',
+    }, {
+      key: '12',
+      label: 'nestjs',
+    }],
     icon: new URL('@/assets/icon/navi/4.png', import.meta.url).href
   },
   {
     key: '考公考编',
     label: '考公考编',
-    children: ['公务员', '辅警招聘'],
+    children: [{
+      key: '13',
+      label: '公务员',
+    }, {
+      key: '14',
+      label: '辅警招聘',
+    }],
     icon: new URL('@/assets/icon/navi/5.png', import.meta.url).href
   }
 ]

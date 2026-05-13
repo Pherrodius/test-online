@@ -9,7 +9,7 @@ import type {
   GetCollectionRequest,
 } from '@/types/reqeust'
 import type {
-  GetQuestionResponse,
+  GetQuestionsResponse,
   CreateQuestionResponse,
   CreateManyQuestionsResponse,
   CheckAnswerResponse,
@@ -17,14 +17,16 @@ import type {
   CreateCollectionResponse,
   GetCollectionResponse,
   DeleteCollectionResponse,
-  GetBankResponse,
+  GetBanksResponse,
   CreateBankResponse,
+  GetBankResponse,
+  GetQuestionDetailResponse,
 } from '@/types/response'
 export function getQuestionList<T>(params: GetQuestionRequest) {
-  return request.get<T, GetQuestionResponse[]>('/question', { params })
+  return request.get<T, GetQuestionsResponse>('/question', { params })
 }
-export function getQuestion<T>(id: number) {
-  return request.get<T, GetQuestionResponse>(`/question/${id}`)
+export function getQuestionDetail<T>(id: number) {
+  return request.get<T, GetQuestionDetailResponse>(`/question/${id}`)
 }
 export function createQuestion<T>(data: CreateQuestionRequest) {
   return request.post<T, CreateQuestionResponse>('/question', data)
@@ -48,8 +50,11 @@ export function deleteCollection<T>(id: number) {
   return request.delete<T, DeleteCollectionResponse>(`/collection/${id}`)
 }
 export function getBankList<T>(params: GetBankRequest) {
-  return request.get<T, GetBankResponse>('/bank', { params })
+  return request.get<T, GetBanksResponse>('/bank', { params })
+}
+export function getBank<T>(id: number) {
+  return request.get<T, GetBankResponse>(`/bank/${id}`)
 }
 export function createBank<T>(data: CreateBankRequest) {
-  return request.post<T, CreateBankResponse>('/bank', data)
+  return request.post<T, CreateBankResponse>('/bank/create', data)
 }

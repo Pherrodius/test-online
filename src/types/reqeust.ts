@@ -15,6 +15,8 @@ export interface GetQuestionRequest {
   type?: QuestionType
   content?: string
   bank?: string
+  bankId?: number
+  disciplineId?: number
   discipline?: string
   number?: number
 }
@@ -42,6 +44,7 @@ export interface CreateBankRequest {
   name: string
   description: string
   creator: string
+  disciplines: string[]
 }
 
 export interface GetBankRequest {
