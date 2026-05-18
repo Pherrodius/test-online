@@ -59,7 +59,7 @@ const navlist = [
     key: '考研学科',
     label: '考研学科',
     children: [{
-      key: '2',
+      key: '1',
       label: '计算机',
     }, {
       key: '3',

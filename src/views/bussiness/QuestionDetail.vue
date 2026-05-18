@@ -123,14 +123,14 @@ import { QuestionType } from '@/types/prisma';
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { getQuestionDetail, getQuestionList } from '@/api/question'
-import type { GetQuestionDetailResponse, GetQuestionsResponse } from '@/types/response'
+import type { GetQuestionDetailResponse, GetQuestionListResponse } from '@/types/response'
 import { dayjs } from 'element-plus';
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const route = useRoute()
 const question = ref<GetQuestionDetailResponse>()
-const relatedQuestions = ref<GetQuestionsResponse>()
+const relatedQuestions = ref<GetQuestionListResponse[]>([])
 const bankIcon = new URL('@/assets/icon/bank.png', import.meta.url).href
 const questionTypeMap = ref({
   [QuestionType.SingleChoice]: '单选题',

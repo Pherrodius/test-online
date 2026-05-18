@@ -41,6 +41,13 @@ const homeRoutes = [
         },
         props: true,
       },
+      {
+        path: '/test',
+        component: () => import('@/views/bussiness/TestPaper.vue'),
+        meta: {
+          home: false,
+        },
+      },
     ],
   },
 ]

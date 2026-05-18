@@ -7,9 +7,10 @@ import type {
   GetBankRequest,
   CreateBankRequest,
   GetCollectionRequest,
+  DeleteAllCollectionsRequest,
 } from '@/types/reqeust'
 import type {
-  GetQuestionsResponse,
+  GetQuestionListResponse,
   CreateQuestionResponse,
   CreateManyQuestionsResponse,
   CheckAnswerResponse,
@@ -23,7 +24,7 @@ import type {
   GetQuestionDetailResponse,
 } from '@/types/response'
 export function getQuestionList<T>(params: GetQuestionRequest) {
-  return request.get<T, GetQuestionsResponse>('/question', { params })
+  return request.get<T, GetQuestionListResponse[]>('/question', { params })
 }
 export function getQuestionDetail<T>(id: number) {
   return request.get<T, GetQuestionDetailResponse>(`/question/${id}`)
@@ -38,16 +39,19 @@ export function checkAnswer<T>(data: CheckAnswerRequest) {
   return request.post<T, CheckAnswerResponse>('/question/check', data)
 }
 export function checkManyAnswers<T>(data: CheckAnswerRequest[]) {
-  return request.post<T, CheckManyAnswersResponse>('/question/checkMany', data)
+  return request.post<T, CheckManyAnswersResponse>('/question/check', data)
 }
 export function createCollection<T>(data: CreateCollectionRequest) {
-  return request.post<T, CreateCollectionResponse>('/collection', data)
+  return request.post<T, CreateCollectionResponse>('/question/collection', data)
 }
 export function getCollectionList<T>(params: GetCollectionRequest) {
-  return request.get<T, GetCollectionResponse>(`/collection`, { params })
+  return request.get<T, GetCollectionResponse>(`/question/collection`, { params })
 }
 export function deleteCollection<T>(id: number) {
-  return request.delete<T, DeleteCollectionResponse>(`/collection/${id}`)
+  return request.delete<T, DeleteCollectionResponse>(`/question/collection/${id}`)
+}
+export function deleteAllCollections<T>(params: DeleteAllCollectionsRequest) {
+  return request.delete<T, void>(`/question/collection`, { params })
 }
 export function getBankList<T>(params: GetBankRequest) {
   return request.get<T, GetBanksResponse>('/bank', { params })

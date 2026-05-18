@@ -14,7 +14,7 @@
   </div>
   <el-pagination style="margin-top: 24px;display: flex;justify-content: center;" layout="  prev,pager, next,total"
     v-model:total="pagination.total" v-model:current-page="pagination.page" v-model:page-size="pagination.size"
-    background=true @current-change="(page: number) => pagination.page = page" />
+    background @current-change="(page: number) => pagination.page = page" />
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue'

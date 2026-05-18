@@ -34,10 +34,16 @@ export interface CreateCollectionRequest {
 }
 
 export interface GetCollectionRequest {
-  id: number
-  type: CollectionType
-  size?: number
-  page?: number
+  userId: number
+  type?: CollectionType
+  bankId?: number
+}
+
+export interface DeleteAllCollectionsRequest {
+  userId: number
+  type?: CollectionType
+  bankId?: number
+  disciplineId?: number
 }
 
 export interface CreateBankRequest {

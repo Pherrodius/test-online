@@ -51,7 +51,7 @@ export interface GetQuestionDetailResponse {
   trueFalseAnswer?: TrueFalseAnswer
 }
 
-export type GetQuestionsResponse = {
+export type GetQuestionListResponse = {
   id: number
   type: QuestionType
   content: string
@@ -67,7 +67,7 @@ export type GetQuestionsResponse = {
     id: number
     name: string
   }
-}[]
+}
 
 export interface CheckAnswerResponse {
   questionId: number
@@ -90,9 +90,9 @@ export interface GetCollectionResponse {
   userId: number
   type: CollectionType
   records: Question[]
-  page: number
-  size: number
   total: number
+  mistakes: number
+  notes: number
 }
 
 export type DeleteCollectionResponse = Collection
@@ -116,10 +116,6 @@ export interface GetBankResponse {
     content: string
     disciplineId: number
     type: QuestionType
-    collected: {
-      id: number
-      type: CollectionType
-    }
   }[]
   createdTime: Date
 }

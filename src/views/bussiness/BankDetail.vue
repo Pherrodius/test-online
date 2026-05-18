@@ -37,11 +37,17 @@
       <div class="section">
         <div class="sub-title">我的练习</div>
         <div class="option-box">
-          <div class="option-item" v-for="item in options" :key="item.path" @click="router.push(item.path)">
+          <div class="option-item" v-for="item in options" :key="item.path" @click="router.push({
+            path: item.path,
+            query: item.query,
+          })">
             <el-image :src="item.icon" style="width: 40px; height: 40px;" />
             <div>
               <p class="label">{{ item.label }}</p>
               <p class="value">{{ item.value }}</p>
+            </div>
+            <div v-if="item.label === '我的错题'" class="delete-btn">
+              <el-button type="primary" size="small" @click.stop="clearMistakes">清空错题 </el-button>
             </div>
           </div>
         </div>
@@ -56,49 +62,99 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getBank } from '@/api/question'
+import { deleteAllCollections, getBank, getCollectionList } from '@/api/question'
 import type { GetBankResponse } from '@/types/response'
 import { CollectionType, type Discipline } from '@/types/prisma'
 import QuestionList from '@/components/QuestionList.vue'
 import dayjs from 'dayjs'
+import { ElMessage, ElMessageBox } from 'element-plus'
 const route = useRoute()
 const router = useRouter()
 const bank = ref<GetBankResponse>()
+const currentDiscipline = ref<Discipline>()
+const mistakes = ref<number>(0)
+const notes = ref<number>(0)
 const options = reactive({
   sequential: {
     icon: new URL('@/assets/icon/sequential.png', import.meta.url).href,
     label: '顺序练习',
-    path: 'test/sequential',
+    path: '/test',
+    query: {
+      type: 'sequential',
+      bankId: route.params.id,
+      disciplineId: computed(() => currentDiscipline.value?.id),
+    },
     value: computed(() => `1 / ${bank.value?.questions.filter(item => item.disciplineId === currentDiscipline.value?.id).length || 0}`)
   },
   random: {
     icon: new URL('@/assets/icon/random.png', import.meta.url).href,
     label: '随机练习',
-    path: 'test/random',
+    path: '/test',
+    query: {
+      type: 'random',
+      bankId: route.params.id,
+      disciplineId: computed(() => currentDiscipline.value?.id),
+    },
     value: `开始随机练习`
   },
   collect: {
     icon: new URL('@/assets/icon/collect.png', import.meta.url).href,
     label: '我的收藏',
-    path: 'collection',
-    value: computed(() => `(共有${bank.value?.questions.filter(item => item.collected.type === CollectionType.Note).length || 0}题)`)
+    path: '/collection',
+    query: {
+      bankId: route.params.id,
+      disciplineId: computed(() => currentDiscipline.value?.id),
+    },
+    value: computed(() => `(共有${notes.value}题)`)
   },
   error: {
     icon: new URL('@/assets/icon/error.png', import.meta.url).href,
     label: '我的错题',
-    path: 'error',
-    value: computed(() => `(共有${bank.value?.questions.filter(item => item.collected.type === CollectionType.Mistake).length || 0}题)`)
+    path: '/error',
+    query: {
+      bankId: route.params.id,
+      disciplineId: computed(() => currentDiscipline.value?.id),
+    },
+    value: computed(() => `(共有${mistakes.value}题)`)
   },
 })
-const currentDiscipline = ref<Discipline>()
+const clearMistakes = async () => {
+  ElMessageBox.confirm('确定清空错题吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    deleteAllCollections({
+      userId: Number(localStorage.getItem('userId') || 1),
+      bankId: Number(route.params.id),
+      disciplineId: currentDiscipline.value?.id,
+      type: CollectionType.Mistake,
+    }).then(() => {
+      mistakes.value = 0
+      ElMessage.success('清空成功')
+    })
+  })
+}
 const render = async () => {
   await getBank(Number(route.params.id)).then(data => {
     bank.value = data
     currentDiscipline.value = data.disciplines[0]!
   })
+  await getCollectionList({
+    userId: Number(localStorage.getItem('userId') || 1),
+    bankId: Number(route.params.id),
+  }).then(data => {
+    mistakes.value = data.mistakes
+    notes.value = data.notes
+  })
 }
 onMounted(async () => {
-  await render()
+  try {
+    await render()
+  } catch (error) {
+    console.error('加载失败', error)
+    ElMessage.error('加载失败')
+  }
 })
 </script>
 <style scoped lang="scss">
@@ -132,6 +188,19 @@ onMounted(async () => {
         justify-content: center;
         align-items: center;
         gap: 0px;
+
+        .delete-btn {
+          :deep(.el-button--small) {
+            font-size: 16px;
+            background-color: transparent;
+            color: #f56c6c;
+            border: none;
+
+            &:hover {
+              background-color: #fff;
+            }
+          }
+        }
 
         .option-item {
           flex: 1;

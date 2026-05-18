@@ -1,0 +1,503 @@
+[
+  {
+    "type": "SingleChoice",
+    "content": "在TCP/IP参考模型中，负责端到端通信可靠性的协议主要位于哪一层？",
+    "options": [
+      { "key": "A", "text": "网络接口层" },
+      { "key": "B", "text": "网络层" },
+      { "key": "C", "text": "传输层" },
+      { "key": "D", "text": "应用层" }
+    ],
+    "answer": "C",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "下列IP地址中，属于私有地址的是？",
+    "options": [
+      { "key": "A", "text": "8.8.8.8" },
+      { "key": "B", "text": "172.20.1.1" },
+      { "key": "C", "text": "202.102.128.68" },
+      { "key": "D", "text": "61.135.169.121" }
+    ],
+    "answer": "B",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "HTTP协议默认使用的传输层协议与端口号分别是？",
+    "options": [
+      { "key": "A", "text": "TCP，80" },
+      { "key": "B", "text": "UDP，80" },
+      { "key": "C", "text": "TCP，21" },
+      { "key": "D", "text": "UDP，53" }
+    ],
+    "answer": "A",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "CSMA/CD协议主要应用于哪种网络环境？",
+    "options": [
+      { "key": "A", "text": "无线局域网" },
+      { "key": "B", "text": "令牌环网" },
+      { "key": "C", "text": "共享式以太网" },
+      { "key": "D", "text": "广域网" }
+    ],
+    "answer": "C",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "DNS协议主要用于实现什么功能？",
+    "options": [
+      { "key": "A", "text": "动态主机配置" },
+      { "key": "B", "text": "域名与IP地址映射" },
+      { "key": "C", "text": "文件远程传输" },
+      { "key": "D", "text": "网页内容缓存" }
+    ],
+    "answer": "B",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "下列关于IPv6的说法中，错误的是？",
+    "options": [
+      { "key": "A", "text": "IPv6地址长度为128位" },
+      { "key": "B", "text": "IPv6支持自动配置" },
+      { "key": "C", "text": "IPv6完全取消了分组转发功能" },
+      { "key": "D", "text": "IPv6能够缓解IPv4地址不足问题" }
+    ],
+    "answer": "C",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "在OSI参考模型中，负责数据加密与压缩的层是？",
+    "options": [
+      { "key": "A", "text": "会话层" },
+      { "key": "B", "text": "表示层" },
+      { "key": "C", "text": "传输层" },
+      { "key": "D", "text": "网络层" }
+    ],
+    "answer": "B",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "TCP三次握手过程中，客户端发送的第一个报文段中SYN字段通常为？",
+    "options": [
+      { "key": "A", "text": "0" },
+      { "key": "B", "text": "1" },
+      { "key": "C", "text": "2" },
+      { "key": "D", "text": "随机值" }
+    ],
+    "answer": "B",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "路由器工作在OSI模型的哪一层？",
+    "options": [
+      { "key": "A", "text": "物理层" },
+      { "key": "B", "text": "数据链路层" },
+      { "key": "C", "text": "网络层" },
+      { "key": "D", "text": "传输层" }
+    ],
+    "answer": "C",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "SMTP协议主要用于？",
+    "options": [
+      { "key": "A", "text": "接收电子邮件" },
+      { "key": "B", "text": "发送电子邮件" },
+      { "key": "C", "text": "解析域名" },
+      { "key": "D", "text": "网页浏览" }
+    ],
+    "answer": "B",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "交换机相比集线器的主要优势在于？",
+    "options": [
+      { "key": "A", "text": "能够减少冲突域" },
+      { "key": "B", "text": "能够扩大广播域" },
+      { "key": "C", "text": "工作于网络层" },
+      { "key": "D", "text": "只能单工通信" }
+    ],
+    "answer": "A",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "ARP协议的主要功能是？",
+    "options": [
+      { "key": "A", "text": "根据MAC地址查找IP地址" },
+      { "key": "B", "text": "根据IP地址查找MAC地址" },
+      { "key": "C", "text": "动态分配IP地址" },
+      { "key": "D", "text": "实现远程登录" }
+    ],
+    "answer": "B",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "TCP协议采用滑动窗口机制的主要目的是？",
+    "options": [
+      { "key": "A", "text": "实现差错检测" },
+      { "key": "B", "text": "进行流量控制" },
+      { "key": "C", "text": "减少IP地址消耗" },
+      { "key": "D", "text": "提高MAC地址解析效率" }
+    ],
+    "answer": "B",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "下列协议中，属于应用层协议的是？",
+    "options": [
+      { "key": "A", "text": "IP" },
+      { "key": "B", "text": "ICMP" },
+      { "key": "C", "text": "FTP" },
+      { "key": "D", "text": "ARP" }
+    ],
+    "answer": "C",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "ICMP协议通常用于？",
+    "options": [
+      { "key": "A", "text": "网页传输" },
+      { "key": "B", "text": "网络控制与差错报告" },
+      { "key": "C", "text": "文件加密" },
+      { "key": "D", "text": "媒体访问控制" }
+    ],
+    "answer": "B",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "在停止等待协议中，发送方每发送一个帧后必须？",
+    "options": [
+      { "key": "A", "text": "立即发送下一个帧" },
+      { "key": "B", "text": "等待确认帧" },
+      { "key": "C", "text": "关闭连接" },
+      { "key": "D", "text": "切换路由器" }
+    ],
+    "answer": "B",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "以下哪种设备能够根据MAC地址转发数据帧？",
+    "options": [
+      { "key": "A", "text": "路由器" },
+      { "key": "B", "text": "交换机" },
+      { "key": "C", "text": "网关" },
+      { "key": "D", "text": "调制解调器" }
+    ],
+    "answer": "B",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "下列关于UDP协议的说法正确的是？",
+    "options": [
+      { "key": "A", "text": "UDP提供可靠传输" },
+      { "key": "B", "text": "UDP面向连接" },
+      { "key": "C", "text": "UDP首部开销较小" },
+      { "key": "D", "text": "UDP具有流量控制机制" }
+    ],
+    "answer": "C",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "采用CIDR技术的主要目的是？",
+    "options": [
+      { "key": "A", "text": "提高传输速率" },
+      { "key": "B", "text": "减少路由表规模" },
+      { "key": "C", "text": "增强数据加密能力" },
+      { "key": "D", "text": "扩大MAC地址空间" }
+    ],
+    "answer": "B",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "HTTPS相比HTTP增加的主要安全机制是？",
+    "options": [
+      { "key": "A", "text": "ARP协议" },
+      { "key": "B", "text": "DNS解析" },
+      { "key": "C", "text": "SSL/TLS加密" },
+      { "key": "D", "text": "UDP传输" }
+    ],
+    "answer": "C",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+
+  {
+    "type": "MultiChoice",
+    "content": "下列属于网络层协议的有？",
+    "options": [
+      { "key": "A", "text": "IP" },
+      { "key": "B", "text": "ICMP" },
+      { "key": "C", "text": "ARP" },
+      { "key": "D", "text": "TCP" }
+    ],
+    "answer": ["A", "B", "C"],
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "MultiChoice",
+    "content": "TCP协议提供的主要机制包括？",
+    "options": [
+      { "key": "A", "text": "流量控制" },
+      { "key": "B", "text": "拥塞控制" },
+      { "key": "C", "text": "可靠传输" },
+      { "key": "D", "text": "广播通信" }
+    ],
+    "answer": ["A", "B", "C"],
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "MultiChoice",
+    "content": "以下属于应用层协议的有？",
+    "options": [
+      { "key": "A", "text": "HTTP" },
+      { "key": "B", "text": "FTP" },
+      { "key": "C", "text": "SMTP" },
+      { "key": "D", "text": "IP" }
+    ],
+    "answer": ["A", "B", "C"],
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "MultiChoice",
+    "content": "关于交换机与路由器，下列说法正确的有？",
+    "options": [
+      { "key": "A", "text": "交换机主要工作在数据链路层" },
+      { "key": "B", "text": "路由器能够隔离广播域" },
+      { "key": "C", "text": "交换机根据IP地址转发帧" },
+      { "key": "D", "text": "路由器主要根据路由表转发数据包" }
+    ],
+    "answer": ["A", "B", "D"],
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "MultiChoice",
+    "content": "下列属于常见网络拓扑结构的有？",
+    "options": [
+      { "key": "A", "text": "总线型" },
+      { "key": "B", "text": "星型" },
+      { "key": "C", "text": "环型" },
+      { "key": "D", "text": "树型" }
+    ],
+    "answer": ["A", "B", "C", "D"],
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "MultiChoice",
+    "content": "IPv6相比IPv4的改进包括？",
+    "options": [
+      { "key": "A", "text": "更大的地址空间" },
+      { "key": "B", "text": "支持自动配置" },
+      { "key": "C", "text": "更好的安全支持" },
+      { "key": "D", "text": "彻底取消路由功能" }
+    ],
+    "answer": ["A", "B", "C"],
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "MultiChoice",
+    "content": "下列关于UDP的描述正确的有？",
+    "options": [
+      { "key": "A", "text": "无连接" },
+      { "key": "B", "text": "首部开销小" },
+      { "key": "C", "text": "支持实时应用" },
+      { "key": "D", "text": "保证数据可靠到达" }
+    ],
+    "answer": ["A", "B", "C"],
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "MultiChoice",
+    "content": "常见的网络安全技术包括？",
+    "options": [
+      { "key": "A", "text": "防火墙" },
+      { "key": "B", "text": "数据加密" },
+      { "key": "C", "text": "入侵检测" },
+      { "key": "D", "text": "ARP广播" }
+    ],
+    "answer": ["A", "B", "C"],
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "MultiChoice",
+    "content": "TCP连接释放过程中可能出现的状态包括？",
+    "options": [
+      { "key": "A", "text": "FIN_WAIT_1" },
+      { "key": "B", "text": "TIME_WAIT" },
+      { "key": "C", "text": "CLOSE_WAIT" },
+      { "key": "D", "text": "LISTEN" }
+    ],
+    "answer": ["A", "B", "C"],
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "MultiChoice",
+    "content": "以下属于无线局域网特点的有？",
+    "options": [
+      { "key": "A", "text": "移动性强" },
+      { "key": "B", "text": "易受干扰" },
+      { "key": "C", "text": "部署灵活" },
+      { "key": "D", "text": "必须使用光纤" }
+    ],
+    "answer": ["A", "B", "C"],
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "TrueFalse",
+    "content": "TCP协议是面向连接的可靠传输协议。",
+    "options": [
+      { "key": "A", "text": "正确" },
+      { "key": "B", "text": "错误" }
+    ],
+    "answer": "A",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "TrueFalse",
+    "content": "IP协议能够保证数据一定按序到达。",
+    "options": [
+      { "key": "A", "text": "正确" },
+      { "key": "B", "text": "错误" }
+    ],
+    "answer": "B",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "TrueFalse",
+    "content": "交换机能够有效减少局域网中的冲突。",
+    "options": [
+      { "key": "A", "text": "正确" },
+      { "key": "B", "text": "错误" }
+    ],
+    "answer": "A",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "TrueFalse",
+    "content": "UDP协议适用于视频直播等实时性要求较高的场景。",
+    "options": [
+      { "key": "A", "text": "正确" },
+      { "key": "B", "text": "错误" }
+    ],
+    "answer": "A",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "TrueFalse",
+    "content": "DNS服务器的主要作用是进行网页内容加密。",
+    "options": [
+      { "key": "A", "text": "正确" },
+      { "key": "B", "text": "错误" }
+    ],
+    "answer": "B",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "TrueFalse",
+    "content": "MAC地址通常由48位二进制数组成。",
+    "options": [
+      { "key": "A", "text": "正确" },
+      { "key": "B", "text": "错误" }
+    ],
+    "answer": "A",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "TrueFalse",
+    "content": "HTTPS协议默认使用443端口。",
+    "options": [
+      { "key": "A", "text": "正确" },
+      { "key": "B", "text": "错误" }
+    ],
+    "answer": "A",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "TrueFalse",
+    "content": "路由器工作在OSI参考模型的数据链路层。",
+    "options": [
+      { "key": "A", "text": "正确" },
+      { "key": "B", "text": "错误" }
+    ],
+    "answer": "B",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "TrueFalse",
+    "content": "CIDR技术能够提高IP地址分配效率。",
+    "options": [
+      { "key": "A", "text": "正确" },
+      { "key": "B", "text": "错误" }
+    ],
+    "answer": "A",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  },
+  {
+    "type": "TrueFalse",
+    "content": "ARP协议用于根据IP地址获取对应的MAC地址。",
+    "options": [
+      { "key": "A", "text": "正确" },
+      { "key": "B", "text": "错误" }
+    ],
+    "answer": "A",
+    "bank": "考研计算机",
+    "discipline": "计算机网络"
+  }
+]
