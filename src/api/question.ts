@@ -8,6 +8,7 @@ import type {
   CreateBankRequest,
   GetCollectionRequest,
   DeleteAllCollectionsRequest,
+  getResolutionsRequest,
 } from '@/types/reqeust'
 import type {
   GetQuestionListResponse,
@@ -16,13 +17,15 @@ import type {
   CheckAnswerResponse,
   CheckManyAnswersResponse,
   CreateCollectionResponse,
-  GetCollectionResponse,
+  GetCollectionListResponse,
   DeleteCollectionResponse,
   GetBanksResponse,
   CreateBankResponse,
   GetBankResponse,
   GetQuestionDetailResponse,
+  isCollectionExistResponse,
 } from '@/types/response'
+import type { Resolution } from '@/types/prisma'
 export function getQuestionList<T>(params: GetQuestionRequest) {
   return request.get<T, GetQuestionListResponse[]>('/question', { params })
 }
@@ -41,17 +44,27 @@ export function checkAnswer<T>(data: CheckAnswerRequest) {
 export function checkManyAnswers<T>(data: CheckAnswerRequest[]) {
   return request.post<T, CheckManyAnswersResponse>('/question/check', data)
 }
+export function isCollectionExist<T>(questionId: number) {
+  return request.get<T, isCollectionExistResponse>(`/question/collection/exist`, {
+    params: { questionId },
+  })
+}
 export function createCollection<T>(data: CreateCollectionRequest) {
   return request.post<T, CreateCollectionResponse>('/question/collection', data)
 }
 export function getCollectionList<T>(params: GetCollectionRequest) {
-  return request.get<T, GetCollectionResponse>(`/question/collection`, { params })
+  return request.get<T, GetCollectionListResponse>(`/question/collection`, { params })
 }
 export function deleteCollection<T>(id: number) {
   return request.delete<T, DeleteCollectionResponse>(`/question/collection/${id}`)
 }
 export function deleteAllCollections<T>(params: DeleteAllCollectionsRequest) {
   return request.delete<T, void>(`/question/collection`, { params })
+}
+export function getResolutions<T>(params: getResolutionsRequest) {
+  return request.get<T, Resolution[]>(`/question/resolution`, {
+    params,
+  })
 }
 export function getBankList<T>(params: GetBankRequest) {
   return request.get<T, GetBanksResponse>('/bank', { params })

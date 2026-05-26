@@ -8,15 +8,18 @@ import { defineStore } from 'pinia'
 import { computed, ref, watch } from 'vue'
 
 export const useTestPaperStore = defineStore('testpaper', () => {
-  const currentQuestion = ref<GetQuestionListResponse>()
+  const currentQuestion = ref<(GetQuestionListResponse & { isCollected?: boolean }) | null>(null)
   const questions = ref<GetQuestionListResponse[]>([])
   const answerSheet = ref<CheckAnswerRequest[]>([])
-  const testResult = ref<CheckManyAnswersResponse>()
+  const testResult = ref<CheckManyAnswersResponse | null>(null)
   const dialogVisible = ref(false)
   interface TestInfo {
-    type: string
     bankId: number
-    disciplineId: number
+    disciplineId?: number
+    questionType?: string
+    random?: number
+    isDay?: number
+    collectionType?: string
   }
 
   const testInfo = ref<TestInfo>()
@@ -43,15 +46,15 @@ export const useTestPaperStore = defineStore('testpaper', () => {
     questions.value.filter((item) => item.type === QuestionType.TrueFalse),
   )
   const resetStore = () => {
-    currentQuestion.value = undefined
+    currentQuestion.value = null
     questions.value = []
     answerSheet.value = []
-    testResult.value = undefined
+    testResult.value = null
     testInfo.value = undefined
   }
   const pushAnswer = (item: Option) => {
     if (testResult.value) {
-      ElMessage.error('已提交，无法继续作答（刷新页面以重新答题!）')
+      ElMessage.error('Already submitted, please refresh to answer again')
       return
     }
     const exist = answerSheet.value.find(
@@ -84,7 +87,6 @@ export const useTestPaperStore = defineStore('testpaper', () => {
       }
     } else {
       answerSheet.value.push({
-        userId: 1,
         questionId: currentQuestion.value?.id || 0,
         answer: currentQuestion.value?.type === QuestionType.MultiChoice ? [item.key] : item.key,
       })
@@ -93,7 +95,7 @@ export const useTestPaperStore = defineStore('testpaper', () => {
   }
   const submitAnswerSheet = async () => {
     if (testResult.value) {
-      ElMessage.error('无法重复提交（刷新页面以重新答题!）')
+      ElMessage.error('Cannot submit repeatedly, please refresh to answer again')
       return
     }
     ElMessageBox.confirm(
@@ -116,30 +118,30 @@ export const useTestPaperStore = defineStore('testpaper', () => {
       case QuestionType.SingleChoice:
         index = singleQuestions.value.findIndex((item) => item.id === currentQuestion.value?.id) - 1
         if (index >= 0) {
-          currentQuestion.value = singleQuestions.value[index]
+          currentQuestion.value = singleQuestions.value[index] ?? null
         } else {
-          currentQuestion.value = singleQuestions.value[0]
+          currentQuestion.value = singleQuestions.value[0] ?? null
         }
         break
       case QuestionType.MultiChoice:
         index = multiQuestions.value.findIndex((item) => item.id === currentQuestion.value?.id) - 1
         if (index >= 0) {
-          currentQuestion.value = multiQuestions.value[index]
+          currentQuestion.value = multiQuestions.value[index] ?? null
         } else {
-          currentQuestion.value = singleQuestions.value[singleQuestions.value.length - 1]
+          currentQuestion.value = singleQuestions.value[singleQuestions.value.length - 1] ?? null
         }
         break
       case QuestionType.TrueFalse:
         index =
           trueFalseQuestions.value.findIndex((item) => item.id === currentQuestion.value?.id) - 1
         if (index >= 0) {
-          currentQuestion.value = trueFalseQuestions.value[index]
+          currentQuestion.value = trueFalseQuestions.value[index] ?? null
         } else {
-          currentQuestion.value = multiQuestions.value[multiQuestions.value.length - 1]
+          currentQuestion.value = multiQuestions.value[multiQuestions.value.length - 1] ?? null
         }
         break
       default:
-        currentQuestion.value = undefined
+        currentQuestion.value = null
         break
     }
   }
@@ -149,30 +151,31 @@ export const useTestPaperStore = defineStore('testpaper', () => {
       case QuestionType.SingleChoice:
         index = singleQuestions.value.findIndex((item) => item.id === currentQuestion.value?.id) + 1
         if (index < singleQuestions.value.length) {
-          currentQuestion.value = singleQuestions.value[index]
+          currentQuestion.value = singleQuestions.value[index] ?? null
         } else {
-          currentQuestion.value = multiQuestions.value[0]
+          currentQuestion.value = multiQuestions.value[0] ?? null
         }
         break
       case QuestionType.MultiChoice:
         index = multiQuestions.value.findIndex((item) => item.id === currentQuestion.value?.id) + 1
         if (index < multiQuestions.value.length) {
-          currentQuestion.value = multiQuestions.value[index]
+          currentQuestion.value = multiQuestions.value[index] ?? null
         } else {
-          currentQuestion.value = trueFalseQuestions.value[0]
+          currentQuestion.value = trueFalseQuestions.value[0] ?? null
         }
         break
       case QuestionType.TrueFalse:
         index =
           trueFalseQuestions.value.findIndex((item) => item.id === currentQuestion.value?.id) + 1
         if (index < trueFalseQuestions.value.length) {
-          currentQuestion.value = trueFalseQuestions.value[index]
+          currentQuestion.value = trueFalseQuestions.value[index] ?? null
         } else {
-          currentQuestion.value = trueFalseQuestions.value[trueFalseQuestions.value.length - 1]
+          currentQuestion.value =
+            trueFalseQuestions.value[trueFalseQuestions.value.length - 1] ?? null
         }
         break
       default:
-        currentQuestion.value = undefined
+        currentQuestion.value = null
         break
     }
   }

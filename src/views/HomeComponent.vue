@@ -15,7 +15,7 @@
             </h4>
             <p class="detail">
               <span class="detail-item" v-for="child in item.children" :key="child.key"
-                @click="router.push(`bank/${child.key}`)">{{ child.label }}</span>
+                @click="router.push(`/bank/${child.key}`)">{{ child.label }}</span>
             </p>
           </div>
           <div class="right-hidden-section">

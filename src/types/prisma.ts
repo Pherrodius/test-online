@@ -42,8 +42,8 @@ export interface Question {
   id: number
   type: QuestionType
   content: string
-  bank: string
-  discipline: string
+  bankId: number
+  disciplineId: number
   createdTime: Date
   options?: Option[]
   singleAnswer?: SingleAnswer
@@ -71,4 +71,10 @@ export interface Collection {
   questionId: number
   createdTime: Date
   type: CollectionType
+}
+export interface Resolution {
+  id: number
+  questionId: number
+  resolution: string
+  updatedTime: Date
 }

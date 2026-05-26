@@ -2,7 +2,6 @@ import type {
   QuestionType,
   Answer,
   CollectionType,
-  Question,
   Option,
   Bank,
   Collection,
@@ -36,12 +35,7 @@ export interface GetQuestionDetailResponse {
   createdTime: Date
   options: Option[]
   explanation?: string
-  bank: {
-    id: number
-    name: string
-    createdTime: Date
-    description: string
-  }
+  bank: Bank
   discipline: {
     id: number
     name: string
@@ -86,10 +80,10 @@ export interface CheckManyAnswersResponse {
 
 export type CreateCollectionResponse = Collection
 
-export interface GetCollectionResponse {
+export interface GetCollectionListResponse {
   userId: number
   type: CollectionType
-  records: Question[]
+  records: (GetQuestionDetailResponse & { updatedTime: Date })[]
   total: number
   mistakes: number
   notes: number
@@ -99,7 +93,7 @@ export type DeleteCollectionResponse = Collection
 
 export type CreateBankResponse = Bank
 
-export interface GetBankResponse {
+export interface GetBankResponse extends Bank {
   id: number
   name: string
   description: string
@@ -125,4 +119,25 @@ export interface GetBanksResponse {
   total: number
   page: number
   size: number
+}
+export interface LoginResponse {
+  id: number
+  name: string
+  phone: string
+  accessToken: string
+  tokenType: 'Bearer'
+}
+
+export interface RegisterResponse {
+  id: number
+  name: string
+  phone: string
+}
+export interface isCollectionExistResponse {
+  userId: number
+  questionId: number
+  notedId?: number
+  mistakeId?: number
+  isMistake: boolean
+  isNoted: boolean
 }

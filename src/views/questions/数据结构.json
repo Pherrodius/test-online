@@ -1,0 +1,965 @@
+[
+  {
+    "type": "SingleChoice",
+    "content": "在顺序表中，访问第 i 个元素的时间复杂度是？",
+    "options": [
+      {
+        "key": "A",
+        "text": "O(1)"
+      },
+      {
+        "key": "B",
+        "text": "O(n)"
+      },
+      {
+        "key": "C",
+        "text": "O(log n)"
+      },
+      {
+        "key": "D",
+        "text": "O(n log n)"
+      }
+    ],
+    "answer": "A",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "在单链表中，已知某结点指针，删除其后继结点的时间复杂度是？",
+    "options": [
+      {
+        "key": "A",
+        "text": "O(1)"
+      },
+      {
+        "key": "B",
+        "text": "O(n)"
+      },
+      {
+        "key": "C",
+        "text": "O(log n)"
+      },
+      {
+        "key": "D",
+        "text": "O(n^2)"
+      }
+    ],
+    "answer": "A",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "栈的插入和删除操作通常发生在？",
+    "options": [
+      {
+        "key": "A",
+        "text": "队头"
+      },
+      {
+        "key": "B",
+        "text": "队尾"
+      },
+      {
+        "key": "C",
+        "text": "栈顶"
+      },
+      {
+        "key": "D",
+        "text": "任意位置"
+      }
+    ],
+    "answer": "C",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "队列的基本操作原则是？",
+    "options": [
+      {
+        "key": "A",
+        "text": "后进先出"
+      },
+      {
+        "key": "B",
+        "text": "先进先出"
+      },
+      {
+        "key": "C",
+        "text": "随机访问"
+      },
+      {
+        "key": "D",
+        "text": "优先级访问"
+      }
+    ],
+    "answer": "B",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "含有 n 个结点的完全二叉树，其高度通常为？",
+    "options": [
+      {
+        "key": "A",
+        "text": "O(1)"
+      },
+      {
+        "key": "B",
+        "text": "O(log n)"
+      },
+      {
+        "key": "C",
+        "text": "O(n)"
+      },
+      {
+        "key": "D",
+        "text": "O(n log n)"
+      }
+    ],
+    "answer": "B",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "二叉搜索树的中序遍历结果通常是？",
+    "options": [
+      {
+        "key": "A",
+        "text": "随机序列"
+      },
+      {
+        "key": "B",
+        "text": "递减序列"
+      },
+      {
+        "key": "C",
+        "text": "非递减有序序列"
+      },
+      {
+        "key": "D",
+        "text": "层序序列"
+      }
+    ],
+    "answer": "C",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "哈希表处理冲突的方法中，开放定址法的特点是？",
+    "options": [
+      {
+        "key": "A",
+        "text": "冲突元素放入同一链表"
+      },
+      {
+        "key": "B",
+        "text": "在表内寻找新的空位置"
+      },
+      {
+        "key": "C",
+        "text": "重新建立整张表"
+      },
+      {
+        "key": "D",
+        "text": "只允许一次插入"
+      }
+    ],
+    "answer": "B",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "图的广度优先遍历通常使用的数据结构是？",
+    "options": [
+      {
+        "key": "A",
+        "text": "栈"
+      },
+      {
+        "key": "B",
+        "text": "队列"
+      },
+      {
+        "key": "C",
+        "text": "堆"
+      },
+      {
+        "key": "D",
+        "text": "散列表"
+      }
+    ],
+    "answer": "B",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "图的深度优先遍历可借助哪种数据结构实现？",
+    "options": [
+      {
+        "key": "A",
+        "text": "栈"
+      },
+      {
+        "key": "B",
+        "text": "队列"
+      },
+      {
+        "key": "C",
+        "text": "顺序表"
+      },
+      {
+        "key": "D",
+        "text": "哈希表"
+      }
+    ],
+    "answer": "A",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "在邻接矩阵表示法中，判断两个顶点是否相邻的时间复杂度是？",
+    "options": [
+      {
+        "key": "A",
+        "text": "O(1)"
+      },
+      {
+        "key": "B",
+        "text": "O(n)"
+      },
+      {
+        "key": "C",
+        "text": "O(e)"
+      },
+      {
+        "key": "D",
+        "text": "O(n^2)"
+      }
+    ],
+    "answer": "A",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "在最坏情况下，直接插入排序的时间复杂度是？",
+    "options": [
+      {
+        "key": "A",
+        "text": "O(n)"
+      },
+      {
+        "key": "B",
+        "text": "O(log n)"
+      },
+      {
+        "key": "C",
+        "text": "O(n^2)"
+      },
+      {
+        "key": "D",
+        "text": "O(n log n)"
+      }
+    ],
+    "answer": "C",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "快速排序在平均情况下的时间复杂度是？",
+    "options": [
+      {
+        "key": "A",
+        "text": "O(n)"
+      },
+      {
+        "key": "B",
+        "text": "O(n log n)"
+      },
+      {
+        "key": "C",
+        "text": "O(n^2)"
+      },
+      {
+        "key": "D",
+        "text": "O(log n)"
+      }
+    ],
+    "answer": "B",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "堆排序所使用的主要数据结构是？",
+    "options": [
+      {
+        "key": "A",
+        "text": "二叉堆"
+      },
+      {
+        "key": "B",
+        "text": "哈希表"
+      },
+      {
+        "key": "C",
+        "text": "线性队列"
+      },
+      {
+        "key": "D",
+        "text": "十字链表"
+      }
+    ],
+    "answer": "A",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "在折半查找中，要求查找表满足什么条件？",
+    "options": [
+      {
+        "key": "A",
+        "text": "链式存储且无序"
+      },
+      {
+        "key": "B",
+        "text": "顺序存储且有序"
+      },
+      {
+        "key": "C",
+        "text": "只含一个元素"
+      },
+      {
+        "key": "D",
+        "text": "必须为树结构"
+      }
+    ],
+    "answer": "B",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "AVL树是一种什么类型的树？",
+    "options": [
+      {
+        "key": "A",
+        "text": "平衡二叉搜索树"
+      },
+      {
+        "key": "B",
+        "text": "完全二叉树"
+      },
+      {
+        "key": "C",
+        "text": "哈夫曼树"
+      },
+      {
+        "key": "D",
+        "text": "线索二叉树"
+      }
+    ],
+    "answer": "A",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "哈夫曼树通常用于解决哪类问题？",
+    "options": [
+      {
+        "key": "A",
+        "text": "最短路径"
+      },
+      {
+        "key": "B",
+        "text": "最优前缀编码"
+      },
+      {
+        "key": "C",
+        "text": "拓扑排序"
+      },
+      {
+        "key": "D",
+        "text": "循环队列判满"
+      }
+    ],
+    "answer": "B",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "拓扑排序适用于哪类图？",
+    "options": [
+      {
+        "key": "A",
+        "text": "无向完全图"
+      },
+      {
+        "key": "B",
+        "text": "有向无环图"
+      },
+      {
+        "key": "C",
+        "text": "带权无向图"
+      },
+      {
+        "key": "D",
+        "text": "强连通图"
+      }
+    ],
+    "answer": "B",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "Dijkstra算法主要用于求解？",
+    "options": [
+      {
+        "key": "A",
+        "text": "最小生成树"
+      },
+      {
+        "key": "B",
+        "text": "单源最短路径"
+      },
+      {
+        "key": "C",
+        "text": "拓扑序列"
+      },
+      {
+        "key": "D",
+        "text": "关键路径"
+      }
+    ],
+    "answer": "B",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "Kruskal算法通常用于求解？",
+    "options": [
+      {
+        "key": "A",
+        "text": "最小生成树"
+      },
+      {
+        "key": "B",
+        "text": "二叉树高度"
+      },
+      {
+        "key": "C",
+        "text": "字符串匹配"
+      },
+      {
+        "key": "D",
+        "text": "顺序查找"
+      }
+    ],
+    "answer": "A",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "SingleChoice",
+    "content": "循环队列中设置少用一个存储单元的主要目的是？",
+    "options": [
+      {
+        "key": "A",
+        "text": "提高访问速度"
+      },
+      {
+        "key": "B",
+        "text": "区分队空和队满"
+      },
+      {
+        "key": "C",
+        "text": "减少内存碎片"
+      },
+      {
+        "key": "D",
+        "text": "实现排序"
+      }
+    ],
+    "answer": "B",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "MultiChoice",
+    "content": "下列属于线性结构的有？",
+    "options": [
+      {
+        "key": "A",
+        "text": "顺序表"
+      },
+      {
+        "key": "B",
+        "text": "链表"
+      },
+      {
+        "key": "C",
+        "text": "栈"
+      },
+      {
+        "key": "D",
+        "text": "队列"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "MultiChoice",
+    "content": "下列操作中，栈常用于实现的有？",
+    "options": [
+      {
+        "key": "A",
+        "text": "函数调用"
+      },
+      {
+        "key": "B",
+        "text": "表达式求值"
+      },
+      {
+        "key": "C",
+        "text": "括号匹配"
+      },
+      {
+        "key": "D",
+        "text": "广度优先遍历"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "MultiChoice",
+    "content": "下列关于二叉树的说法正确的有？",
+    "options": [
+      {
+        "key": "A",
+        "text": "每个结点最多有两个孩子"
+      },
+      {
+        "key": "B",
+        "text": "可以为空树"
+      },
+      {
+        "key": "C",
+        "text": "左右子树有次序"
+      },
+      {
+        "key": "D",
+        "text": "一定是完全二叉树"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "MultiChoice",
+    "content": "下列排序算法中，平均时间复杂度为 O(n log n) 的有？",
+    "options": [
+      {
+        "key": "A",
+        "text": "归并排序"
+      },
+      {
+        "key": "B",
+        "text": "堆排序"
+      },
+      {
+        "key": "C",
+        "text": "快速排序"
+      },
+      {
+        "key": "D",
+        "text": "冒泡排序"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "MultiChoice",
+    "content": "图的常见存储结构包括？",
+    "options": [
+      {
+        "key": "A",
+        "text": "邻接矩阵"
+      },
+      {
+        "key": "B",
+        "text": "邻接表"
+      },
+      {
+        "key": "C",
+        "text": "十字链表"
+      },
+      {
+        "key": "D",
+        "text": "邻接多重表"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "MultiChoice",
+    "content": "下列算法可用于求最小生成树的有？",
+    "options": [
+      {
+        "key": "A",
+        "text": "Prim算法"
+      },
+      {
+        "key": "B",
+        "text": "Kruskal算法"
+      },
+      {
+        "key": "C",
+        "text": "Dijkstra算法"
+      },
+      {
+        "key": "D",
+        "text": "Floyd算法"
+      }
+    ],
+    "answer": [
+      "A",
+      "B"
+    ],
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "MultiChoice",
+    "content": "下列关于哈希表的说法正确的有？",
+    "options": [
+      {
+        "key": "A",
+        "text": "理想情况下查找效率较高"
+      },
+      {
+        "key": "B",
+        "text": "可能发生冲突"
+      },
+      {
+        "key": "C",
+        "text": "装填因子会影响性能"
+      },
+      {
+        "key": "D",
+        "text": "一定保持关键字有序"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "MultiChoice",
+    "content": "下列属于树的遍历方式的有？",
+    "options": [
+      {
+        "key": "A",
+        "text": "先序遍历"
+      },
+      {
+        "key": "B",
+        "text": "中序遍历"
+      },
+      {
+        "key": "C",
+        "text": "后序遍历"
+      },
+      {
+        "key": "D",
+        "text": "层序遍历"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "MultiChoice",
+    "content": "下列关于链式存储的说法正确的有？",
+    "options": [
+      {
+        "key": "A",
+        "text": "插入删除通常较灵活"
+      },
+      {
+        "key": "B",
+        "text": "需要指针域"
+      },
+      {
+        "key": "C",
+        "text": "不要求逻辑相邻元素物理相邻"
+      },
+      {
+        "key": "D",
+        "text": "一定支持随机访问"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "MultiChoice",
+    "content": "下列查找方法中，适用于有序顺序表的有？",
+    "options": [
+      {
+        "key": "A",
+        "text": "折半查找"
+      },
+      {
+        "key": "B",
+        "text": "插值查找"
+      },
+      {
+        "key": "C",
+        "text": "斐波那契查找"
+      },
+      {
+        "key": "D",
+        "text": "顺序查找"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "TrueFalse",
+    "content": "顺序表可以实现随机访问。",
+    "options": [
+      {
+        "key": "A",
+        "text": "正确"
+      },
+      {
+        "key": "B",
+        "text": "错误"
+      }
+    ],
+    "answer": "A",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "TrueFalse",
+    "content": "单链表查找第 i 个元素的时间复杂度通常为 O(1)。",
+    "options": [
+      {
+        "key": "A",
+        "text": "正确"
+      },
+      {
+        "key": "B",
+        "text": "错误"
+      }
+    ],
+    "answer": "B",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "TrueFalse",
+    "content": "栈是一种后进先出的线性表。",
+    "options": [
+      {
+        "key": "A",
+        "text": "正确"
+      },
+      {
+        "key": "B",
+        "text": "错误"
+      }
+    ],
+    "answer": "A",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "TrueFalse",
+    "content": "队列是一种先进先出的线性表。",
+    "options": [
+      {
+        "key": "A",
+        "text": "正确"
+      },
+      {
+        "key": "B",
+        "text": "错误"
+      }
+    ],
+    "answer": "A",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "TrueFalse",
+    "content": "二叉搜索树的中序遍历一定得到有序序列。",
+    "options": [
+      {
+        "key": "A",
+        "text": "正确"
+      },
+      {
+        "key": "B",
+        "text": "错误"
+      }
+    ],
+    "answer": "A",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "TrueFalse",
+    "content": "邻接矩阵适合表示稀疏图，且空间开销总是最小。",
+    "options": [
+      {
+        "key": "A",
+        "text": "正确"
+      },
+      {
+        "key": "B",
+        "text": "错误"
+      }
+    ],
+    "answer": "B",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "TrueFalse",
+    "content": "快速排序在最坏情况下可能退化为 O(n^2)。",
+    "options": [
+      {
+        "key": "A",
+        "text": "正确"
+      },
+      {
+        "key": "B",
+        "text": "错误"
+      }
+    ],
+    "answer": "A",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "TrueFalse",
+    "content": "哈夫曼编码是一种前缀编码。",
+    "options": [
+      {
+        "key": "A",
+        "text": "正确"
+      },
+      {
+        "key": "B",
+        "text": "错误"
+      }
+    ],
+    "answer": "A",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "TrueFalse",
+    "content": "拓扑排序只能用于有向无环图。",
+    "options": [
+      {
+        "key": "A",
+        "text": "正确"
+      },
+      {
+        "key": "B",
+        "text": "错误"
+      }
+    ],
+    "answer": "A",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  },
+  {
+    "type": "TrueFalse",
+    "content": "堆排序是一种稳定排序算法。",
+    "options": [
+      {
+        "key": "A",
+        "text": "正确"
+      },
+      {
+        "key": "B",
+        "text": "错误"
+      }
+    ],
+    "answer": "B",
+    "bank": "考研计算机",
+    "discipline": "数据结构"
+  }
+]

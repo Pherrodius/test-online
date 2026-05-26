@@ -3,13 +3,17 @@
     <div class="header-container">
       <div class="clear-fix">
         <div class="logo">
-          <el-image :src="logoImg" alt="" fit="contain" style="width: 148px;
-        height: 80px;" />
+          <el-image :src="logoImg" alt="" fit="contain" style="width: 148px; height: 80px" />
         </div>
         <div class="search-container">
           <div class="search-tab">
-            <div v-for="tab in tabs" :key="tab.key" class="tab-item" :class="{ active: activeTab === tab.key }"
-              @click="handleTabClick(tab.key)">
+            <div
+              v-for="tab in tabs"
+              :key="tab.key"
+              class="tab-item"
+              :class="{ active: activeTab === tab.key }"
+              @click="handleTabClick(tab.key)"
+            >
               {{ tab.label }}
             </div>
           </div>
@@ -17,26 +21,47 @@
             <div class="input-content">
               <el-input placeholder="请输入搜索内容" />
             </div>
-            <el-button type="primary" style="height: 32px;width: 64px; border-radius: 0 4px 4px 0;"
-              color="#008CFF">搜索</el-button>
+            <el-button
+              type="primary"
+              style="height: 32px; width: 64px; border-radius: 0 4px 4px 0"
+              color="#008CFF"
+              >搜索</el-button
+            >
           </div>
         </div>
-        <div class="login-box flex-box">
-          <el-button class="btn login-btn">登录</el-button>
-          <el-button class="btn register-btn" type="primary" color="#008CFF">注册</el-button>
+        <div class="login-box flex-box" v-if="!isLogin">
+          <el-button class="btn login-btn" @click="router.push('/auth/login')">登录</el-button>
+          <el-button
+            class="btn register-btn"
+            type="primary"
+            color="#008CFF"
+            @click="router.push('/auth/register')"
+            >注册</el-button
+          >
+        </div>
+        <div class="login-box flex-box" v-else>
+          <el-avatar :src="avatar" />
+          <div class="user-name">{{ userInfo!.name }}</div>
         </div>
       </div>
       <el-menu class="menu" mode="horizontal" default-active="全部" router>
-        <el-menu-item class="menu-item" v-for="tab in tabs" :key="tab.key" :index="tab.key">{{ tab.label
-          }}</el-menu-item>
+        <el-menu-item class="menu-item" v-for="tab in tabs" :key="tab.key" :index="tab.key">{{
+          tab.label
+        }}</el-menu-item>
       </el-menu>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-
+import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
+const avatar = new URL('@/assets/images/def-head.png', import.meta.url).href
+const router = useRouter()
+const userInfo = localStorage.getItem('userInfo')
+  ? JSON.parse(localStorage.getItem('userInfo')!)
+  : null
+const isLogin = computed(() => !!userInfo)
 const activeTab = ref('全部')
 
 const tabs = ref([
@@ -48,7 +73,10 @@ const tabs = ref([
   { key: '/error', label: '错题' },
 ])
 
-const logoImg = new URL('https://resource-cdn.kaoshibao.com/pc/logo/www.kaoshibao.com2.svg', import.meta.url).href
+const logoImg = new URL(
+  'https://resource-cdn.kaoshibao.com/pc/logo/www.kaoshibao.com2.svg',
+  import.meta.url,
+).href
 
 const handleTabClick = (key: string) => {
   activeTab.value = key
@@ -56,8 +84,8 @@ const handleTabClick = (key: string) => {
 </script>
 
 <style scoped lang="scss">
-$color-blue: #008CFF;
-$color-bg: #F5F5F5;
+$color-blue: #008cff;
+$color-bg: #f5f5f5;
 
 * {
   box-sizing: border-box;
@@ -68,7 +96,7 @@ $color-bg: #F5F5F5;
 }
 
 .header {
-  border-bottom: 1px solid #E5E5E5;
+  border-bottom: 1px solid #e5e5e5;
 
   .header-container {
     position: relative;
@@ -120,7 +148,6 @@ $color-bg: #F5F5F5;
         }
 
         .input-box {
-
           .input-content {
             :deep(.el-input__wrapper) {
               width: 470px;
@@ -138,6 +165,15 @@ $color-bg: #F5F5F5;
         bottom: 12px;
         width: 142px;
         height: 32px;
+
+        .user-name {
+          margin-left: 8px;
+          height: 32px;
+          line-height: 32px;
+          font-size: 14px;
+          font-weight: 350;
+          color: #333;
+        }
 
         .btn {
           height: 32px;

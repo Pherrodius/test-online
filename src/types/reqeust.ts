@@ -12,6 +12,7 @@ export interface CreateQuestionRequest {
 }
 
 export interface GetQuestionRequest {
+  collectionType?: CollectionType
   type?: QuestionType
   content?: string
   bank?: string
@@ -22,25 +23,32 @@ export interface GetQuestionRequest {
 }
 
 export interface CheckAnswerRequest {
-  userId: number
   questionId: number
   answer: Answer | Answer[]
 }
 
 export interface CreateCollectionRequest {
   questionId: number
-  userId: number
   type?: CollectionType
 }
 
 export interface GetCollectionRequest {
-  userId: number
   type?: CollectionType
   bankId?: number
+  disciplineId?: number
+  isDay?: 1 | 0
+  questionType?: QuestionType
+  detailed?: boolean
+}
+
+export interface getResolutionsRequest {
+  bankId?: number
+  disciplineId?: number
+  bankName?: string
+  disciplineName?: string
 }
 
 export interface DeleteAllCollectionsRequest {
-  userId: number
   type?: CollectionType
   bankId?: number
   disciplineId?: number
@@ -59,4 +67,18 @@ export interface GetBankRequest {
   creator?: string
   size?: number
   page?: number
+}
+export interface LoginByNameRequest {
+  name: string
+  password: string
+}
+export interface LoginByPhoneRequest {
+  phone: string
+  password: string
+}
+export interface RegisterRequest {
+  name: string
+  phone: string
+  password: string
+  confirmPassword: string
 }

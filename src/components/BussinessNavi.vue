@@ -2,13 +2,22 @@
   <div class="header">
     <div class="container">
       <div class="menu">
-        <div v-for="item in menuItems" :key="item.path" class="menu-item" @click="router.push(item.path)">
+        <div
+          v-for="item in menuItems"
+          :key="item.path"
+          class="menu-item"
+          @click="router.push(item.path)"
+        >
           {{ item.name }}
         </div>
       </div>
       <div class="right">
         <div class="search-box">
-          <el-input placeholder="请输入搜索内容" prefix-icon="el-icon-search" v-model="queryItem.input">
+          <el-input
+            placeholder="请输入搜索内容"
+            prefix-icon="el-icon-search"
+            v-model="queryItem.input"
+          >
             <template #prepend>
               <el-select placeholder="请选择搜索类型" v-model="queryItem.searchType">
                 <el-option label="题目" value="question" />
@@ -19,50 +28,61 @@
             </template>
             <template #append>
               <el-button color="primary">
-                <el-icon style="color: black;">
+                <el-icon style="color: black">
                   <Search />
                 </el-icon>
               </el-button>
             </template>
           </el-input>
         </div>
-        <div class="login-box">
-          <el-button class="login-btn">登录</el-button>
-          <el-button type="primary" class="register-btn">注册</el-button>
+        <div class="login-box" v-if="!isLogin">
+          <el-button class="login-btn" @click="router.push('/auth/login')">登录</el-button>
+          <el-button type="primary" class="register-btn" @click="router.push('/auth/register')"
+            >注册</el-button
+          >
+        </div>
+        <div class="login-box" v-else>
+          <el-avatar :src="avatar" size="small" />
+          <span class="user-name">{{ userInfo!.name }}</span>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
+const userInfo = localStorage.getItem('userInfo')
+  ? JSON.parse(localStorage.getItem('userInfo')!)
+  : null
+const isLogin = computed(() => !!userInfo)
+const avatar = new URL('@/assets/images/def-head.png', import.meta.url).href
 const router = useRouter()
 const menuItems = ref([
   {
     name: '首页',
-    path: '/'
+    path: '/',
   },
   {
     name: '题目',
-    path: '/question'
+    path: '/question',
   },
   {
     name: '题库',
-    path: '/bank'
+    path: '/bank',
   },
   {
     name: '文档',
-    path: '/document'
+    path: '/document',
   },
   {
     name: '联系我们',
-    path: '/contact'
-  }
+    path: '/contact',
+  },
 ])
 const queryItem = ref({
   searchType: 'bank',
-  input: ''
+  input: '',
 })
 </script>
 
@@ -112,20 +132,20 @@ html,
 
       .el-input-group__append button {
         background-color: #fff;
-        border-color: #DDDFE5;
+        border-color: #dddfe5;
         border-left: none;
         border-radius: 0 4px 4px 0;
       }
 
       &:deep(.el-input__wrapper) {
-        border-top: 1px solid #DDDFE5;
-        border-bottom: 1px solid #DDDFE5;
+        border-top: 1px solid #dddfe5;
+        border-bottom: 1px solid #dddfe5;
         padding: 0 12px;
         box-shadow: none;
       }
 
       &:deep(.el-input__prefix-inner) {
-        width: 4px
+        width: 4px;
       }
 
       .el-input-group__prepend {
@@ -143,10 +163,14 @@ html,
           border: none;
         }
       }
-
     }
   }
 
-
+  .login-box {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+  }
 }
 </style>
