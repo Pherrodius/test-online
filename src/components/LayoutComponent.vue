@@ -2,11 +2,11 @@
   <div class="common-layout">
     <el-container>
       <el-header>
-        <NavibarComponent v-if="meta.home" />
+        <NavibarComponent v-if="$route.meta.home" />
         <BussinessNavi v-else />
       </el-header>
       <el-main>
-        <router-view></router-view>
+        <router-view :key="$route.path"></router-view>
       </el-main>
       <el-footer>Footer</el-footer>
     </el-container>
@@ -16,10 +16,6 @@
 <script setup lang="ts">
 import NavibarComponent from './HomeNavi.vue'
 import BussinessNavi from './BussinessNavi.vue'
-import { useRoute } from 'vue-router'
-import { computed } from 'vue'
-const route = useRoute()
-const meta = computed(() => route.meta)
 </script>
 <style scoped>
 html,
@@ -38,7 +34,7 @@ html,
 
 .el-main {
   padding: 0;
-  background-color: #F5F5F5;
+  background-color: #f5f5f5;
 }
 
 .el-footer {

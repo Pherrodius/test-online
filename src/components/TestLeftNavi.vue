@@ -2,9 +2,18 @@
   <div class="left-section">
     <div class="left-section-title">{{ typeMap[props.type] }}</div>
     <div class="left-section-content">
-      <div v-for="(item, index) in props.typedQuestions" :key="item.id" class="left-section-item"
-        :class="{ 'active': currentQuestion?.id === item.id, 'is-done': answerSheet?.map((item) => item.questionId).includes(item.id), 'is-correct': testResult?.results?.find((r) => r.questionId === item.id)?.isCorrect, 'is-incorrect': testResult?.results?.find((r) => r.questionId === item.id)?.isCorrect === false }"
-        @click="currentQuestion = item">
+      <div
+        v-for="(item, index) in props.typedQuestions"
+        :key="item.id"
+        class="left-section-item"
+        :class="{
+          active: currentQuestion?.id === item.id,
+          'is-done': answerSheet?.map((item) => item.questionId).includes(item.id),
+          'is-correct': result?.find((r) => r.questionId === item.id)?.isCorrect,
+          'is-incorrect': result?.find((r) => r.questionId === item.id)?.isCorrect === false,
+        }"
+        @click="currentQuestion = item"
+      >
         <template v-if="props.type === QuestionType.SingleChoice">
           {{ index + 1 }}
         </template>
@@ -24,7 +33,8 @@ import { useTestPaperStore } from '@/stores/testpaper'
 import { storeToRefs } from 'pinia'
 import { QuestionType } from '@/types/prisma'
 const testPaperStore = useTestPaperStore()
-const { currentQuestion, answerSheet, singleQuestions, multiQuestions, testResult } = storeToRefs(testPaperStore)
+const { currentQuestion, answerSheet, singleQuestions, multiQuestions, result } =
+  storeToRefs(testPaperStore)
 
 const props = defineProps<{
   type: QuestionType
@@ -92,12 +102,12 @@ const typeMap = {
     }
 
     &.is-correct {
-      background-color: #6CB77B;
+      background-color: #6cb77b;
       color: #fff;
     }
 
     &.is-incorrect {
-      background-color: #E57155;
+      background-color: #e57155;
       color: #fff;
     }
   }

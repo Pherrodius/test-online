@@ -1,15 +1,24 @@
+import { ElMessage } from 'element-plus'
 import { createRouter, createWebHistory } from 'vue-router'
 const homeRoutes = [
   {
     path: '/',
-    component: () => import('@/views/HomeComponent.vue'),
+    alias: '/home',
+    component: () => import('@/views/home/HomeComponent.vue'),
     meta: {
       home: true,
     },
   },
   {
     path: '/bank/category',
-    component: () => import('@/views/BankCategory.vue'),
+    redirect: '/bank/category/0',
+    meta: {
+      home: true,
+    },
+  },
+  {
+    path: '/bank/category/:id',
+    component: () => import('@/views/home/BankCategory.vue'),
     meta: {
       home: true,
     },
@@ -43,7 +52,7 @@ const authRoutes = [
 const bussinessRoutes = [
   {
     path: '/collection/:type',
-    component: () => import('@/views/bussiness/BankCollection.vue'),
+    component: () => import('@/views/bussiness/QCIB.vue'),
     meta: {
       home: false,
       auth: true,
@@ -76,11 +85,63 @@ const bussinessRoutes = [
     },
   },
 ]
+const userRoutes = [
+  {
+    path: '/mine',
+    redirect: '/user',
+  },
+  {
+    path: '/user',
+    component: () => import('@/views/user/UserLayout.vue'),
+    meta: {
+      home: false,
+      auth: true,
+    },
+    children: [
+      {
+        path: '',
+        component: () => import('@/views/user/UserHome.vue'),
+      },
+      {
+        path: 'profile',
+        component: () => import('@/views/user/UserProfile.vue'),
+      },
+      {
+        path: 'mistakes',
+        component: () => import('@/views/user/UserMistakes.vue'),
+      },
+      {
+        path: 'notes',
+        component: () => import('@/views/user/UserNotes.vue'),
+      },
+      {
+        path: 'testHistory',
+        component: () => import('@/views/user/UserTestHistory.vue'),
+      },
+      {
+        path: 'resolutions',
+        component: () => import('@/views/user/UserResolutions.vue'),
+      },
+      {
+        path: 'banks',
+        component: () => import('@/views/user/UserBanks.vue'),
+      },
+      {
+        path: 'documents',
+        component: () => import('@/views/user/UserDocuments.vue'),
+      },
+      {
+        path: 'settings',
+        component: () => import('@/views/user/UserSettings.vue'),
+      },
+    ],
+  },
+]
 const routes = [
   {
     path: '/',
     component: () => import('@/components/LayoutComponent.vue'),
-    children: [...homeRoutes, ...bussinessRoutes, ...authRoutes],
+    children: [...homeRoutes, ...bussinessRoutes, ...authRoutes, ...userRoutes],
   },
 ]
 const router = createRouter({
@@ -94,6 +155,7 @@ router.beforeEach((to) => {
     if (localStorage.getItem('token')) {
       return true
     } else {
+      ElMessage.warning('请先登录')
       return `/auth/login?redirect=${to.fullPath}`
     }
   }

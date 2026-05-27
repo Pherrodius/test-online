@@ -152,7 +152,7 @@ import { deleteAllCollections, getCollectionList, getResolutions } from '@/api/q
 import { CollectionType, QuestionType } from '@/types/prisma'
 import { useRoute } from 'vue-router'
 import { dayjs, ElMessage, ElMessageBox } from 'element-plus'
-import type { GetCollectionListResponse, GetQuestionDetailResponse } from '@/types/response'
+import type { GetDetailedCollectionListResponse, GetQuestionDetailResponse } from '@/types/response'
 import { useRouter } from 'vue-router'
 import DetailedQuestion from '@/components/DetailedQuestion.vue'
 const router = useRouter()
@@ -162,7 +162,7 @@ const route = useRoute()
 const type = computed(() => route.params.type as CollectionType)
 const bankId = Number(route.query.bankId)
 const dialogVisible = ref(false)
-const collectionList = ref<GetCollectionListResponse | null>(null)
+const collectionList = ref<GetDetailedCollectionListResponse | null>(null)
 const categoryList = ref([
   {
     type: 'single',
@@ -222,7 +222,7 @@ enum TimeType {
 const resolutionCount = ref<number>(0)
 const loading = ref(false)
 const currentList = ref<GetQuestionDetailResponse[]>([])
-const pushDetail = async (item: GetCollectionListResponse['records']) => {
+const pushDetail = async (item: GetDetailedCollectionListResponse['records']) => {
   loading.value = true
   for (const question of item) {
     currentList.value.push(question)

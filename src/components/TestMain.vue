@@ -82,7 +82,31 @@
           上一题
         </div>
       </el-button>
-      <el-button class="btn submit-btn" @click="submitAnswerSheet" size="large">提交</el-button>
+      <el-button
+        v-if="testInfo?.model === TestModel.Test && !testResult"
+        class="btn submit-btn"
+        @click="submitAnswerSheet"
+        size="large"
+        >提交试卷</el-button
+      >
+      <el-button
+        v-else-if="testInfo?.model === TestModel.Test && testResult"
+        class="btn submit-btn"
+        @click="reTest"
+        size="large"
+        >重新测试</el-button
+      >
+      <el-button
+        v-else-if="testInfo?.model === TestModel.Practice"
+        :disabled="!!result.find((r) => r.questionId === currentQuestion?.id)"
+        class="btn submit-btn"
+        @click="checkPracticeAnswer"
+        size="large"
+        >检查答案</el-button
+      >
+      <el-button v-else class="btn submit-btn" @click="checkPracticeAnswer" size="large" loading
+        >加载中</el-button
+      >
       <el-button
         class="btn"
         @click="nextQuestion"
@@ -105,15 +129,24 @@ import { CollectionType, QuestionType } from '@/types/prisma'
 import type { Option } from '@/types/prisma'
 import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useTestPaperStore } from '@/stores/testpaper'
+import { TestModel, useTestPaperStore } from '@/stores/testpaper'
 import { createCollection, deleteCollection, isCollectionExist } from '@/api/question'
 import { ElMessageBox, ElMessage } from 'element-plus'
-
+const reTest = () => {
+  ElMessageBox.confirm('确定重新测试吗?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    location.reload()
+  })
+}
 const testPaperStore = useTestPaperStore()
 
-const { currentQuestion, answerSheet } = storeToRefs(testPaperStore)
-const { pushAnswer, submitAnswerSheet, prevQuestion, nextQuestion } = testPaperStore
-const { singleQuestions, multiQuestions, trueFalseQuestions, testResult } =
+const { currentQuestion, answerSheet, result } = storeToRefs(testPaperStore)
+const { pushAnswer, submitAnswerSheet, prevQuestion, nextQuestion, checkPracticeAnswer } =
+  testPaperStore
+const { testInfo, singleQuestions, multiQuestions, trueFalseQuestions, testResult } =
   storeToRefs(testPaperStore)
 const questionTypeMap = ref({
   [QuestionType.SingleChoice]: '单选题',
@@ -127,10 +160,15 @@ const handleCollect = async () => {
       cancelButtonText: '取消',
       type: 'warning',
     }).then(() => {
-      deleteCollection(currentQuestion.value!.id!).then(() => {
-        ElMessage.success('删除收藏成功')
-        currentQuestion.value!.isCollected = false
-      })
+      deleteCollection(currentQuestion.value!.id!)
+        .then(() => {
+          ElMessage.success('删除收藏成功')
+          currentQuestion.value!.isCollected = false
+        })
+        .catch((err) => {
+          ElMessage.error('删除收藏失败')
+          console.error(err)
+        })
     })
     return
   }
@@ -165,7 +203,7 @@ watch(currentQuestion, () => {
   }
 })
 const isCorrect = (item: Option) => {
-  const isFound = testResult.value?.results?.find((r) => r.questionId === currentQuestion.value?.id)
+  const isFound = result.value?.find((r) => r.questionId === currentQuestion.value?.id)
   return isFound?.correctAnswer === item.key || isFound?.correctAnswer.includes(item.key)
 }
 const isChecked = (item: Option) => {
@@ -176,7 +214,7 @@ const isChecked = (item: Option) => {
   )
 }
 const isIncorrect = (item: Option) => {
-  const isFound = testResult.value?.results?.find((r) => r.questionId === currentQuestion.value?.id)
+  const isFound = result.value?.find((r) => r.questionId === currentQuestion.value?.id)
   if (isFound) {
     return isFound.correctAnswer === item.key || isFound.correctAnswer.includes(item.key)
       ? false
@@ -194,7 +232,6 @@ const isIncorrect = (item: Option) => {
   background-color: #fff;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
   position: relative;
-
   .collect {
     position: absolute;
     top: 0;

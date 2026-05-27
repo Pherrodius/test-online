@@ -1,12 +1,10 @@
 <template>
   <div class="bank">
-    <div class="title">相关题库推荐</div>
+    <div class="title" v-if="props.title">相关题库推荐</div>
     <div class="value" @click="router.push(`/bank/${bank?.id}`)">
-      <el-image
-        :src="bankIcon"
-        fit="contain"
-        style="width: 32px; height: 32px; margin-right: 8px"
-      />
+      <div class="bank-icon">
+        <el-image :src="bankIcon" fit="contain" />
+      </div>
       <div class="text">
         <div class="upper">
           {{ bank?.name || '' }}
@@ -34,8 +32,9 @@ import type { Bank } from '@/types/prisma'
 import { dayjs } from 'element-plus'
 import { useRouter } from 'vue-router'
 const router = useRouter()
-defineProps<{
+const props = defineProps<{
   bank: Bank | null
+  title: boolean
 }>()
 const bankIcon = new URL('@/assets/icon/bank.png', import.meta.url).href
 </script>
@@ -43,7 +42,6 @@ const bankIcon = new URL('@/assets/icon/bank.png', import.meta.url).href
 .bank {
   padding: 24px;
   background-color: #fff;
-  margin-top: 16px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -63,6 +61,7 @@ const bankIcon = new URL('@/assets/icon/bank.png', import.meta.url).href
     width: 100%;
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     gap: 8px;
     cursor: pointer;
 
@@ -78,11 +77,26 @@ const bankIcon = new URL('@/assets/icon/bank.png', import.meta.url).href
       }
     }
 
+    .bank-icon {
+      width: 32px;
+      height: 32px;
+      margin-right: 8px;
+      flex: 0 0 32px;
+    }
+
+    .text {
+      min-width: 0;
+      flex: 1;
+    }
+
     .upper {
       font-size: 16px;
       font-weight: bolder;
       line-height: 24px;
       color: #333;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .lower {
@@ -95,11 +109,14 @@ const bankIcon = new URL('@/assets/icon/bank.png', import.meta.url).href
       justify-content: flex-start;
       align-items: center;
       gap: 16px;
-
       .front {
         display: flex;
         align-items: center;
         gap: 4px;
+        white-space: nowrap;
+        max-width: 60%;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .back {

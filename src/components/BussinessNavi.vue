@@ -41,17 +41,43 @@
             >注册</el-button
           >
         </div>
-        <div class="login-box" v-else>
-          <el-avatar :src="avatar" size="small" />
-          <span class="user-name">{{ userInfo!.name }}</span>
+        <div v-else>
+          <el-dropdown>
+            <div class="login-box">
+              <el-avatar :src="avatar" size="small" />
+              <span class="user-name">{{ userInfo!.name }}</span>
+            </div>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item
+                  v-for="item in dropdownItems"
+                  :key="item.path"
+                  @click="router.push(item.path)"
+                >
+                  <el-icon>
+                    <component :is="item.icon" />
+                  </el-icon>
+                  {{ item.name }}
+                </el-dropdown-item>
+                <el-dropdown-item @click="handleLogout">
+                  <el-icon>
+                    <SwitchButton />
+                  </el-icon>
+                  退出登录
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ElMessage } from 'element-plus'
+import { computed, markRaw, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { CircleClose, Collection, SwitchButton, User } from '@element-plus/icons-vue'
 const userInfo = localStorage.getItem('userInfo')
   ? JSON.parse(localStorage.getItem('userInfo')!)
   : null
@@ -84,6 +110,29 @@ const queryItem = ref({
   searchType: 'bank',
   input: '',
 })
+const dropdownItems = ref([
+  {
+    name: '个人中心',
+    path: '/user/profile',
+    icon: markRaw(User),
+  },
+  {
+    name: '我的题库',
+    path: '/user/banks',
+    icon: markRaw(Collection),
+  },
+  {
+    name: '全部错题',
+    path: '/user/mistakes',
+    icon: markRaw(CircleClose),
+  },
+])
+const handleLogout = () => {
+  localStorage.removeItem('userInfo')
+  localStorage.removeItem('token')
+  ElMessage.success('退出登录成功')
+  router.push('/auth/login')
+}
 </script>
 
 <style scoped lang="scss">

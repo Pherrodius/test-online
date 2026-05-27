@@ -35,7 +35,7 @@ request.interceptors.response.use(
     }
 
     if (response.data.code === 200) {
-      return response.data.data || response.data
+      return response.data.data
     }
 
     console.error(response.data.message || '请求失败')

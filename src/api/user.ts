@@ -1,10 +1,21 @@
+import type { TestHistory } from '@/types/prisma'
 import type { LoginByNameRequest, LoginByPhoneRequest, RegisterRequest } from '@/types/reqeust'
-import type { LoginResponse, RegisterResponse } from '@/types/response'
+import type { getOverviewResponse, LoginResponse, RegisterResponse } from '@/types/response'
 
 import { request } from '@/utils/request'
-export function loginRequest<T>(data: LoginByNameRequest | LoginByPhoneRequest) {
-  return request.post<T, LoginResponse>('/user/login', data)
+export function loginRequest(data: LoginByNameRequest | LoginByPhoneRequest) {
+  return request.post<unknown, LoginResponse>('/user/login', data)
 }
-export function registerRequest<T>(data: RegisterRequest) {
-  return request.post<T, RegisterResponse>('/user', data)
+export function registerRequest(data: RegisterRequest) {
+  return request.post<unknown, RegisterResponse>('/user', data)
+}
+export function getOverview() {
+  return request.get<unknown, getOverviewResponse>('/user/overview')
+}
+
+export function getTestHistory() {
+  return request.get<unknown, TestHistory[]>('/user/testHistory')
+}
+export function deleteTestHistory(id: number) {
+  return request.delete<unknown, TestHistory>(`/user/testHistory/${id}`)
 }

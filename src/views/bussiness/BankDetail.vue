@@ -33,13 +33,14 @@
           </p>
         </div>
         <div class="btn-box">
-          <el-button type="warning" size="large">
+          <el-button type="warning" size="large" @click="handleCollectBank">
             <el-icon style="font-size: 24px">
-              <Star />
+              <Check v-if="isCollected" />
+              <Star v-else />
             </el-icon>
-            <span>收藏</span>
+            <span>{{ isCollected ? '已收藏' : '收藏' }}</span>
           </el-button>
-          <el-button type="success" size="large">
+          <el-button type="success" size="large" @click="handleShare">
             <el-icon style="font-size: 24px">
               <Promotion />
             </el-icon>
@@ -55,7 +56,7 @@
             v-for="item in options"
             :key="item.path"
             @click="
-              router.push({
+              $router.push({
                 path: item.path,
                 query: item.query,
               })
@@ -94,54 +95,56 @@
         />
       </div>
     </div>
-  </div>
-  <el-dialog
-    v-model="dialogVisible"
-    title="提示"
-    width="30%"
-    :before-close="() => (dialogVisible = false)"
-  >
-    <template #header>
-      <div>科目选择</div>
-    </template>
-    <div
-      class="discipline"
-      v-for="item in bank?.disciplines || []"
-      :key="item.id"
-      @dblclick="((currentDiscipline = item), (dialogVisible = false))"
-      title="双击选择该科目"
+    <el-dialog
+      v-model="dialogVisible"
+      title="提示"
+      width="30%"
+      :before-close="() => (dialogVisible = false)"
     >
-      <div class="value">
-        <el-image
-          :src="bankIcon"
-          fit="contain"
-          style="width: 32px; height: 32px; margin-right: 8px"
-        />
-        <div class="text">
-          <div class="upper">
-            {{ item.name || '' }}
+      <template #header>
+        <div>科目选择</div>
+      </template>
+      <div
+        class="discipline"
+        v-for="item in bank?.disciplines || []"
+        :key="item.id"
+        @dblclick="((currentDiscipline = item), (dialogVisible = false))"
+        title="双击选择该科目"
+      >
+        <div class="value">
+          <el-image
+            :src="bankIcon"
+            fit="contain"
+            style="width: 32px; height: 32px; margin-right: 8px"
+          />
+          <div class="text">
+            <div class="upper">
+              {{ item.name || '' }}
+            </div>
           </div>
         </div>
+        <div class="count">
+          共{{
+            bank?.questions.filter((question) => question.disciplineId === item.id).length || 0
+          }}题
+        </div>
       </div>
-      <div class="count">
-        共{{
-          bank?.questions.filter((question) => question.disciplineId === item.id).length || 0
-        }}题
-      </div>
-    </div>
-  </el-dialog>
+    </el-dialog>
+  </div>
 </template>
 <script setup lang="ts">
 import { ref, reactive, computed, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { deleteAllCollections, getBank, getCollectionList } from '@/api/question'
+import { useRoute } from 'vue-router'
+import { deleteAllCollections, getCollectionList } from '@/api/question'
+import { getBank, collectBank, uncollectBank, isBankCollected } from '@/api/bank'
 import type { GetBankResponse } from '@/types/response'
 import { CollectionType, type Discipline } from '@/types/prisma'
 import QuestionList from '@/components/QuestionList.vue'
 import dayjs from 'dayjs'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { TestModel } from '@/stores/testpaper'
+
 const route = useRoute()
-const router = useRouter()
 const bank = ref<GetBankResponse | null>(null)
 const currentDiscipline = ref<Discipline>()
 const mistakes = ref<number>(0)
@@ -153,6 +156,7 @@ const options = reactive({
     label: '顺序练习',
     path: '/test',
     query: {
+      model: TestModel.Practice,
       random: 0,
       bankId: route.params.id,
       disciplineId: computed(() => currentDiscipline.value?.id),
@@ -164,9 +168,10 @@ const options = reactive({
   },
   random: {
     icon: new URL('@/assets/icon/random.png', import.meta.url).href,
-    label: '随机练习',
+    label: '随机测试',
     path: '/test',
     query: {
+      model: TestModel.Test,
       random: 1,
       bankId: route.params.id,
       disciplineId: computed(() => currentDiscipline.value?.id),
@@ -193,6 +198,71 @@ const options = reactive({
   },
 })
 const dialogVisible = ref(false)
+const isCollected = ref(false)
+const handleCollectBank = () => {
+  if (!bank.value) {
+    ElMessage.error('题库信息加载中，请稍后再试')
+    return
+  }
+  if (isCollected.value) {
+    ElMessageBox.confirm('确定取消收藏吗？', '您已收藏该题库', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }).then(() => {
+      uncollectBank(Number(route.params.id))
+        .then(() => {
+          isCollected.value = false
+          ElMessage.success('已取消收藏')
+        })
+        .catch((error) => {
+          console.error('取消收藏失败', error)
+          ElMessage.error('取消收藏失败')
+        })
+    })
+  } else {
+    collectBank(Number(route.params.id))
+      .then(() => {
+        isCollected.value = true
+        ElMessage.success('收藏成功')
+      })
+      .catch((error) => {
+        console.error('收藏失败', error)
+        ElMessage.error('收藏失败')
+      })
+  }
+}
+
+const handleShare = async () => {
+  if (!bank.value) {
+    ElMessage.warning('题库信息加载中，请稍后再试')
+    return
+  }
+
+  const url = window.location.href
+  const title = bank.value.name
+
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title,
+        text: `分享题库：${title}`,
+        url,
+      })
+      return
+    } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        return
+      }
+    }
+  }
+  try {
+    await navigator.clipboard.writeText(url)
+    ElMessage.success('题库链接已复制')
+  } catch {
+    ElMessage.error('分享失败，请手动复制当前页面链接')
+  }
+}
 watch(
   () => currentDiscipline.value,
   () => {
@@ -223,6 +293,10 @@ const render = async () => {
   await getBank(Number(route.params.id))
     .then((data) => {
       bank.value = data
+      if (!data) {
+        currentDiscipline.value = undefined
+        return
+      }
       if (localStorage.getItem('currentDiscipline')) {
         const savedDiscipline = JSON.parse(localStorage.getItem('currentDiscipline')!)
         if (data.disciplines.some((discipline) => discipline.id === savedDiscipline.id)) {
@@ -248,6 +322,14 @@ const render = async () => {
       .catch((error) => {
         console.error('获取收藏信息失败', error)
         ElMessage.error('获取收藏信息失败')
+      })
+    await isBankCollected(Number(route.params.id))
+      .then((data) => {
+        isCollected.value = data
+      })
+      .catch((error) => {
+        console.error('获取收藏状态失败', error)
+        ElMessage.error('获取收藏状态失败')
       })
   }
 }

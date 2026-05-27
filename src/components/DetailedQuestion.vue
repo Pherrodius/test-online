@@ -71,9 +71,7 @@
           ''
         }}</span>
       </div>
-      <div class="explanation">
-        <span class="title">答案解析：</span>{{ question?.explanation || '该题目暂无解析内容~' }}
-      </div>
+      <div class="explanation"><span class="title">答案解析：</span>该题目暂无解析内容~</div>
     </div>
     <div class="log">
       <div>
@@ -181,6 +179,7 @@ onMounted(() => {
 .main-section {
   background-color: #fff;
   padding: 24px;
+  margin-bottom: 16px;
 }
 
 .question {

@@ -1,9 +1,9 @@
 <template>
-  <div class="question-detail" :key="route.fullPath">
+  <div class="question-detail" :key="$route.fullPath">
     <div class="container">
       <DetailedQuestion v-if="question" :question="question" />
       <div v-else>加载中...</div>
-      <BankRecord v-if="question" :bank="question.bank" />
+      <BankRecord v-if="question" :bank="question.bank" :title="true" />
       <div v-else>加载中...</div>
       <div class="relatedQuestions">
         <div class="title">相关题目推荐</div>

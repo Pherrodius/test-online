@@ -16,6 +16,17 @@ export enum CollectionType {
   Note = 'Note',
 }
 
+// Dates are serialized as ISO strings in HTTP responses.
+export type DateTimeString = string
+
+export interface User {
+  id: number
+  name: string
+  phone: string
+  password: string
+  createdTime: DateTimeString
+}
+
 export interface Option {
   id: number
   key: Answer
@@ -29,6 +40,7 @@ export interface SingleAnswer {
 }
 
 export interface MultiChoiceAnswer {
+  id: number
   questionId: number
   answerKey: Answer
 }
@@ -44,20 +56,27 @@ export interface Question {
   content: string
   bankId: number
   disciplineId: number
-  createdTime: Date
+  createdTime: DateTimeString
   options?: Option[]
-  singleAnswer?: SingleAnswer
+  singleAnswer?: SingleAnswer | null
   multiChoiceAnswer?: MultiChoiceAnswer[]
-  trueFalseAnswer?: TrueFalseAnswer
+  trueFalseAnswer?: TrueFalseAnswer | null
 }
 
 export interface Bank {
   id: number
   name: string
   description: string
+  categoryId: number | null
   creatorId: number
-  createdTime: Date
+  createdTime: DateTimeString
   disciplines?: Discipline[]
+  bankCollections?: BankCollection[]
+}
+
+export interface BankCategory {
+  id: number
+  name: string
 }
 
 export interface Discipline {
@@ -69,12 +88,42 @@ export interface Collection {
   id: number
   userId: number
   questionId: number
-  createdTime: Date
+  updatedTime: DateTimeString
   type: CollectionType
 }
+
+export interface BankCollection {
+  id: number
+  userId: number
+  bankId: number
+  updatedTime: DateTimeString
+  bank?: Bank
+}
+
 export interface Resolution {
   id: number
+  userId: number
   questionId: number
-  resolution: string
-  updatedTime: Date
+  yourAnswer: string
+  correctAnswer: string
+  isCorrect: boolean
+  updatedTime: DateTimeString
+  user?: User
+  question?: Question
+}
+export interface Category {
+  id: number
+  name: string
+}
+export interface TestHistory {
+  id: number
+  userId: number
+  bankId: number
+  disciplineId: number
+  accuracy: number
+  takenTime: number
+  createdTime: DateTimeString
+  bank?: Bank
+  discipline?: Discipline
+  length: number
 }

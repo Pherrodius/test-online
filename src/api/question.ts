@@ -4,74 +4,75 @@ import type {
   CreateQuestionRequest,
   CheckAnswerRequest,
   CreateCollectionRequest,
-  GetBankRequest,
-  CreateBankRequest,
   GetCollectionRequest,
   DeleteAllCollectionsRequest,
-  getResolutionsRequest,
+  SubmitTestRequest,
+  GetResolutionsRequest,
+  deleteResolutionRequest,
 } from '@/types/reqeust'
 import type {
   GetQuestionListResponse,
   CreateQuestionResponse,
   CreateManyQuestionsResponse,
   CheckAnswerResponse,
-  CheckManyAnswersResponse,
+  SubmitTestResponse,
   CreateCollectionResponse,
   GetCollectionListResponse,
+  GetDetailedCollectionListResponse,
   DeleteCollectionResponse,
-  GetBanksResponse,
-  CreateBankResponse,
-  GetBankResponse,
   GetQuestionDetailResponse,
   isCollectionExistResponse,
 } from '@/types/response'
 import type { Resolution } from '@/types/prisma'
-export function getQuestionList<T>(params: GetQuestionRequest) {
-  return request.get<T, GetQuestionListResponse[]>('/question', { params })
+export function getQuestionList(params: GetQuestionRequest) {
+  return request.get<unknown, GetQuestionListResponse[]>('/question', { params })
 }
-export function getQuestionDetail<T>(id: number) {
-  return request.get<T, GetQuestionDetailResponse>(`/question/${id}`)
+export function getQuestionDetail(id: number) {
+  return request.get<unknown, GetQuestionDetailResponse | null>(`/question/${id}`)
 }
-export function createQuestion<T>(data: CreateQuestionRequest) {
-  return request.post<T, CreateQuestionResponse>('/question', data)
+export function createQuestion(data: CreateQuestionRequest) {
+  return request.post<unknown, CreateQuestionResponse>('/question', data)
 }
-export function createManyQuestions<T>(data: CreateQuestionRequest[]) {
-  return request.post<T, CreateManyQuestionsResponse>('/question', data)
+export function createManyQuestions(data: CreateQuestionRequest[]) {
+  return request.post<unknown, CreateManyQuestionsResponse>('/question', data)
 }
-export function checkAnswer<T>(data: CheckAnswerRequest) {
-  return request.post<T, CheckAnswerResponse>('/question/check', data)
+export function checkAnswer(data: CheckAnswerRequest) {
+  return request.post<unknown, CheckAnswerResponse>('/question/check', data)
 }
-export function checkManyAnswers<T>(data: CheckAnswerRequest[]) {
-  return request.post<T, CheckManyAnswersResponse>('/question/check', data)
+export function submitTest(data: SubmitTestRequest) {
+  return request.post<unknown, SubmitTestResponse>('/question/submit', data)
 }
-export function isCollectionExist<T>(questionId: number) {
-  return request.get<T, isCollectionExistResponse>(`/question/collection/exist`, {
+export function isCollectionExist(questionId: number) {
+  return request.get<unknown, isCollectionExistResponse>(`/question/collection/exist`, {
     params: { questionId },
   })
 }
-export function createCollection<T>(data: CreateCollectionRequest) {
-  return request.post<T, CreateCollectionResponse>('/question/collection', data)
+export function createCollection(data: CreateCollectionRequest) {
+  return request.post<unknown, CreateCollectionResponse>('/question/collection', data)
 }
-export function getCollectionList<T>(params: GetCollectionRequest) {
-  return request.get<T, GetCollectionListResponse>(`/question/collection`, { params })
+export function getCollectionList(
+  params: GetCollectionRequest & { detailed: true },
+): Promise<GetDetailedCollectionListResponse>
+
+export function getCollectionList(params: GetCollectionRequest): Promise<GetCollectionListResponse>
+
+export function getCollectionList(params: GetCollectionRequest) {
+  return request.get<unknown, GetCollectionListResponse>(`/question/collection`, { params })
 }
-export function deleteCollection<T>(id: number) {
-  return request.delete<T, DeleteCollectionResponse>(`/question/collection/${id}`)
+export function deleteCollection(id: number) {
+  return request.delete<unknown, DeleteCollectionResponse>(`/question/collection/${id}`)
 }
-export function deleteAllCollections<T>(params: DeleteAllCollectionsRequest) {
-  return request.delete<T, void>(`/question/collection`, { params })
+export function deleteAllCollections(params: DeleteAllCollectionsRequest) {
+  return request.delete<unknown, DeleteCollectionResponse>(`/question/collection`, { params })
 }
-export function getResolutions<T>(params: getResolutionsRequest) {
-  return request.get<T, Resolution[]>(`/question/resolution`, {
+export function getResolutions(params: GetResolutionsRequest) {
+  return request.get<unknown, Resolution[]>(`/question/resolution`, {
     params,
   })
 }
-export function getBankList<T>(params: GetBankRequest) {
-  return request.get<T, GetBanksResponse>('/bank', { params })
+export function deleteResolution(id: number) {
+  return request.delete<unknown, Resolution>(`/question/resolution/${id}`)
 }
-export function getBank<T>(id: number) {
-  return request.get<T, GetBankResponse>(`/bank/${id}`)
-}
-export function createBank<T>(data: CreateBankRequest) {
-  return request.post<T, CreateBankResponse>('/bank/create', data)
+export function batchDeleteResolution(params: deleteResolutionRequest) {
+  return request.delete<unknown, Resolution>(`/question/resolution`, { params })
 }
