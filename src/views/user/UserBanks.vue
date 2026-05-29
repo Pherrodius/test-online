@@ -13,13 +13,21 @@
         <article class="bank-card">
           <div class="bank-top">
             <h3>{{ item.name }}</h3>
-            <el-tag :type="item.type">{{ item.status }}</el-tag>
+            <div class="bank-tags">
+              <el-tag type="success" v-if="item.created">已创建</el-tag>
+              <el-tag type="warning" v-if="item.collected">已收藏</el-tag>
+              <el-tag :type="typeMap(item.progress / item.count)"
+                >{{ statusMap(item.progress / item.count) }}
+              </el-tag>
+            </div>
           </div>
-          <p>{{ item.desc }}</p>
+          <p>{{ item.description }}</p>
           <el-progress :percentage="item.progress" />
           <div class="bank-foot">
             <span>{{ item.count }} 道题</span>
-            <el-button text type="primary">进入题库</el-button>
+            <el-button text type="primary" @click="$router.push(`/bank/${item.id}`)"
+              >进入题库</el-button
+            >
           </div>
         </article>
       </el-col>
@@ -28,34 +36,23 @@
 </template>
 
 <script setup lang="ts">
+import { getMyBanks } from '@/api/user'
 import { Plus } from '@element-plus/icons-vue'
-
-const banks = [
-  {
-    name: 'Vue 进阶题库',
-    desc: '组件、路由、状态管理与性能优化专题。',
-    count: 238,
-    progress: 62,
-    status: '学习中',
-    type: 'success',
-  },
-  {
-    name: '计算机基础',
-    desc: '网络、操作系统、数据结构综合练习。',
-    count: 520,
-    progress: 35,
-    status: '已导入',
-    type: 'info',
-  },
-  {
-    name: 'JavaScript 高频题',
-    desc: '覆盖闭包、异步、原型链和浏览器机制。',
-    count: 186,
-    progress: 78,
-    status: '学习中',
-    type: 'success',
-  },
-]
+import { onMounted, ref } from 'vue'
+import type { GetMyBanksRes } from '@/types/response'
+const banks = ref<GetMyBanksRes[]>()
+const typeMap = (rate: number) => {
+  if (rate >= 80) return 'success'
+  if (rate >= 50) return 'warning'
+  return 'danger'
+}
+const statusMap = (rate: number) => {
+  if (rate >= 100) return '完成了！'
+  return '练习中'
+}
+onMounted(async () => {
+  banks.value = await getMyBanks()
+})
 </script>
 
 <style scoped lang="scss">
@@ -112,5 +109,9 @@ const banks = [
 .bank-foot {
   margin-top: 12px;
   color: #98a2b3;
+}
+.bank-tags {
+  display: flex;
+  gap: 8px;
 }
 </style>

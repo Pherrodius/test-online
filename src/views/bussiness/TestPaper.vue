@@ -24,7 +24,7 @@
               ? testInfo?.collectionType === CollectionType.Mistake
                 ? '错题练习'
                 : '收藏练习'
-              : testInfo?.random === 1
+              : practiceConfig?.random
                 ? '随机练习'
                 : '顺序练习'
         }}</el-breadcrumb-item>
@@ -66,10 +66,12 @@ import { onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { getCollectionList, getQuestionList, getResolutions } from '@/api/question'
 import { TestModel, useTestPaperStore } from '@/stores/testpaper'
+import { useConfigStore } from '@/stores/config'
 import { storeToRefs } from 'pinia'
 import { dayjs } from 'element-plus'
-import type { GetQuestionRequest } from '@/types/reqeust'
 const testPaperStore = useTestPaperStore()
+const configStore = useConfigStore()
+const { practiceConfig, testConfig } = storeToRefs(configStore)
 const route = useRoute()
 const {
   takenTime,
@@ -88,51 +90,44 @@ onMounted(async () => {
   testInfo.value = {
     bankId: Number(route.query.bankId as string),
     disciplineId: Number(route.query.disciplineId as string) || undefined,
-    random: Number(route.query.random as string) || 0,
     isDay: Number(route.query.isDay as string) || 0,
     collectionType: route.query.collectionType as CollectionType,
     questionType: route.query.questionType as string,
     model: route.query.model as TestModel,
   }
-  const payload: GetQuestionRequest = {
-    bankId: testInfo.value.bankId,
-    disciplineId: testInfo.value.disciplineId,
-  }
-  if (!payload.disciplineId) {
-    delete payload.disciplineId
-  }
-  // 获取题目
-  if (testInfo.value.collectionType) {
-    await getCollectionList({
+
+  const payload = Object.fromEntries(
+    Object.entries({
       bankId: testInfo.value.bankId,
       disciplineId: testInfo.value.disciplineId,
       type: testInfo.value.collectionType as CollectionType,
       isDay: testInfo.value.isDay !== 0 ? 1 : 0,
       questionType: testInfo.value.questionType as QuestionType,
-    }).then((res) => {
+      number: testInfo.value.model === TestModel.Test ? testConfig.value?.amount : null,
+    }).filter((value) => Boolean(value[1])),
+  )
+  // 获取题目
+  if (testInfo.value.collectionType) {
+    await getCollectionList(payload).then((res) => {
       const data = res.records
-      questions.value = testInfo.value?.random == 1 ? data.sort(() => Math.random() - 0.5) : data
+      questions.value = practiceConfig.value?.random ? data.sort(() => Math.random() - 0.5) : data
     })
   } else {
     await getQuestionList(payload).then((res) => {
-      questions.value = testInfo.value?.random == 1 ? res.sort(() => Math.random() - 0.5) : res
+      questions.value =
+        practiceConfig.value?.random && testInfo.value?.model === TestModel.Practice
+          ? res.sort(() => Math.random() - 0.5)
+          : res
     })
   }
   currentQuestion.value =
     singleQuestions.value[0] || multiQuestions.value[0] || trueFalseQuestions.value[0] || null
-  // 获取答题记录
-  if (testInfo.value.model === TestModel.Test) {
-    const storedAnswerSheet = localStorage.getItem('answerSheet')
-    if (storedAnswerSheet) {
-      const historyAnswerSheet = JSON.parse(storedAnswerSheet)
-      if (
-        JSON.stringify(testInfo.value, null, 2) ===
-        JSON.stringify(historyAnswerSheet.testInfo, null, 2)
-      ) {
-        answerSheet.value = historyAnswerSheet.answerSheet
-      }
-    }
-  } else if (testInfo.value.model === TestModel.Practice && !testInfo.value.collectionType) {
+  // 获取练习记录
+  if (
+    testInfo.value.model === TestModel.Practice &&
+    practiceConfig.value?.random === false &&
+    !testInfo.value.collectionType
+  ) {
     practicedQuestions.value = await getResolutions(payload)
     if (practicedQuestions.value.length > 0) {
       currentQuestion.value =

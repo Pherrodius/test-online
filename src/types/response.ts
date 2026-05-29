@@ -14,6 +14,7 @@ import type {
   TrueFalseAnswer,
   TestHistory,
   BankCollection,
+  User,
 } from '@/types/prisma'
 
 export interface CreateQuestionResponse {
@@ -162,4 +163,38 @@ export interface getOverviewResponse {
   noteCount: number
   mistakeCount: number
   collectedBank: (BankCollection & { bank: Bank })[]
+}
+export interface GetGroupedCollectionsRes extends Bank {
+  questions: Question[]
+  creator: User
+}
+export interface GetMyBanksRes extends Bank {
+  count: number
+  progress: number
+  collected: boolean
+  created: boolean
+}
+export interface SearchQuestionsRes {
+  records: Question[]
+  total: number
+  page: number
+  pageSize: number
+}
+export interface SearchBanksRes {
+  records: Bank[]
+  total: number
+  page: number
+  pageSize: number
+}
+export interface SearchDocumentsRes {
+  records: Document[]
+  total: number
+  page: number
+  pageSize: number
+}
+export interface SearchUsersRes {
+  records: User[]
+  total: number
+  page: number
+  pageSize: number
 }

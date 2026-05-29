@@ -8,9 +8,12 @@ import type {
   GetResolutionsResponse,
 } from '@/types/response'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { defineStore } from 'pinia'
+import { defineStore, storeToRefs } from 'pinia'
 import { computed, ref, watch } from 'vue'
 import { checkAnswer, submitTest } from '@/api/question'
+import { useConfigStore } from '@/stores/config'
+const configStore = useConfigStore()
+const { practiceConfig } = storeToRefs(configStore)
 export enum TestModel {
   Practice = 'Practice',
   Test = 'Test',
@@ -19,7 +22,6 @@ export interface TestInfo {
   bankId: number
   disciplineId?: number
   questionType?: string
-  random?: number
   isDay?: number
   collectionType?: CollectionType
   model: TestModel
@@ -33,13 +35,6 @@ export const useTestPaperStore = defineStore('testpaper', () => {
   const result = ref<Resolution[]>([])
   const dialogVisible = ref(false)
   const takenTime = ref(0)
-  const timer = setInterval(() => {
-    if (testResult.value) {
-      clearInterval(timer)
-    } else {
-      takenTime.value += 1
-    }
-  }, 1000)
   const testInfo = ref<TestInfo | null>(null)
   watch(
     () => answerSheet.value,
@@ -53,6 +48,23 @@ export const useTestPaperStore = defineStore('testpaper', () => {
       )
     },
     { deep: true },
+  )
+  const timer = ref<number | null>(null)
+  watch(
+    () => testInfo.value?.model,
+    () => {
+      if (testInfo.value?.model === TestModel.Test)
+        timer.value =
+          testInfo.value?.model === TestModel.Test
+            ? setInterval(() => {
+                if (testResult.value) {
+                  clearInterval(timer.value as number)
+                } else {
+                  takenTime.value += 1
+                }
+              }, 1000)
+            : null
+    },
   )
   const singleQuestions = computed(() =>
     questions.value.filter((item) => item.type === QuestionType.SingleChoice),
@@ -71,6 +83,9 @@ export const useTestPaperStore = defineStore('testpaper', () => {
     result.value = []
     testInfo.value = null
     takenTime.value = 0
+    if (typeof timer.value === 'number') {
+      clearInterval(timer.value)
+    }
   }
   const pushAnswer = (item: Option) => {
     if (
@@ -114,6 +129,12 @@ export const useTestPaperStore = defineStore('testpaper', () => {
         questionId: currentQuestion.value?.id || 0,
         answer: currentQuestion.value?.type === QuestionType.MultiChoice ? [item.key] : item.key,
       })
+    }
+    if (
+      practiceConfig.value.autoCheck &&
+      currentQuestion.value?.type !== QuestionType.MultiChoice
+    ) {
+      checkPracticeAnswer()
     }
     console.log(answerSheet.value)
   }

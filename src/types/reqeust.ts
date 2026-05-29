@@ -1,4 +1,4 @@
-import type { QuestionType, Answer, CollectionType } from '@/types/prisma'
+import type { QuestionType, Answer, CollectionType, MimeType } from '@/types/prisma'
 export interface CreateQuestionRequest {
   type: QuestionType
   content: string
@@ -31,6 +31,7 @@ export enum TestType {
   RandomPractice = 'RandomPractice',
   Review = 'Review',
 }
+
 export interface SubmitTestRequest {
   answerSheet: CheckAnswerRequest[]
   bankId: number
@@ -64,6 +65,7 @@ export interface DeleteAllCollectionsRequest {
   type?: CollectionType
   bankId?: number
   disciplineId?: number
+  questionId?: number
 }
 
 export interface CreateBankRequest {
@@ -106,4 +108,27 @@ export interface deleteResolutionRequest {
   id?: number
   bankId?: number
   disciplineId?: number
+}
+export interface SearchQuestionsReq {
+  keyword?: string
+  type?: QuestionType
+  time?: string
+  riskLevel?: number
+}
+export interface SearchBanksReq {
+  keyword?: string
+  questionCount?: number
+  time?: string
+  categoryId?: number
+}
+export interface SearchDocumentsReq {
+  keyword?: string
+  mimeType?: MimeType
+  size?: number
+  time?: string
+}
+export interface SearchUsersReq {
+  keyword?: string
+  bankCount?: number
+  time?: string
 }

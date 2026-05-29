@@ -2,8 +2,8 @@
   <div class="user-page">
     <div class="page-header">
       <div>
-        <h2>斩题记录</h2>
-        <p>回顾每次练习结果，追踪正确答案和错误原因。</p>
+        <h2>测试记录</h2>
+        <p>回顾每次测试结果，追踪正确率和用时变化。</p>
       </div>
       <el-date-picker
         v-model="dateRange"
@@ -15,48 +15,35 @@
     </div>
 
     <section class="panel">
-      <el-table :data="filteredResolutions" style="width: 100%">
-        <el-table-column prop="updatedTime" label="日期" width="220">
+      <el-table :data="filteredTestHistory" style="width: 100%">
+        <el-table-column prop="createdTime" label="日期" width="220">
           <template #default="{ row }">
             {{ dayjs(row.createdTime).format('YYYY-MM-DD HH:mm') }}
           </template>
         </el-table-column>
-        <el-table-column label="题目" class="question-content">
-          <template #default="{ row }">
-            {{ row.question.content }}
-          </template>
-        </el-table-column>
         <el-table-column label="题库" width="150">
           <template #default="{ row }">
-            {{ row.question.bank.name }}
+            {{ row.bank.name }}
           </template>
         </el-table-column>
         <el-table-column label="学科" width="150">
           <template #default="{ row }">
-            {{ row.question.discipline.name }}
+            {{ row.discipline.name }}
           </template>
         </el-table-column>
-        <el-table-column label="正误" width="120">
+        <el-table-column prop="length" label="题量" width="120" />
+        <el-table-column prop="takenTime" label="用时" width="180">
           <template #default="{ row }">
-            {{ row.isCorrect ? '正确' : '错误' }}
+            {{ dayjs(row.takenTime).format('mm:ss') }}
           </template>
         </el-table-column>
-        <el-table-column prop="takenTime" label="正确答案" width="120">
+        <el-table-column label="正确率" min-width="150">
           <template #default="{ row }">
-            {{
-              Array.isArray(JSON.parse(row.correctAnswer))
-                ? JSON.parse(row.correctAnswer).join(', ')
-                : JSON.parse(row.correctAnswer)
-            }}
-          </template>
-        </el-table-column>
-        <el-table-column label="我的答案" width="120">
-          <template #default="{ row }">
-            {{
-              Array.isArray(JSON.parse(row.yourAnswer))
-                ? JSON.parse(row.yourAnswer).join(', ')
-                : JSON.parse(row.yourAnswer)
-            }}
+            <el-progress
+              :percentage="Math.round(row.accuracy * 100)"
+              :stroke-width="8"
+              :color="row.accuracy >= 0.85 ? 'green' : row.accuracy >= 0.6 ? 'yellow' : 'red'"
+            />
           </template>
         </el-table-column>
         <el-table-column label="删除记录" width="80">
@@ -74,37 +61,38 @@
 </template>
 
 <script setup lang="ts">
-import type { Resolution } from '@/types/prisma'
+import { getTestHistory } from '@/api/user'
+import type { TestHistory } from '@/types/prisma'
 import { dayjs, ElMessage, ElMessageBox } from 'element-plus'
+import { deleteTestHistory } from '@/api/user'
 import { computed, onMounted, ref } from 'vue'
-import { deleteResolution, getResolutions } from '@/api/question'
-const resolutions = ref<Resolution[]>([])
+const testHistory = ref<TestHistory[]>([])
 const dateRange = ref<[Date, Date] | null>(null)
 
-const filteredResolutions = computed(() => {
+const filteredTestHistory = computed(() => {
   if (!dateRange.value) {
-    return resolutions.value
+    return testHistory.value
   }
 
   const [startDate, endDate] = dateRange.value
   const startTime = dayjs(startDate).startOf('day').valueOf()
   const endTime = dayjs(endDate).endOf('day').valueOf()
 
-  return resolutions.value.filter((item) => {
-    const updatedTime = dayjs(item.updatedTime).valueOf()
-    return updatedTime >= startTime && updatedTime <= endTime
+  return testHistory.value.filter((item) => {
+    const createdTime = dayjs(item.createdTime).valueOf()
+    return createdTime >= startTime && createdTime <= endTime
   })
 })
 
 const handleDelete = (id: number) => {
-  ElMessageBox.confirm('删除做题记录可能导致部分数据异常，确定继续吗？', '确定删除吗?', {
+  ElMessageBox.confirm('确定删除吗?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning',
   })
     .then(() => {
       try {
-        deleteResolution(id)
+        deleteTestHistory(id)
       } catch (e) {
         console.log(e)
         ElMessage.error('删除失败')
@@ -112,11 +100,11 @@ const handleDelete = (id: number) => {
     })
     .then(() => {
       ElMessage.success('删除成功')
-      resolutions.value = resolutions.value.filter((item) => item.id !== id)
+      testHistory.value = testHistory.value.filter((item) => item.id !== id)
     })
 }
 onMounted(async () => {
-  resolutions.value = await getResolutions({ detailed: true })
+  testHistory.value = await getTestHistory()
 })
 </script>
 
@@ -160,12 +148,5 @@ onMounted(async () => {
       color: #fff;
     }
   }
-}
-.question-content {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
 }
 </style>

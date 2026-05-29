@@ -1,3 +1,4 @@
+import { SearchType } from '@/types/prisma'
 import { ElMessage } from 'element-plus'
 import { createRouter, createWebHistory } from 'vue-router'
 const homeRoutes = [
@@ -107,12 +108,8 @@ const userRoutes = [
         component: () => import('@/views/user/UserProfile.vue'),
       },
       {
-        path: 'mistakes',
-        component: () => import('@/views/user/UserMistakes.vue'),
-      },
-      {
-        path: 'notes',
-        component: () => import('@/views/user/UserNotes.vue'),
+        path: 'collections/:type',
+        component: () => import('@/views/user/UserCollections.vue'),
       },
       {
         path: 'testHistory',
@@ -137,6 +134,54 @@ const userRoutes = [
     ],
   },
 ]
+const searchRoutes = [
+  {
+    path: '/search',
+    component: () => import('@/views/search/SearchLayout.vue'),
+    meta: {
+      home: false,
+      auth: false,
+    },
+    children: [
+      {
+        path: 'question',
+        component: () => import('@/views/search/SearchQuestion.vue'),
+        meta: {
+          home: false,
+          auth: false,
+          type: SearchType.Question,
+        },
+      },
+      {
+        path: 'bank',
+        component: () => import('@/views/search/SearchBank.vue'),
+        meta: {
+          home: false,
+          auth: false,
+          type: SearchType.Bank,
+        },
+      },
+      {
+        path: 'document',
+        component: () => import('@/views/search/SearchDocument.vue'),
+        meta: {
+          home: false,
+          auth: false,
+          type: SearchType.Document,
+        },
+      },
+      {
+        path: 'user',
+        component: () => import('@/views/search/SearchUser.vue'),
+        meta: {
+          home: false,
+          auth: false,
+          type: SearchType.User,
+        },
+      },
+    ],
+  },
+]
 const routes = [
   {
     path: '/',
@@ -146,7 +191,7 @@ const routes = [
 ]
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: routes,
+  routes: [...routes, ...searchRoutes],
 })
 router.beforeEach((to) => {
   if (!to.meta.auth) {

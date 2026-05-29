@@ -176,7 +176,7 @@ const options = reactive({
       bankId: route.params.id,
       disciplineId: computed(() => currentDiscipline.value?.id),
     },
-    value: `开始随机练习`,
+    value: `根据设置的题量进行考试`,
   },
   collect: {
     icon: new URL('@/assets/icon/collect.png', import.meta.url).href,
@@ -406,6 +406,7 @@ watch(
           }
 
           .label {
+            text-align: left;
             font-size: 16px;
             font-weight: bolder;
             line-height: 24px;

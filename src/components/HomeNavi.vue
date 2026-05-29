@@ -8,11 +8,11 @@
         <div class="search-container">
           <div class="search-tab">
             <div
-              v-for="tab in tabs"
+              v-for="tab in searchTabs"
               :key="tab.key"
               class="tab-item"
-              :class="{ active: activeTab === tab.key }"
-              @click="handleTabClick(tab.key)"
+              :class="{ active: currentType === tab.key }"
+              @click="setSearchType(tab.key)"
             >
               {{ tab.label }}
             </div>
@@ -25,6 +25,7 @@
               type="primary"
               style="height: 32px; width: 64px; border-radius: 0 4px 4px 0"
               color="#008CFF"
+              @click="handleSearch(currentInput)"
               >搜索</el-button
             >
           </div>
@@ -97,7 +98,7 @@
         active-index="$route.path"
         router
       >
-        <el-menu-item class="menu-item" v-for="tab in tabs" :key="tab.key" :index="tab.key">{{
+        <el-menu-item class="menu-item" v-for="tab in menutabs" :key="tab.key" :index="tab.key">{{
           tab.label
         }}</el-menu-item>
       </el-menu>
@@ -110,14 +111,18 @@ import { computed, markRaw, ref } from 'vue'
 import { CircleClose, Collection, Star, SwitchButton } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
+import { useSearchStore } from '@/stores/search'
+import { storeToRefs } from 'pinia'
+const searchStore = useSearchStore()
+const { currentType, currentInput, searchTabs } = storeToRefs(searchStore)
+const { handleSearch, setSearchType } = searchStore
 const router = useRouter()
 const avatar = new URL('@/assets/images/def-head.png', import.meta.url).href
 const userInfo = localStorage.getItem('userInfo')
   ? JSON.parse(localStorage.getItem('userInfo')!)
   : null
 const isLogin = computed(() => !!userInfo)
-const activeTab = ref('全部')
-const tabs = ref([
+const menutabs = ref([
   { key: '/home', label: '全部' },
   { key: '/bank/category', label: '题库' },
   { key: '/document', label: '文档' },
@@ -125,6 +130,7 @@ const tabs = ref([
   { key: '/collect', label: '收藏' },
   { key: '/error', label: '错题' },
 ])
+
 const dropdownItems = ref([
   {
     name: '我的题库',
@@ -151,9 +157,6 @@ const handleLogout = () => {
   localStorage.removeItem('token')
   ElMessage.success('退出登录成功')
   router.push('/auth/login')
-}
-const handleTabClick = (key: string) => {
-  activeTab.value = key
 }
 </script>
 

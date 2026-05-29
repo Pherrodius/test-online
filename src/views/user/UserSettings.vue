@@ -22,42 +22,40 @@
     </section>
 
     <section class="panel">
-      <h3>通知偏好</h3>
-      <div class="setting-row">
-        <div>
-          <strong>每日练习提醒</strong>
-          <p>每天固定时间提醒完成练习计划。</p>
-        </div>
-        <el-switch model-value />
-      </div>
-      <div class="setting-row">
-        <div>
-          <strong>错题复习提醒</strong>
-          <p>错题超过设定数量时自动提醒。</p>
-        </div>
-        <el-switch />
-      </div>
+      <h3>练习设置</h3>
+      <el-form label-width="120px" :model="practiceConfig">
+        <el-form-item label="自动检查答案">
+          <el-radio-group v-model="practiceConfig.autoCheck">
+            <el-radio-button :value="true">开启</el-radio-button>
+            <el-radio-button :value="false">关闭</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="出题顺序">
+          <el-radio-group v-model="practiceConfig.random">
+            <el-radio-button :value="false">顺序</el-radio-button>
+            <el-radio-button :value="true">随机</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+      </el-form>
     </section>
 
     <section class="panel">
-      <h3>练习设置</h3>
-      <el-form label-width="120px">
+      <h3>测试设置</h3>
+      <el-form label-width="120px" :model="testConfig">
         <el-form-item label="默认题量">
-          <el-input-number model-value="20" :min="5" :max="100" />
-        </el-form-item>
-        <el-form-item label="出题顺序">
-          <el-radio-group model-value="random">
-            <el-radio-button label="random">随机</el-radio-button>
-            <el-radio-button label="sequence">顺序</el-radio-button>
-          </el-radio-group>
+          <el-input-number v-model="testConfig.amount" :step="5" :min="5" :max="100" />
         </el-form-item>
       </el-form>
     </section>
   </div>
 </template>
 
-<script setup lang="ts"></script>
-
+<script setup lang="ts">
+import { useConfigStore } from '@/stores/config.ts'
+import { storeToRefs } from 'pinia'
+const useConfig = useConfigStore()
+const { practiceConfig, testConfig } = storeToRefs(useConfig)
+</script>
 <style scoped lang="scss">
 .user-page {
   padding: 24px;

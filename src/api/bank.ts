@@ -1,7 +1,7 @@
-import type { Bank, Category } from "@/types/prisma"
-import type { GetBankRequest, CreateBankRequest } from "@/types/reqeust"
-import type { GetBanksResponse, GetBankResponse, CreateBankResponse } from "@/types/response"
-import  { request } from "@/utils/request"
+import type { Bank, Category } from '@/types/prisma'
+import type { GetBankRequest, CreateBankRequest } from '@/types/reqeust'
+import type { GetBanksResponse, GetBankResponse, CreateBankResponse } from '@/types/response'
+import { request } from '@/utils/request'
 
 export function getBankList(params: GetBankRequest) {
   return request.get<unknown, GetBanksResponse>('/bank', { params })
@@ -19,7 +19,7 @@ export function uncollectBank(id: number) {
   return request.delete<unknown, Bank>(`/bank/collection/${id}`)
 }
 export function isBankCollected(id: number) {
-  return request.get<unknown, boolean >(`/bank/collection/${id}/exist`)
+  return request.get<unknown, boolean>(`/bank/collection/${id}/exist`)
 }
 export function getCollectedBanks() {
   return request.get<unknown, GetBanksResponse>('/bank/collection')

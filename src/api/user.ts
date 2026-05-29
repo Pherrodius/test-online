@@ -1,6 +1,12 @@
-import type { TestHistory } from '@/types/prisma'
+import type { CollectionType, TestHistory } from '@/types/prisma'
 import type { LoginByNameRequest, LoginByPhoneRequest, RegisterRequest } from '@/types/reqeust'
-import type { getOverviewResponse, LoginResponse, RegisterResponse } from '@/types/response'
+import type {
+  getOverviewResponse,
+  LoginResponse,
+  RegisterResponse,
+  GetGroupedCollectionsRes,
+  GetMyBanksRes,
+} from '@/types/response'
 
 import { request } from '@/utils/request'
 export function loginRequest(data: LoginByNameRequest | LoginByPhoneRequest) {
@@ -18,4 +24,10 @@ export function getTestHistory() {
 }
 export function deleteTestHistory(id: number) {
   return request.delete<unknown, TestHistory>(`/user/testHistory/${id}`)
+}
+export function getGroupedCollections(type: CollectionType) {
+  return request.get<unknown, GetGroupedCollectionsRes[]>('/user/collections', { params: { type } })
+}
+export function getMyBanks() {
+  return request.get<unknown, GetMyBanksRes[]>('/user/banks')
 }

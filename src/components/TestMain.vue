@@ -142,7 +142,6 @@ const reTest = () => {
   })
 }
 const testPaperStore = useTestPaperStore()
-
 const { currentQuestion, answerSheet, result } = storeToRefs(testPaperStore)
 const { pushAnswer, submitAnswerSheet, prevQuestion, nextQuestion, checkPracticeAnswer } =
   testPaperStore

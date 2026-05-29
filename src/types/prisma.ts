@@ -16,6 +16,12 @@ export enum CollectionType {
   Note = 'Note',
 }
 
+export enum SearchType {
+  Bank = 'Bank',
+  Question = 'Question',
+  Document = 'Document',
+  User = 'User',
+}
 // Dates are serialized as ISO strings in HTTP responses.
 export type DateTimeString = string
 
@@ -126,4 +132,21 @@ export interface TestHistory {
   bank?: Bank
   discipline?: Discipline
   length: number
+}
+export enum MimeType {
+  Pdf = 'application/pdf',
+  Word = 'application/msword',
+  WordOpenXml = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  Excel = 'application/vnd.ms-excel',
+  ExcelOpenXml = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  PowerPoint = 'application/vnd.ms-powerpoint',
+  PowerPointOpenXml = 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  Text = 'text/plain',
+  Csv = 'text/csv',
+  Markdown = 'text/markdown',
+  Json = 'application/json',
+  Jpeg = 'image/jpeg',
+  Png = 'image/png',
+  Gif = 'image/gif',
+  Webp = 'image/webp',
 }
