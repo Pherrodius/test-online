@@ -1,5 +1,10 @@
-import type { CollectionType, TestHistory } from '@/types/prisma'
-import type { LoginByNameRequest, LoginByPhoneRequest, RegisterRequest } from '@/types/reqeust'
+import type { CollectionType, TestHistory, Document, User } from '@/types/prisma'
+import type {
+  LoginByNameRequest,
+  LoginByPhoneRequest,
+  RegisterRequest,
+  UpdateUserRequest,
+} from '@/types/reqeust'
 import type {
   getOverviewResponse,
   LoginResponse,
@@ -30,4 +35,18 @@ export function getGroupedCollections(type: CollectionType) {
 }
 export function getMyBanks() {
   return request.get<unknown, GetMyBanksRes[]>('/user/banks')
+}
+export function getMyFiles() {
+  return request.get<unknown, Document[]>('/user/files')
+}
+export function getProfile() {
+  return request.get<unknown, User>('/user/profile')
+}
+export function updateProfile(data: UpdateUserRequest) {
+  return request.put<unknown, User>('/user/profile', data)
+}
+export function uploadAvatar(file: File) {
+  const formData = new FormData()
+  formData.append('avatar', file)
+  return request.post<unknown, User>('/user/avatar', formData)
 }

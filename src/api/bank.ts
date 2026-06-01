@@ -1,6 +1,11 @@
 import type { Bank, Category } from '@/types/prisma'
 import type { GetBankRequest, CreateBankRequest } from '@/types/reqeust'
-import type { GetBanksResponse, GetBankResponse, CreateBankResponse } from '@/types/response'
+import type {
+  GetBanksResponse,
+  GetBankResponse,
+  CreateBankResponse,
+  GetQuestionDetailResponse,
+} from '@/types/response'
 import { request } from '@/utils/request'
 
 export function getBankList(params: GetBankRequest) {
@@ -26,4 +31,9 @@ export function getCollectedBanks() {
 }
 export function getAllCategories() {
   return request.get<unknown, Category[]>('/bank/category')
+}
+export function getDetailedQuestions(bankId: number, disciplineId: number) {
+  return request.get<unknown, GetQuestionDetailResponse[]>(`/bank/edit/${bankId}`, {
+    params: { disciplineId },
+  })
 }

@@ -24,6 +24,20 @@ const homeRoutes = [
       home: true,
     },
   },
+  {
+    path: '/documents',
+    component: () => import('@/views/home/HomeDocuments.vue'),
+    meta: {
+      home: true,
+    },
+  },
+  {
+    path: '/questions',
+    component: () => import('@/views/home/HomeQuestions.vue'),
+    meta: {
+      home: true,
+    },
+  },
 ]
 const authRoutes = [
   {
@@ -80,6 +94,14 @@ const bussinessRoutes = [
   {
     path: '/test',
     component: () => import('@/views/bussiness/TestPaper.vue'),
+    meta: {
+      home: false,
+      auth: true,
+    },
+  },
+  {
+    path: '/bank/edit/:id',
+    component: () => import('@/views/bussiness/EditBank.vue'),
     meta: {
       home: false,
       auth: true,

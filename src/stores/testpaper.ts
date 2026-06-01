@@ -1,11 +1,12 @@
 import { QuestionType } from '@/types/prisma'
-import type { Resolution } from '@/types/prisma'
+import type { Question, Resolution } from '@/types/prisma'
 import type { CollectionType, Option } from '@/types/prisma'
 import type { CheckAnswerRequest } from '@/types/reqeust'
 import type {
   SubmitTestResponse,
   GetQuestionListResponse,
   GetResolutionsResponse,
+  GetQuestionDetailResponse,
 } from '@/types/response'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { defineStore, storeToRefs } from 'pinia'
@@ -27,8 +28,10 @@ export interface TestInfo {
   model: TestModel
 }
 export const useTestPaperStore = defineStore('testpaper', () => {
-  const currentQuestion = ref<(GetQuestionListResponse & { isCollected?: boolean }) | null>(null)
-  const questions = ref<GetQuestionListResponse[]>([])
+  const currentQuestion = ref<(Question & { isCollected?: boolean; options: Option[] }) | null>(
+    null,
+  )
+  const questions = ref<GetQuestionListResponse[] | GetQuestionDetailResponse[]>([])
   const practicedQuestions = ref<GetResolutionsResponse>()
   const answerSheet = ref<CheckAnswerRequest[]>([])
   const testResult = ref<SubmitTestResponse | null>(null)

@@ -16,11 +16,11 @@ export function searchQuestions(params: SearchQuestionsReq) {
   return request.get<unknown, SearchQuestionsRes>(`/search/question`, { params })
 }
 export function searchBanks(params: SearchBanksReq) {
-  return request.get<unknown, SearchBanksRes>(`/search/question`, { params })
+  return request.get<unknown, SearchBanksRes>(`/search/bank`, { params })
 }
 export function searchDocuments(params: SearchDocumentsReq) {
-  return request.get<unknown, SearchDocumentsRes>(`/search/question`, { params })
+  return request.get<unknown, SearchDocumentsRes>(`/search/document`, { params })
 }
 export function searchUsers(params: SearchUsersReq) {
-  return request.get<unknown, SearchUsersRes>(`/search/question`, { params })
+  return request.get<unknown, SearchUsersRes>(`/search/user`, { params })
 }

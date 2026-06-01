@@ -124,11 +124,11 @@ const userInfo = localStorage.getItem('userInfo')
 const isLogin = computed(() => !!userInfo)
 const menutabs = ref([
   { key: '/home', label: '全部' },
-  { key: '/bank/category', label: '题库' },
-  { key: '/document', label: '文档' },
-  { key: '/author', label: '作者' },
-  { key: '/collect', label: '收藏' },
-  { key: '/error', label: '错题' },
+  { key: '/bank/category', label: '专业题库' },
+  { key: '/questions', label: '题目集市' },
+  { key: '/documents', label: '文档下载' },
+  { key: '/user/collections/Note', label: '我的收藏' },
+  { key: '/user/collections/Mistake', label: '查看错题' },
 ])
 
 const dropdownItems = ref([
@@ -139,12 +139,12 @@ const dropdownItems = ref([
   },
   {
     name: '全部错题',
-    path: '/user/mistakes',
+    path: '/user/collections/Mistake',
     icon: markRaw(CircleClose),
   },
   {
     name: '我的收藏',
-    path: '/user/notes',
+    path: '/user/collections/Note',
     icon: markRaw(Star),
   },
 ])

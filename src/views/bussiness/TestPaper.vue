@@ -69,6 +69,7 @@ import { TestModel, useTestPaperStore } from '@/stores/testpaper'
 import { useConfigStore } from '@/stores/config'
 import { storeToRefs } from 'pinia'
 import { dayjs } from 'element-plus'
+import { filterAttributes } from '@/hooks/useFilterAttributes'
 const testPaperStore = useTestPaperStore()
 const configStore = useConfigStore()
 const { practiceConfig, testConfig } = storeToRefs(configStore)
@@ -96,16 +97,14 @@ onMounted(async () => {
     model: route.query.model as TestModel,
   }
 
-  const payload = Object.fromEntries(
-    Object.entries({
-      bankId: testInfo.value.bankId,
-      disciplineId: testInfo.value.disciplineId,
-      type: testInfo.value.collectionType as CollectionType,
-      isDay: testInfo.value.isDay !== 0 ? 1 : 0,
-      questionType: testInfo.value.questionType as QuestionType,
-      number: testInfo.value.model === TestModel.Test ? testConfig.value?.amount : null,
-    }).filter((value) => Boolean(value[1])),
-  )
+  const payload = filterAttributes({
+    bankId: testInfo.value.bankId,
+    disciplineId: testInfo.value.disciplineId,
+    type: testInfo.value.collectionType as CollectionType,
+    isDay: testInfo.value.isDay !== 0 ? 1 : 0,
+    questionType: testInfo.value.questionType as QuestionType,
+    number: testInfo.value.model === TestModel.Test ? testConfig.value?.amount : null,
+  })
   // 获取题目
   if (testInfo.value.collectionType) {
     await getCollectionList(payload).then((res) => {

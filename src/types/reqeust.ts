@@ -1,4 +1,4 @@
-import type { QuestionType, Answer, CollectionType, MimeType } from '@/types/prisma'
+import type { QuestionType, Answer, CollectionType, MimeType, Gender } from '@/types/prisma'
 export interface CreateQuestionRequest {
   type: QuestionType
   content: string
@@ -7,8 +7,12 @@ export interface CreateQuestionRequest {
     text: string
   }[]
   answer: Answer | Answer[]
-  bank: string
-  discipline: string
+  bank?: string
+  bankId?: number
+  disciplineId?: number
+  discipline?: string
+  riskLevel?: number
+  explanation?: string
 }
 
 export interface GetQuestionRequest {
@@ -103,6 +107,11 @@ export interface UpdateUserRequest {
   name?: string
   phone?: string
   password?: string
+  avatarUrl?: string
+  introduction?: string
+  direction?: string
+  area?: string
+  gender?: Gender | null
 }
 export interface deleteResolutionRequest {
   id?: number
@@ -113,22 +122,39 @@ export interface SearchQuestionsReq {
   keyword?: string
   type?: QuestionType
   time?: string
+  collectedCount?: string
   riskLevel?: number
+  page: number
 }
 export interface SearchBanksReq {
   keyword?: string
-  questionCount?: number
+  questionCount?: string
   time?: string
-  categoryId?: number
+  collectedCount?: string
+  page: number
 }
 export interface SearchDocumentsReq {
   keyword?: string
   mimeType?: MimeType
-  size?: number
+  size?: string
   time?: string
+  page: number
 }
 export interface SearchUsersReq {
   keyword?: string
-  bankCount?: number
+  bankCount?: string
   time?: string
+  page: number
+}
+export interface EditQuestionReq {
+  content: string
+  options: {
+    key: Answer
+    text: string
+  }[]
+  singleAnswer?: Answer | null
+  multiChoiceAnswer?: Answer[]
+  trueFalseAnswer?: Answer | null
+  explanation?: string
+  riskLevel?: number
 }

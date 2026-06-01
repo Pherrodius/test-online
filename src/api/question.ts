@@ -9,6 +9,7 @@ import type {
   SubmitTestRequest,
   GetResolutionsRequest,
   deleteResolutionRequest,
+  EditQuestionReq,
 } from '@/types/reqeust'
 import type {
   GetQuestionListResponse,
@@ -32,6 +33,9 @@ export function getQuestionDetail(id: number) {
 }
 export function createQuestion(data: CreateQuestionRequest) {
   return request.post<unknown, CreateQuestionResponse>('/question', data)
+}
+export function deleteQuestion(id: number) {
+  return request.delete<unknown, CreateQuestionResponse>(`/question/delete/${id}`)
 }
 export function createManyQuestions(data: CreateQuestionRequest[]) {
   return request.post<unknown, CreateManyQuestionsResponse>('/question', data)
@@ -75,4 +79,7 @@ export function deleteResolution(id: number) {
 }
 export function batchDeleteResolution(params: deleteResolutionRequest) {
   return request.delete<unknown, Resolution>(`/question/resolution`, { params })
+}
+export function editQuestion(id: number, data: EditQuestionReq) {
+  return request.put<unknown, CreateQuestionResponse>(`/question/edit/${id}`, data)
 }

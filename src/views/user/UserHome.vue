@@ -5,7 +5,7 @@
         <p class="eyebrow">学习概览</p>
         <h2>欢迎回来，继续保持节奏</h2>
       </div>
-      <el-button type="primary" :icon="EditPen" @click="dialogVisible = true">开始练习</el-button>
+      <el-button type="primary" :icon="EditPen" @click="startPractice">开始练习</el-button>
     </div>
 
     <el-row :gutter="16" class="stats">
@@ -55,12 +55,51 @@
         <section class="panel">
           <div class="panel-title">
             <h3>待办提醒</h3>
+            <el-button text type="primary" :icon="Plus" @click="addTodo">新增</el-button>
           </div>
-          <el-timeline>
-            <el-timeline-item v-for="item in todos" :key="item" type="primary">
-              {{ item }}
-            </el-timeline-item>
-          </el-timeline>
+          <div class="todo-editor">
+            <el-input
+              v-model="newTodoText"
+              placeholder="添加新的待办提醒"
+              clearable
+              @keyup.enter="addTodo"
+            />
+          </div>
+          <div v-if="todos.length" class="todo-list">
+            <div v-for="item in todos" :key="item.id" class="todo-item">
+              <el-checkbox v-model="item.done" @change="saveTodos" />
+              <el-input
+                v-if="editingTodoId === item.id"
+                v-model="editingTodoText"
+                class="todo-edit-input"
+                size="small"
+                maxlength="40"
+                @keyup.enter="confirmEditTodo(item)"
+                @keyup.esc="cancelEditTodo"
+              />
+              <button
+                v-else
+                type="button"
+                class="todo-text"
+                :class="{ done: item.done }"
+                @click="startEditTodo(item)"
+              >
+                {{ item.text }}
+              </button>
+              <div class="todo-actions">
+                <el-button
+                  v-if="editingTodoId === item.id"
+                  link
+                  type="primary"
+                  :icon="Check"
+                  @click="confirmEditTodo(item)"
+                />
+                <el-button v-else link type="primary" :icon="Edit" @click="startEditTodo(item)" />
+                <el-button link type="danger" :icon="Delete" @click="removeTodo(item.id)" />
+              </div>
+            </div>
+          </div>
+          <el-empty v-else description="暂无待办" :image-size="80" />
         </section>
       </el-col>
     </el-row>
@@ -87,15 +126,28 @@
 <script setup lang="ts">
 import { getOverview } from '@/api/user'
 import type { getOverviewResponse } from '@/types/response'
-import { Collection, EditPen, Star, WarningFilled } from '@element-plus/icons-vue'
+import {
+  Check,
+  Collection,
+  Delete,
+  Edit,
+  EditPen,
+  Plus,
+  Star,
+  WarningFilled,
+} from '@element-plus/icons-vue'
 import { dayjs } from 'element-plus'
 import { computed, markRaw, onMounted, ref } from 'vue'
 import BankRecord from '@/components/BankRecord.vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 const dialogVisible = ref(false)
 const overview = ref<getOverviewResponse>()
 const handleDialogClose = (done: () => void) => {
   done()
 }
+
 const stats = ref([
   {
     label: '累计练习',
@@ -122,8 +174,91 @@ const stats = ref([
     color: '#67c23a',
   },
 ])
-const todos = ['复习 12 道高频错题', '完善个人学习目标', '整理本周收藏题目', '上传新的练习文件']
+
+const startPractice = () => {
+  if (stats.value[3]?.value) {
+    dialogVisible.value = true
+    return
+  }
+  router.push('/bank/category/0')
+}
+interface TodoItem {
+  id: number
+  text: string
+  done: boolean
+}
+
+const todoStorageKey = 'user-home-todos'
+const defaultTodos: TodoItem[] = [
+  { id: 1, text: '复习 12 道高频错题', done: false },
+  { id: 2, text: '完善个人学习目标', done: false },
+  { id: 3, text: '整理本周收藏题目', done: false },
+  { id: 4, text: '上传新的练习文件', done: false },
+]
+const todos = ref<TodoItem[]>([])
+const newTodoText = ref('')
+const editingTodoId = ref<number | null>(null)
+const editingTodoText = ref('')
+
+const saveTodos = () => {
+  localStorage.setItem(todoStorageKey, JSON.stringify(todos.value))
+}
+
+const loadTodos = () => {
+  const savedTodos = localStorage.getItem(todoStorageKey)
+  if (!savedTodos) {
+    todos.value = [...defaultTodos]
+    saveTodos()
+    return
+  }
+
+  try {
+    const parsedTodos = JSON.parse(savedTodos) as TodoItem[]
+    todos.value = parsedTodos.length ? parsedTodos : []
+  } catch {
+    todos.value = [...defaultTodos]
+    saveTodos()
+  }
+}
+
+const addTodo = () => {
+  const text = newTodoText.value.trim()
+  if (!text) return
+
+  todos.value.unshift({
+    id: Date.now(),
+    text,
+    done: false,
+  })
+  newTodoText.value = ''
+  saveTodos()
+}
+
+const startEditTodo = (item: TodoItem) => {
+  editingTodoId.value = item.id
+  editingTodoText.value = item.text
+}
+
+const cancelEditTodo = () => {
+  editingTodoId.value = null
+  editingTodoText.value = ''
+}
+
+const confirmEditTodo = (item: TodoItem) => {
+  const text = editingTodoText.value.trim()
+  if (!text) return
+
+  item.text = text
+  cancelEditTodo()
+  saveTodos()
+}
+
+const removeTodo = (id: number) => {
+  todos.value = todos.value.filter((item) => item.id !== id)
+  saveTodos()
+}
 onMounted(async () => {
+  loadTodos()
   overview.value = await getOverview()
 })
 </script>
@@ -204,6 +339,56 @@ onMounted(async () => {
     font-size: 18px;
   }
 }
+
+.todo-editor {
+  margin-bottom: 14px;
+}
+
+.todo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.todo-item {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  min-height: 40px;
+  padding: 8px 10px;
+  border: 1px solid #ebeef5;
+  border-radius: 8px;
+  background-color: #fafcff;
+}
+
+.todo-text {
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  color: #1f2d3d;
+  font: inherit;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: transparent;
+  cursor: pointer;
+
+  &.done {
+    color: #a8abb2;
+    text-decoration: line-through;
+  }
+}
+
+.todo-edit-input {
+  min-width: 0;
+}
+
+.todo-actions {
+  display: flex;
+  align-items: center;
+}
+
 :deep(.el-dialog) {
   padding: 12px 36px;
   border-radius: 24px;

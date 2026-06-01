@@ -25,11 +25,9 @@
           </p>
           <p class="info-item">题目数量：{{ bank?.questions?.length || 'loading...' }}</p>
           <p class="info-item">
-            提供作者：<a
-              :href="`https://www.kaoshibao.com/user/${bank?.creator?.id || 'loading...'}`"
-              target="_blank"
-              >{{ bank?.creator?.name || 'loading...' }}</a
-            >
+            提供作者：<a href="#" @click="dialogVisible2 = true">{{
+              bank?.creator?.name || 'loading...'
+            }}</a>
           </p>
         </div>
         <div class="btn-box">
@@ -45,6 +43,22 @@
               <Promotion />
             </el-icon>
             <span>分享</span>
+          </el-button>
+          <el-button
+            type="primary"
+            size="large"
+            @click="
+              $router.push({
+                path: `/bank/edit/${bank?.id}`,
+                query: { disciplineId: currentDiscipline?.id },
+              })
+            "
+            v-if="isOwned"
+          >
+            <el-icon style="font-size: 24px">
+              <Edit />
+            </el-icon>
+            <span>编辑题库</span>
           </el-button>
         </div>
       </div>
@@ -130,6 +144,7 @@
         </div>
       </div>
     </el-dialog>
+    <UserInfoDialog v-model="dialogVisible2" :user="bank?.creator" v-if="bank?.creator" />
   </div>
 </template>
 <script setup lang="ts">
@@ -143,13 +158,19 @@ import QuestionList from '@/components/QuestionList.vue'
 import dayjs from 'dayjs'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { TestModel } from '@/stores/testpaper'
+import UserInfoDialog from '@/components/UserInfoDialog.vue'
 
+const dialogVisible2 = ref(false)
 const route = useRoute()
 const bank = ref<GetBankResponse | null>(null)
 const currentDiscipline = ref<Discipline>()
 const mistakes = ref<number>(0)
 const notes = ref<number>(0)
 const bankIcon = new URL('@/assets/icon/bank.png', import.meta.url).href
+const isOwned = computed(() => {
+  if (!localStorage.getItem('userInfo') || !localStorage.getItem('token')) return false
+  return bank.value?.creatorId == JSON.parse(localStorage.getItem('userInfo')!).id
+})
 const options = reactive({
   sequential: {
     icon: new URL('@/assets/icon/sequential.png', import.meta.url).href,

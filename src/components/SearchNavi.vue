@@ -11,48 +11,45 @@
           {{ item.name }}
         </div>
       </div>
-      <div class="right">
-        <div class="search-box">
-          <el-input
-            placeholder="请输入搜索内容"
-            prefix-icon="el-icon-search"
-            v-model="queryItem.input"
-          >
-            <template #prepend>
-              <el-select placeholder="请选择搜索类型" v-model="queryItem.searchType">
-                <el-option label="题目" value="question" />
-                <el-option label="题库" value="bank" />
-                <el-option label="文档" value="document" />
-                <el-option label="作者" value="author" />
-              </el-select>
-            </template>
-            <template #append>
-              <el-button color="primary">
-                <el-icon style="color: black">
-                  <Search />
-                </el-icon>
-              </el-button>
-            </template>
-          </el-input>
-        </div>
-        <div class="login-box" v-if="!isLogin">
-          <el-button class="login-btn" @click="router.push('/auth/login')">登录</el-button>
-          <el-button type="primary" class="register-btn" @click="router.push('/auth/register')"
-            >注册</el-button
-          >
-        </div>
-        <div v-else>
+      <div class="login-box" v-if="!isLogin">
+        <el-button class="login-btn" @click="router.push('/auth/login')">登录</el-button>
+        <el-button type="primary" class="register-btn" @click="router.push('/auth/register')"
+          >注册</el-button
+        >
+      </div>
+      <div class="login-box" v-else>
+        <div class="flex-box">
+          <div class="flex-box mine" @click="$router.push('/user/profile')">
+            <svg
+              t="1779690311235"
+              class="icon"
+              viewBox="0 0 1024 1024"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              p-id="13163"
+              width="20"
+              height="16"
+            >
+              <path
+                d="M928 832l-64 32-352 160-352-160-64-32a96 96 0 0 1-96-96V96a96 96 0 0 1 96-96l64 32 352 160 352-160 64-32a96 96 0 0 1 96 96v640a96 96 0 0 1-96 96z m-480 0V288L128 192v544l320 128v-32zM896 192L576 288v576l320-128V192z"
+                fill="#0090FF"
+                p-id="13164"
+              ></path>
+            </svg>
+            <span>个人中心</span>
+          </div>
           <el-dropdown>
-            <div class="login-box">
-              <el-avatar :src="avatar" size="small" />
-              <span class="user-name">{{ userInfo!.name }}</span>
-            </div>
+            <el-avatar
+              :src="avatar"
+              style="width: 36px; height: 36px; cursor: pointer"
+              @click="$router.push('/user')"
+            />
             <template #dropdown>
-              <el-dropdown-menu>
+              <el-dropdown-menu class="drop-item">
                 <el-dropdown-item
                   v-for="item in dropdownItems"
                   :key="item.path"
-                  @click="router.push(item.path)"
+                  @click="$router.push(item.path)"
                 >
                   <el-icon>
                     <component :is="item.icon" />
@@ -61,7 +58,7 @@
                 </el-dropdown-item>
                 <el-dropdown-item @click="handleLogout">
                   <el-icon>
-                    <SwitchButton />
+                    <component :is="markRaw(SwitchButton)" />
                   </el-icon>
                   退出登录
                 </el-dropdown-item>
@@ -106,10 +103,6 @@ const menuItems = ref([
     path: '/contact',
   },
 ])
-const queryItem = ref({
-  searchType: 'bank',
-  input: '',
-})
 const dropdownItems = ref([
   {
     name: '个人中心',
@@ -154,7 +147,7 @@ html,
     display: flex;
     justify-content: space-between;
     align-items: center;
-
+    position: relative;
     .menu {
       display: flex;
       justify-content: flex-start;
@@ -216,10 +209,58 @@ html,
   }
 
   .login-box {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 8px;
+    position: absolute;
+    right: 0;
+    bottom: 12px;
+    width: 142px;
+    height: 32px;
+
+    .user-name {
+      margin-left: 8px;
+      height: 32px;
+      line-height: 32px;
+      font-size: 14px;
+      font-weight: 350;
+      color: #333;
+    }
+
+    .btn {
+      height: 32px;
+      width: 65px;
+      font-size: 14px;
+      font-weight: 350;
+
+      &.login-btn {
+        color: rgb(25, 140, 255);
+        border-color: rgb(25, 140, 255);
+      }
+
+      &.register-btn {
+        color: #fff;
+      }
+    }
   }
+}
+.flex-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mine {
+  white-space: nowrap;
+  gap: 4px;
+  font-size: 14px;
+  color: #198cff;
+  background-color: #ecf7fe;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 16px;
+}
+.drop-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
 }
 </style>

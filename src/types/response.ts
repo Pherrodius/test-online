@@ -15,6 +15,7 @@ import type {
   TestHistory,
   BankCollection,
   User,
+  Document,
 } from '@/types/prisma'
 
 export interface CreateQuestionResponse {
@@ -42,6 +43,8 @@ export interface GetQuestionDetailResponse {
   createdTime: Question['createdTime']
   options: Option[]
   bank: Bank
+  explanation: string
+  riskLevel: number
   discipline: Discipline
   singleAnswer: SingleAnswer | null
   multiChoiceAnswer: MultiChoiceAnswer[]
@@ -112,9 +115,11 @@ export type CreateBankResponse = Bank
 
 export interface GetBankResponse extends Omit<Bank, 'disciplines'> {
   disciplines: Discipline[]
-  creator: {
-    id: number
-    name: string
+  creator: User & {
+    _count?: {
+      banks: number
+      documents: number
+    }
   }
   category: BankCategory | null
   questions: {
@@ -175,25 +180,45 @@ export interface GetMyBanksRes extends Bank {
   created: boolean
 }
 export interface SearchQuestionsRes {
-  records: Question[]
+  records: (Question & {
+    bank: Bank
+    discipline: Discipline
+    _count: {
+      collected: number
+    }
+  })[]
   total: number
   page: number
   pageSize: number
 }
 export interface SearchBanksRes {
-  records: Bank[]
+  records: (Bank & {
+    _count: {
+      questions: number
+      bankCollections: number
+      disciplines: number
+    }
+    creator: User
+  })[]
   total: number
   page: number
   pageSize: number
 }
 export interface SearchDocumentsRes {
-  records: Document[]
+  records: (Document & {
+    uploader?: User
+  })[]
   total: number
   page: number
   pageSize: number
 }
 export interface SearchUsersRes {
-  records: User[]
+  records: (User & {
+    _count?: {
+      banks: number
+      documents: number
+    }
+  })[]
   total: number
   page: number
   pageSize: number

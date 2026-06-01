@@ -42,7 +42,12 @@
   </div>
   <div class="bottom-nav-container">
     <div class="bottom-navi">
-      <div class="bottom-navi-item" v-for="item in bottomNaviList" :key="item.title">
+      <div
+        class="bottom-navi-item"
+        v-for="item in bottomNaviList"
+        :key="item.title"
+        @click="$router.push(item.path)"
+      >
         <p>{{ item.title }}</p>
         <p>{{ item.desc }}</p>
       </div>
@@ -151,11 +156,11 @@ const navlist = [
   },
 ]
 const bottomNaviList = [
-  { icon: 'upload', title: '上传题库', desc: '快速批量导入试题' },
-  { icon: 'exam', title: '发起考试', desc: '智能评分和防作弊' },
-  { icon: '人工导题', title: '人工导题', desc: '内容团队高效导题' },
-  { icon: 'search', title: '搜索试题', desc: '免费搜题，答案秒出' },
-  { icon: 'download', title: '文档下载', desc: '免费资料持续更新' },
+  { icon: 'upload', title: '题库列表', desc: '浏览公开题库', path: '/bank/category' },
+  { icon: 'exam', title: '练习题目', desc: '快速进入做题', path: '/questions' },
+  { icon: '人工导题', title: '我的空间', desc: '管理学习资料', path: '/user' },
+  { icon: 'search', title: '搜索试题', desc: '免费搜题，答案秒出', path: '/search/question' },
+  { icon: 'download', title: '文档下载', desc: '免费资料持续更新', path: '/documents' },
 ]
 </script>
 <style scoped>
