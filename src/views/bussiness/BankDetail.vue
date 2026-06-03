@@ -30,6 +30,7 @@
             }}</a>
           </p>
         </div>
+        <div class="desc">题库简介：{{ bank?.description || 'loading...' }}</div>
         <div class="btn-box">
           <el-button type="warning" size="large" @click="handleCollectBank">
             <el-icon style="font-size: 24px">
@@ -58,7 +59,13 @@
             <el-icon style="font-size: 24px">
               <Edit />
             </el-icon>
-            <span>编辑题库</span>
+            <span>编辑题目</span>
+          </el-button>
+          <el-button type="danger" size="large" @click="dialogVisible3 = true" v-if="isOwned">
+            <el-icon style="font-size: 24px">
+              <EditPen />
+            </el-icon>
+            <span>编辑基本信息</span>
           </el-button>
         </div>
       </div>
@@ -145,6 +152,7 @@
       </div>
     </el-dialog>
     <UserInfoDialog v-model="dialogVisible2" :user="bank?.creator" v-if="bank?.creator" />
+    <EditBankDialog v-model="dialogVisible3" :bank="bank" v-if="bank" />
   </div>
 </template>
 <script setup lang="ts">
@@ -159,8 +167,10 @@ import dayjs from 'dayjs'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { TestModel } from '@/stores/testpaper'
 import UserInfoDialog from '@/components/UserInfoDialog.vue'
+import EditBankDialog from '@/components/EditBankDialog.vue'
 
 const dialogVisible2 = ref(false)
+const dialogVisible3 = ref(false)
 const route = useRoute()
 const bank = ref<GetBankResponse | null>(null)
 const currentDiscipline = ref<Discipline>()
@@ -365,7 +375,11 @@ watch(
 <style scoped lang="scss">
 .bank-detail {
   background-color: #f5f5f5;
-
+  .desc {
+    font-size: 15px;
+    color: #666;
+    margin-bottom: 24px;
+  }
   .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -468,7 +482,7 @@ watch(
       .info {
         display: flex;
         gap: 12px;
-        margin-bottom: 24px;
+        margin-bottom: 8px;
 
         .info-item {
           display: flex;

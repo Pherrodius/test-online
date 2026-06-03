@@ -75,7 +75,6 @@ export interface DeleteAllCollectionsRequest {
 export interface CreateBankRequest {
   name: string
   description: string
-  creator: string
   disciplines: string[]
   categoryId?: number
   categoryName?: string
@@ -157,4 +156,9 @@ export interface EditQuestionReq {
   trueFalseAnswer?: Answer | null
   explanation?: string
   riskLevel?: number
+}
+export interface LLMAnalysisFileReq {
+  prompt?: string
+  bankId: number
+  disciplineId: number
 }

@@ -127,7 +127,7 @@ const menutabs = ref([
   { key: '/bank/category', label: '专业题库' },
   { key: '/questions', label: '题目集市' },
   { key: '/documents', label: '文档下载' },
-  { key: '/user/collections/Note', label: '我的收藏' },
+  { key: '/user/documents', label: 'AI导题' },
   { key: '/user/collections/Mistake', label: '查看错题' },
 ])
 

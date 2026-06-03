@@ -72,6 +72,10 @@
         }}</span>
       </div>
       <div class="explanation"><span class="title">答案解析：</span>该题目暂无解析内容~</div>
+      <div class="risklevel">
+        <span>题目难度：</span>
+        <el-rate v-model="question.riskLevel" :max="3" />
+      </div>
     </div>
     <div class="log">
       <div>
@@ -291,6 +295,14 @@ onMounted(() => {
     font-weight: bolder;
     line-height: 24px;
     color: #333;
+  }
+  .risklevel {
+    font-size: 16px;
+    font-weight: bolder;
+    line-height: 24px;
+    color: #333;
+    display: flex;
+    align-items: center;
   }
 }
 

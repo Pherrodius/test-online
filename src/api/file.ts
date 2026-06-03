@@ -1,5 +1,6 @@
 import { request } from '@/utils/request'
 import type { Document } from '@/types/prisma'
+import type { LLMAnalysisFileReq } from '@/types/reqeust'
 
 export function uploadFile(file: File, content: string) {
   const formData = new FormData()
@@ -15,4 +16,7 @@ export function deleteFile(id: number) {
 
 export function getFiles() {
   return request.get<unknown, Document[]>('/files')
+}
+export function LLMAnalysisFile(id: number, data: LLMAnalysisFileReq) {
+  return request.post<unknown, string>(`/files/llm/${id}`, data, { timeout: 5 * 60 * 1000 })
 }

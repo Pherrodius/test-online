@@ -1,6 +1,8 @@
 import { SearchType } from '@/types/prisma'
 import { ElMessage } from 'element-plus'
 import { createRouter, createWebHistory } from 'vue-router'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 const homeRoutes = [
   {
     path: '/',
@@ -216,6 +218,7 @@ const router = createRouter({
   routes: [...routes, ...searchRoutes],
 })
 router.beforeEach((to) => {
+  NProgress.start()
   if (!to.meta.auth) {
     return true
   } else {
@@ -226,5 +229,12 @@ router.beforeEach((to) => {
       return `/auth/login?redirect=${to.fullPath}`
     }
   }
+})
+router.afterEach(() => {
+  NProgress.done()
+})
+
+router.onError(() => {
+  NProgress.done()
 })
 export default router

@@ -1,5 +1,5 @@
 <template>
-  <div class="user-page">
+  <div class="user-page" v-loading="loading">
     <div class="page-header">
       <div>
         <h2>我的文件</h2>
@@ -13,7 +13,7 @@
         <el-icon class="el-icon--upload"><UploadFilled /></el-icon>
         <div class="el-upload__text">拖拽文件到此处，或点击选择文件</div>
         <template #tip>
-          <div class="el-upload__tip">支持 PDF、Word、Excel 等学习资料。</div>
+          <div class="el-upload__tip">支持解析 PDF、Word、txt 格式的学习资料。</div>
         </template>
       </el-upload>
     </section>
@@ -53,8 +53,10 @@
           </template>
         </el-table-column>
         <el-table-column label="状态" width="120">
-          <template #default>
-            <el-tag type="success" effect="light">已上传</el-tag>
+          <template #default="{ row }">
+            <el-tag :type="statusMap[row.status as DocumentStatus].type" effect="light">{{
+              statusMap[row.status as DocumentStatus].label
+            }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column label="上传时间" width="180">
@@ -64,21 +66,123 @@
         </el-table-column>
         <el-table-column label="操作" width="180">
           <template #default="{ row }">
-            <p class="file-delete" @click="handleDelete(row)">删除</p>
+            <div class="action">
+              <p
+                class="file-llm"
+                @click="handleOpen(row.id)"
+                :disabled="row.status === DocumentStatus.Pending"
+              >
+                {{ row.status === DocumentStatus.Uploaded ? 'AI解析' : '再次解析' }}
+              </p>
+              <p class="file-delete" @click="handleDelete(row)">删除</p>
+            </div>
           </template>
         </el-table-column>
       </el-table>
     </section>
+    <el-dialog v-model="dialogVisible" title="Tips" width="640" class="llm-dialog">
+      <template #header>大模型通过解析文件生成题目并导入到指定题库的指定学科分类下</template>
+      <div v-loading="loading2">
+        <el-form :model="form" label-width="64px">
+          <el-form-item label="题库">
+            <el-select v-model="form.bankId" placeholder="选择导入的题库">
+              <el-option
+                v-for="bank in myBanks"
+                :key="bank.id"
+                :value="bank.id"
+                :label="bank.name"
+              /> </el-select></el-form-item
+          ><el-form-item label="学科">
+            <el-select v-model="form.disciplineId" placeholder="选择导入的学科">
+              <el-option
+                v-for="discipline in myBanks.find((item) => item.id === form.bankId)?.disciplines ||
+                []"
+                :key="discipline.id"
+                :value="discipline.id"
+                :label="discipline.name" /></el-select
+          ></el-form-item>
+          <el-form-item label="描述">
+            <el-input
+              type="textarea"
+              v-model="form.prompt"
+              placeholder="请输入你的需求（选填）"
+              :rows="5"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="提示">
+            <div class="tips">
+              1、AI出题需要消耗一定的时间，请耐心等待。<br />2、避免将所有题目导入同一个题库，这会拖慢ai助手的解析速度。<br />3、一次性最多导入100题，可重复解析文件以获得更多题目，ai助手会自行避开已有题目。
+            </div>
+          </el-form-item>
+        </el-form>
+      </div>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="dialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="handleSubmit"> 提交 </el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { deleteFile, uploadFile } from '@/api/file'
+import { deleteFile, LLMAnalysisFile, uploadFile } from '@/api/file'
 import { Document as DocumentIcon, Upload, UploadFilled } from '@element-plus/icons-vue'
 import { dayjs, ElMessage, ElMessageBox } from 'element-plus'
 import { onMounted, ref } from 'vue'
-import type { Document } from '@/types/prisma'
+import type { Bank, Discipline, Document } from '@/types/prisma'
+import { DocumentStatus } from '@/types/prisma'
 import { getMyFiles } from '@/api/user'
+import type { LLMAnalysisFileReq } from '@/types/reqeust'
+import { getOwnedBanks } from '@/api/bank'
+import { useRouter } from 'vue-router'
+const dialogVisible = ref(false)
+const router = useRouter()
+const form = ref<Partial<LLMAnalysisFileReq>>({
+  bankId: undefined,
+  disciplineId: undefined,
+  prompt: '',
+})
+const statusMap = {
+  [DocumentStatus.Uploaded]: {
+    label: '已上传',
+    type: 'primary',
+  },
+  [DocumentStatus.Pending]: {
+    label: '解析中',
+    type: 'warning',
+  },
+  [DocumentStatus.Resolved]: {
+    label: '已解析',
+    type: 'success',
+  },
+  [DocumentStatus.Rejected]: {
+    label: '解析失败',
+    type: 'danger',
+  },
+}
+const currentFileId = ref<number>(0)
+const loading = ref(false)
+const loading2 = ref(false)
+const myBanks = ref<(Bank & { disciplines: Discipline[] })[]>([])
+const handleOpen = async (id: number) => {
+  loading.value = true
+  try {
+    myBanks.value = await getOwnedBanks()
+  } catch (e) {
+    console.log(e)
+    ElMessage.error('获取已有题库失败')
+    loading.value = false
+  }
+  currentFileId.value = id
+  if (myBanks.value.length === 0) {
+    ElMessage.error('请先创建题库')
+    router.push('/user/banks')
+  }
+  dialogVisible.value = true
+  loading.value = false
+}
 const handleUpload = async ({ file }: { file: File }) => {
   try {
     const { value } = await ElMessageBox.prompt('请输入文件简介（可选）', 'Tip', {
@@ -111,6 +215,26 @@ const handleDelete = async (row: Document) => {
         ElMessage.error('删除失败')
       })
   })
+}
+const handleSubmit = () => {
+  if (!form.value.bankId) return ElMessage.error('请选择题库')
+  if (!form.value.disciplineId) return ElMessage.error('请选择学科')
+  loading2.value = true
+  LLMAnalysisFile(currentFileId.value, form.value as LLMAnalysisFileReq)
+    .then(() => {
+      ElMessage.success('请求已发送，AI助手全力解析中')
+      const file = files.value.find((item) => item.id === currentFileId.value)
+      if (file) {
+        file.status = DocumentStatus.Pending
+      }
+      loading2.value = false
+      dialogVisible.value = false
+    })
+    .catch(() => {
+      ElMessage.error('题目解析失败')
+      loading2.value = false
+      dialogVisible.value = false
+    })
 }
 const mimeLabels: Record<string, string> = {
   'application/pdf': 'PDF',
@@ -257,13 +381,43 @@ onMounted(async () => {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.file-delete {
+.action {
   margin-left: auto;
-  color: red;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.file-delete,
+.file-llm {
+  margin: auto auto auto 8px;
   font-size: 14px;
   cursor: pointer;
   &:hover {
     text-decoration: underline;
   }
+}
+.file-delete {
+  flex: 0 0 auto;
+  color: red;
+}
+.file-llm {
+  flex: 0 0 auto;
+  color: blue;
+}
+
+:deep(.llm-dialog) {
+  .el-dialog__body {
+    padding-top: 8px;
+  }
+
+  .el-select,
+  .el-input {
+    width: 100%;
+  }
+}
+
+.tips {
+  color: #606266;
+  line-height: 1.7;
 }
 </style>

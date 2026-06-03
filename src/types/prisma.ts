@@ -10,7 +10,12 @@ export enum Answer {
   C = 'C',
   D = 'D',
 }
-
+export enum DocumentStatus {
+  Uploaded = 'Uploaded',
+  Pending = 'Pending',
+  Resolved = 'Resolved',
+  Rejected = 'Rejected',
+}
 export enum CollectionType {
   Mistake = 'Mistake',
   Note = 'Note',
@@ -89,6 +94,7 @@ export interface Bank {
   creatorId: number
   createdTime: DateTimeString
   disciplines?: Discipline[]
+  category?: BankCategory | null
   bankCollections?: BankCollection[]
 }
 
@@ -152,6 +158,7 @@ export interface Document {
   url: string
   size: number
   mimeType: MimeType
+  status: DocumentStatus
   content?: string
   uploaderId: number
   downloadCount: number

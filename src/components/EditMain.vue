@@ -213,6 +213,10 @@ import { useTestPaperStore } from '@/stores/testpaper'
 import { createQuestion, deleteQuestion, editQuestion } from '@/api/question'
 import { useRoute } from 'vue-router'
 import type { CreateQuestionRequest } from '@/types/reqeust'
+const props = defineProps<{
+  refreshKey: number
+}>()
+const emits = defineEmits(['update:refreshKey'])
 const route = useRoute()
 const testPaperStore = useTestPaperStore()
 const { currentQuestion } = storeToRefs(testPaperStore)
@@ -344,7 +348,7 @@ const delQuestion = () => {
     deleteQuestion(currentQuestion.value!.id)
       .then(() => {
         ElMessage.success('删除成功')
-        questions.value.filter((item) => item.id === currentQuestion.value!.id)
+        questions.value = questions.value.filter((item) => item.id !== currentQuestion.value!.id)
       })
       .catch(() => {
         ElMessage.error('删除失败')
@@ -400,6 +404,7 @@ const createNewQuestion = async () => {
   await createQuestion(payload)
   createDialogVisible.value = false
   ElMessage.success('创建成功')
+  emits('update:refreshKey', props.refreshKey + 1)
 }
 
 const saveEdit = async () => {
@@ -417,10 +422,8 @@ const saveEdit = async () => {
     trueFalseAnswer: currentQuestion.value.trueFalseAnswer?.answerKey,
   }
   await editQuestion(currentQuestion.value.id, payload)
-  ElMessage({
-    message: '保存成功',
-    type: 'success',
-  })
+  ElMessage.success('保存成功')
+  emits('update:refreshKey', props.refreshKey + 1)
 }
 </script>
 

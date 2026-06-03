@@ -36,13 +36,13 @@ const route = useRoute()
 
 const menuList = ref([
   { name: '首页', path: '/user', icon: markRaw(House) },
-  { name: '个人信息', path: '/user/profile', icon: markRaw(User) },
+  { name: '我的题库', path: '/user/banks', icon: markRaw(Collection) },
+  { name: '我的文件', path: '/user/documents', icon: markRaw(Document) },
   { name: '全部错题', path: '/user/collections/Mistake', icon: markRaw(CloseBold) },
   { name: '我的收藏', path: '/user/collections/Note', icon: markRaw(Star) },
   { name: '测试记录', path: '/user/testHistory', icon: markRaw(Clock) },
   { name: '斩题记录', path: '/user/resolutions', icon: markRaw(EditPen) },
-  { name: '我的题库', path: '/user/banks', icon: markRaw(Collection) },
-  { name: '我的文件', path: '/user/documents', icon: markRaw(Document) },
+  { name: '个人信息', path: '/user/profile', icon: markRaw(User) },
   { name: '设置', path: '/user/settings', icon: markRaw(Setting) },
 ])
 
