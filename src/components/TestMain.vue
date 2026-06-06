@@ -1,145 +1,241 @@
 <template>
-  <div class="main">
-    <div class="collect">
-      <el-button type="primary" size="large" @click="handleCollect" :loading="!currentQuestion">
-        <el-icon style="font-size: 24px">
-          <Check v-if="currentQuestion?.isCollected" />
-          <Star v-else />
-        </el-icon>
-        <span>{{ currentQuestion?.isCollected ? '已收藏' : '加入收藏' }}</span>
-      </el-button>
-    </div>
-    <div class="question" :key="currentQuestion?.id">
-      <div class="q-content">
-        <div class="label">
-          {{ questionTypeMap[currentQuestion?.type || QuestionType.SingleChoice] }}
+  <div class="right">
+    <div class="main">
+      <div class="collect">
+        <el-button type="primary" size="large" @click="handleCollect" :loading="!currentQuestion">
+          <el-icon style="font-size: 24px">
+            <Check v-if="currentQuestion?.isCollected" />
+            <Star v-else />
+          </el-icon>
+          <span>{{ currentQuestion?.isCollected ? '已收藏' : '加入收藏' }}</span>
+        </el-button>
+      </div>
+      <div class="question" :key="currentQuestion?.id">
+        <div class="q-content">
+          <div class="label">
+            {{ questionTypeMap[currentQuestion?.type || QuestionType.SingleChoice] }}
+          </div>
+          <div class="value">
+            <span v-if="currentQuestion?.type === QuestionType.SingleChoice" class="index"
+              >{{ singleQuestions.indexOf(currentQuestion) + 1 }}/{{ questions.length }}、</span
+            >
+            <span v-else-if="currentQuestion?.type === QuestionType.MultiChoice" class="index"
+              >{{ multiQuestions.indexOf(currentQuestion) + singleQuestions.length + 1 }}/{{
+                questions.length
+              }}、</span
+            >
+            <span v-else-if="currentQuestion?.type === QuestionType.TrueFalse" class="index"
+              >{{
+                trueFalseQuestions.indexOf(currentQuestion) +
+                singleQuestions.length +
+                multiQuestions.length +
+                1
+              }}/{{ questions.length }}、</span
+            >
+            <span v-else-if="currentQuestion?.type === QuestionType.Subjective" class="index"
+              >{{
+                subjectiveQuestions.indexOf(currentQuestion) +
+                singleQuestions.length +
+                multiQuestions.length +
+                trueFalseQuestions.length +
+                1
+              }}/{{ questions.length }}、</span
+            >
+            <span>{{ currentQuestion?.content || '' }}</span>
+          </div>
         </div>
-        <div class="value">
-          <span v-if="currentQuestion?.type === QuestionType.SingleChoice" class="index"
-            >{{ singleQuestions.indexOf(currentQuestion) + 1 }}/{{ questions.length }}、</span
+        <div class="option">
+          <el-input
+            v-if="currentQuestion?.type === QuestionType.Subjective"
+            v-model="subjectiveAnswer"
+            type="textarea"
+            :rows="8"
+            placeholder="请输入答案"
+            :disabled="!!result.find((r) => r.questionId === currentQuestion?.id) || !!testResult"
+          />
+          <div
+            v-for="item in currentQuestion?.options"
+            :key="item.id"
+            class="option-item"
+            @click="pushAnswer(item)"
           >
-          <span v-else-if="currentQuestion?.type === QuestionType.MultiChoice" class="index"
-            >{{ multiQuestions.indexOf(currentQuestion) + 1 }}/{{ questions.length }}、</span
-          >
-          <span v-else-if="currentQuestion?.type === QuestionType.TrueFalse" class="index"
-            >{{ trueFalseQuestions.indexOf(currentQuestion) + 1 }}/{{ questions.length }}、</span
-          >
-          <span>{{ currentQuestion?.content || '' }}（ ）</span>
+            <div
+              class="select-box checkbox"
+              v-if="currentQuestion?.type === QuestionType.MultiChoice"
+            >
+              <div
+                class="select__label"
+                :class="{
+                  'is-correct': isCorrect(item),
+                  'is-incorrect': isIncorrect(item),
+                  'is-checked': isChecked(item),
+                }"
+              ></div>
+            </div>
+            <div
+              class="select-box radio"
+              v-if="
+                currentQuestion?.type === QuestionType.SingleChoice ||
+                currentQuestion?.type === QuestionType.TrueFalse
+              "
+              :class="{ 'is-checked': isChecked(item) }"
+            >
+              <div
+                class="select__label"
+                :class="{
+                  'is-correct': isCorrect(item),
+                  'is-incorrect': isIncorrect(item),
+                  'is-checked': isChecked(item),
+                }"
+              ></div>
+            </div>
+            <p class="option-text">{{ item.key }}、 {{ item.text }}</p>
+          </div>
         </div>
       </div>
-      <div class="option">
-        <div
-          v-for="item in currentQuestion?.options"
-          :key="item.id"
-          class="option-item"
-          @click="pushAnswer(item)"
+      <div class="btns">
+        <el-button
+          class="btn"
+          @click="prevQuestion"
+          :disabled="currentQuestion?.id === singleQuestions[0]?.id"
+          size="large"
         >
-          <div
-            class="select-box checkbox"
-            v-if="currentQuestion?.type === QuestionType.MultiChoice"
-          >
-            <div
-              class="select__label"
-              :class="{
-                'is-correct': isCorrect(item),
-                'is-incorrect': isIncorrect(item),
-                'is-checked': isChecked(item),
-              }"
-            ></div>
+          <div class="inner">
+            <el-icon size="20">
+              <Back />
+            </el-icon>
+            上一题
           </div>
-          <div
-            class="select-box radio"
-            v-if="
-              currentQuestion?.type === QuestionType.SingleChoice ||
-              currentQuestion?.type === QuestionType.TrueFalse
-            "
-            :class="{ 'is-checked': isChecked(item) }"
-          >
-            <div
-              class="select__label"
-              :class="{
-                'is-correct': isCorrect(item),
-                'is-incorrect': isIncorrect(item),
-                'is-checked': isChecked(item),
-              }"
-            ></div>
+        </el-button>
+        <el-button
+          v-if="testInfo?.model === TestModel.Test && !testResult"
+          class="btn submit-btn"
+          @click="submitAnswerSheet"
+          size="large"
+          >提交试卷</el-button
+        >
+        <el-button
+          v-else-if="testInfo?.model === TestModel.Test && testResult"
+          class="btn submit-btn"
+          @click="reTest"
+          size="large"
+          >重新测试</el-button
+        >
+        <el-button
+          v-else-if="
+            testInfo?.model === TestModel.Practice &&
+            !result.find((r) => r.questionId === currentQuestion?.id)
+          "
+          class="btn submit-btn"
+          @click="checkPracticeAnswer"
+          size="large"
+          >检查答案</el-button
+        >
+        <el-button
+          v-else-if="!!result.find((r) => r.questionId === currentQuestion?.id)"
+          class="btn submit-btn"
+          @click="handleRestart(currentQuestion?.id!)"
+          size="large"
+          >再次练习</el-button
+        >
+        <el-button v-else class="btn submit-btn" @click="checkPracticeAnswer" size="large" loading
+          >加载中</el-button
+        >
+        <el-button
+          class="btn"
+          @click="nextQuestion"
+          :disabled="
+            currentQuestion?.id === subjectiveQuestions[subjectiveQuestions.length - 1]?.id
+          "
+          size="large"
+        >
+          <div class="inner">
+            下一题
+            <el-icon size="20">
+              <Right />
+            </el-icon>
           </div>
-          <p class="option-text">{{ item.key }}、 {{ item.text }}</p>
-        </div>
+        </el-button>
       </div>
     </div>
-    <div class="btns">
-      <el-button
-        class="btn"
-        @click="prevQuestion"
-        :disabled="currentQuestion?.id === singleQuestions[0]?.id"
-        size="large"
-      >
-        <div class="inner">
-          <el-icon size="20">
-            <Back />
-          </el-icon>
-          上一题
+    <section
+      class="ai-consult"
+      :class="{ 'is-expanded': chatExpanded }"
+      v-if="testInfo?.model === TestModel.Practice"
+    >
+      <div v-if="chatExpanded" class="chat-panel">
+        <div class="chat-header">
+          <div>
+            <strong>AI 答疑</strong>
+            <span>基于当前题目继续提问</span>
+          </div>
+          <div class="chat-actions">
+            <button
+              class="chat-clear"
+              type="button"
+              :disabled="!sessionMessages.length || isConsulting || isClearingHistory"
+              @click="handleClearConsultationHistory"
+            >
+              {{ isClearingHistory ? '清空中' : '清空' }}
+            </button>
+            <button
+              class="chat-close"
+              type="button"
+              aria-label="收起答疑"
+              @click="chatExpanded = false"
+            >
+              ×
+            </button>
+          </div>
         </div>
-      </el-button>
-      <el-button
-        v-if="testInfo?.model === TestModel.Test && !testResult"
-        class="btn submit-btn"
-        @click="submitAnswerSheet"
-        size="large"
-        >提交试卷</el-button
-      >
-      <el-button
-        v-else-if="testInfo?.model === TestModel.Test && testResult"
-        class="btn submit-btn"
-        @click="reTest"
-        size="large"
-        >重新测试</el-button
-      >
-      <el-button
-        v-else-if="
-          testInfo?.model === TestModel.Practice &&
-          !result.find((r) => r.questionId === currentQuestion?.id)
-        "
-        class="btn submit-btn"
-        @click="checkPracticeAnswer"
-        size="large"
-        >检查答案</el-button
-      >
-      <el-button
-        v-else-if="!!result.find((r) => r.questionId === currentQuestion?.id)"
-        class="btn submit-btn"
-        @click="handleRestart(currentQuestion?.id!)"
-        size="large"
-        >再次练习</el-button
-      >
-      <el-button v-else class="btn submit-btn" @click="checkPracticeAnswer" size="large" loading
-        >加载中</el-button
-      >
-      <el-button
-        class="btn"
-        @click="nextQuestion"
-        :disabled="currentQuestion?.id === trueFalseQuestions[trueFalseQuestions.length - 1]?.id"
-        size="large"
-      >
-        <div class="inner">
-          下一题
-          <el-icon size="20">
-            <Right />
-          </el-icon>
+
+        <div class="chat-messages">
+          <div v-if="!sessionMessages.length" class="chat-empty">
+            <span class="chat-empty-icon">AI</span>
+            <p>哪里没想明白？我可以帮你梳理解题思路。</p>
+          </div>
+          <div
+            v-for="message in sessionMessages"
+            :key="message.id"
+            class="chat-message"
+            :class="`is-${message.role}`"
+          >
+            <span class="message-role">{{ message.role === 'user' ? '你' : 'AI' }}</span>
+            <div class="message-content">
+              {{ message.content || '网络连接中...' }}
+            </div>
+          </div>
         </div>
-      </el-button>
-    </div>
+      </div>
+
+      <form class="consult-input" @submit.prevent="handleConsultSubmit">
+        <span class="consult-badge">AI</span>
+        <input
+          v-model="inputMessage"
+          type="text"
+          placeholder="对这道题有疑问？问问 AI"
+          @focus="chatExpanded = true"
+        />
+        <button type="submit" :disabled="!inputMessage.trim() || isConsulting">
+          {{ isConsulting ? '思考中' : '发送' }}
+        </button>
+      </form>
+    </section>
   </div>
 </template>
 
 <script setup lang="ts">
 import { CollectionType, QuestionType } from '@/types/prisma'
 import type { Option } from '@/types/prisma'
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { TestModel, useTestPaperStore } from '@/stores/testpaper'
 import { createCollection, deleteCollection, isCollectionExist } from '@/api/question'
+import {
+  clearConsultationHistory,
+  getConsultationHistory,
+  getConsultationStreamUrl,
+} from '@/api/consultation'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { fetchEventSource } from '@microsoft/fetch-event-source'
 const reTest = () => {
@@ -153,14 +249,37 @@ const reTest = () => {
 }
 const testPaperStore = useTestPaperStore()
 const { currentQuestion, answerSheet, result } = storeToRefs(testPaperStore)
-const { pushAnswer, submitAnswerSheet, prevQuestion, nextQuestion, checkPracticeAnswer } =
-  testPaperStore
-const { testInfo, singleQuestions, multiQuestions, trueFalseQuestions, testResult, questions } =
-  storeToRefs(testPaperStore)
+const {
+  pushAnswer,
+  setSubjectiveAnswer,
+  submitAnswerSheet,
+  prevQuestion,
+  nextQuestion,
+  checkPracticeAnswer,
+} = testPaperStore
+const {
+  testInfo,
+  singleQuestions,
+  multiQuestions,
+  trueFalseQuestions,
+  subjectiveQuestions,
+  testResult,
+  questions,
+} = storeToRefs(testPaperStore)
+const subjectiveAnswer = computed({
+  get: () => {
+    const answer = answerSheet.value.find(
+      (item) => item.questionId === currentQuestion.value?.id,
+    )?.answer
+    return typeof answer === 'string' ? answer : ''
+  },
+  set: setSubjectiveAnswer,
+})
 const questionTypeMap = ref({
   [QuestionType.SingleChoice]: '单选题',
   [QuestionType.MultiChoice]: '多选题',
   [QuestionType.TrueFalse]: '判断题',
+  [QuestionType.Subjective]: '主观题',
 })
 const handleCollect = async () => {
   if (currentQuestion.value?.isCollected) {
@@ -235,55 +354,118 @@ const handleRestart = (id: number) => {
   result.value = result.value.filter((r) => r.questionId !== id)
   answerSheet.value = answerSheet.value.filter((r) => r.questionId !== id)
 }
-const aiResponse = ref<string>('')
+const sessionMessages = ref<{ id: string; role: string; content: string }[]>([])
 const inputMessage = ref<string>('')
-const controller: AbortController = new AbortController()
-const AiConsultation = async () => {
-  try {
-    inputMessage.value = await ElMessageBox.prompt('', 'AI助手在线答疑', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      inputPlaceholder: '请输入疑惑内容',
-    })
-  } catch (e) {
-    return e
-  }
+const chatExpanded = ref(false)
+const isConsulting = ref(false)
+const isClearingHistory = ref(false)
 
+const loadConsultationHistory = async () => {
+  try {
+    const history = await getConsultationHistory()
+    sessionMessages.value = history.map((item) => ({
+      id: item.id.toString(),
+      role: item.role,
+      content: item.content,
+    }))
+  } catch (error) {
+    console.error('加载咨询历史失败', error)
+  }
+}
+
+watch(
+  () => testInfo.value,
+  () => {
+    if (testInfo.value?.model === TestModel.Practice) loadConsultationHistory()
+  },
+  { immediate: true },
+)
+
+const handleClearConsultationHistory = async () => {
+  if (!sessionMessages.value.length || isConsulting.value || isClearingHistory.value) return
+
+  try {
+    await ElMessageBox.confirm('清空后无法恢复，确定清空全部咨询历史吗？', '清空咨询历史', {
+      confirmButtonText: '确定清空',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
+    isClearingHistory.value = true
+    await clearConsultationHistory()
+    sessionMessages.value = []
+    ElMessage.success('咨询历史已清空')
+  } catch (error) {
+    if (error !== 'cancel' && error !== 'close') {
+      console.error('清空咨询历史失败', error)
+      ElMessage.error('清空咨询历史失败')
+    }
+  } finally {
+    isClearingHistory.value = false
+  }
+}
+
+const handleConsultSubmit = async () => {
+  if (!inputMessage.value.trim() || isConsulting.value || !currentQuestion.value?.id) return
+  chatExpanded.value = true
+  await AiConsultation()
+}
+
+const AiConsultation = async () => {
+  const message = inputMessage.value.trim()
+  if (!message) return
+
+  const controller = new AbortController()
   let retryCount = 0
-  await fetchEventSource('/api/question/chat', {
+  isConsulting.value = true
+  sessionMessages.value.push({
+    id: new Date().getTime().toString() + '1',
+    role: 'user',
+    content: message,
+  })
+  inputMessage.value = ''
+  const newRes = {
+    id: new Date().getTime().toString() + '2',
+    role: 'assistant',
+    content: '',
+  }
+  sessionMessages.value.push(newRes)
+  const aiResponse = sessionMessages.value.find((item) => item.id === newRes.id)
+  const token = localStorage.getItem('token')
+  await fetchEventSource(getConsultationStreamUrl(currentQuestion.value!.id), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(
-      `问题情况如下：${{
-        content: currentQuestion.value?.content,
-        options: currentQuestion.value?.options.map((o) => o.text),
-        myAnswer: result.value?.find((r) => r.questionId === currentQuestion.value?.id)?.yourAnswer,
-        correctAnswer: result.value?.find((r) => r.questionId === currentQuestion.value?.id)
-          ?.correctAnswer,
-      }}\n
-      我想咨询：${inputMessage.value}\n
-      `,
-    ),
+    body: JSON.stringify({
+      content: message,
+    }),
     signal: controller.signal,
     onmessage: (event) => {
-      const raw = event.data
-      // event.data may be a plain string (e.g. '[DONE]') or a JSON string with a `type` field
-      if (raw === '[DONE]') {
-        controller.abort()
-        return
-      }
+      const delta = event.data
       try {
-        const data = JSON.parse(raw)
-        if (data?.type === '[DONE]') {
+        if (!aiResponse) {
+          controller.abort()
+          ElMessage.error('未知错误')
+          return
+        }
+        const data = JSON.parse(delta)
+        if (data?.type === 'done') {
           controller.abort()
           return
         }
+        if (data?.type === 'error') {
+          controller.abort()
+          ElMessage.error(data.message)
+          aiResponse.content = data.message
+          return
+        }
         if (data?.type === 'delta' && data?.content) {
-          aiResponse.value += data.content
+          aiResponse.content +=
+            typeof data.content === 'string' ? data.content : (data.content.content ?? '')
         }
       } catch (e) {
+        if (aiResponse) aiResponse.content = 'Invalid JSON in event data'
         console.error('Invalid JSON in event data', e)
       }
     },
@@ -295,23 +477,35 @@ const AiConsultation = async () => {
         retryCount++
         return 3000
       }
+      if (aiResponse) aiResponse.content = err
       controller.abort()
       throw new Error(err)
     },
   }).finally(() => {
+    controller.abort()
     retryCount = 0
+    isConsulting.value = false
   })
 }
 </script>
 <style scoped lang="scss">
+.right {
+  width: calc(100% - 264px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
+}
 .main {
+  box-sizing: border-box;
   padding: 24px;
   max-height: calc(100svh - 86px);
+  min-height: 550px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   overflow: auto;
-  width: calc(100% - 264px);
+  width: 100%;
   background-color: #fff;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
   position: relative;
@@ -507,6 +701,212 @@ const AiConsultation = async () => {
     display: flex;
     justify-content: space-between;
     gap: 12px;
+  }
+
+  .ai-consult {
+    flex: 1;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0 0 4px;
+    border: 1px solid #dfe8f6;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(48, 91, 154, 0.08);
+    overflow: hidden;
+    transition: box-shadow 0.2s ease;
+
+    &.is-expanded {
+      box-shadow: 0 12px 32px rgba(48, 91, 154, 0.14);
+    }
+  }
+
+  .chat-panel {
+    border-bottom: 1px solid #edf1f7;
+  }
+
+  .chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px 10px;
+
+    div {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    strong {
+      color: #234064;
+      font-size: 15px;
+    }
+
+    span {
+      color: #8a98aa;
+      font-size: 12px;
+    }
+  }
+
+  .chat-close {
+    width: 28px;
+    height: 28px;
+    border: 0;
+    border-radius: 8px;
+    color: #8795a8;
+    background: transparent;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+
+    &:hover {
+      color: #548ef7;
+      background: #f2f6fc;
+    }
+  }
+
+  .chat-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .chat-clear {
+    border: 0;
+    border-radius: 7px;
+    padding: 5px 8px;
+    color: #8997aa;
+    background: transparent;
+    font-size: 12px;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      color: #e06b63;
+      background: #fff1f0;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.4;
+    }
+  }
+
+  .chat-messages {
+    max-height: 260px;
+    padding: 8px 16px 16px;
+    overflow-y: auto;
+  }
+
+  .chat-empty {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 64px;
+    color: #718096;
+    font-size: 13px;
+
+    p {
+      margin: 0;
+    }
+  }
+
+  .chat-empty-icon,
+  .message-role,
+  .consult-badge {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    color: #fff;
+    background: linear-gradient(135deg, #6ba4ff, #477be9);
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .chat-message {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 12px;
+
+    &.is-user {
+      flex-direction: row-reverse;
+
+      .message-role {
+        color: #58708e;
+        background: #edf3fb;
+      }
+
+      .message-content {
+        color: #fff;
+        background: #548ef7;
+      }
+    }
+  }
+
+  .message-role {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+  }
+
+  .message-content {
+    max-width: min(78%, 620px);
+    padding: 9px 12px;
+    border-radius: 12px;
+    color: #3d5168;
+    background: #f3f6fa;
+    font-size: 14px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+  }
+
+  .consult-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+
+    input {
+      min-width: 0;
+      flex: 1;
+      border: 0;
+      outline: none;
+      color: #34495e;
+      background: transparent;
+      font-size: 14px;
+
+      &::placeholder {
+        color: #a1adbc;
+      }
+    }
+
+    button {
+      border: 0;
+      border-radius: 9px;
+      padding: 8px 16px;
+      color: #fff;
+      background: #548ef7;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+
+      &:hover:not(:disabled) {
+        background: #3d78e5;
+      }
+
+      &:disabled {
+        cursor: not-allowed;
+        opacity: 0.45;
+      }
+    }
+  }
+
+  .consult-badge {
+    width: 28px;
+    height: 28px;
   }
 
   .inner {

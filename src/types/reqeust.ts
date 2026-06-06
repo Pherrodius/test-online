@@ -6,7 +6,7 @@ export interface CreateQuestionRequest {
     key: Answer
     text: string
   }[]
-  answer: Answer | Answer[]
+  answer: Answer | Answer[] | string
   bank?: string
   bankId?: number
   disciplineId?: number
@@ -28,7 +28,7 @@ export interface GetQuestionRequest {
 
 export interface CheckAnswerRequest {
   questionId: number
-  answer: Answer | Answer[]
+  answer: Answer | Answer[] | string
 }
 export enum TestType {
   SeqPractice = 'SeqPractice',
@@ -154,6 +154,7 @@ export interface EditQuestionReq {
   singleAnswer?: Answer | null
   multiChoiceAnswer?: Answer[]
   trueFalseAnswer?: Answer | null
+  subjectiveAnswer?: string | null
   explanation?: string
   riskLevel?: number
 }

@@ -310,7 +310,7 @@ const featureCards = [
     iconClass: 'sprite-past-paper',
   },
   {
-    title: '章节练习',
+    title: 'AI答疑',
     iconClass: 'sprite-chapter',
   },
   {

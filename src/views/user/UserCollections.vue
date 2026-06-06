@@ -107,6 +107,7 @@ const questionTypeMap = {
   [QuestionType.SingleChoice]: '单选题',
   [QuestionType.MultiChoice]: '多选题',
   [QuestionType.TrueFalse]: '判断题',
+  [QuestionType.Subjective]: '主观题',
 }
 
 const getQuestionTypeText = (type: QuestionType) => questionTypeMap[type] ?? type

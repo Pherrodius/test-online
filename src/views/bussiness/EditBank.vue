@@ -29,6 +29,11 @@
           :typedQuestions="trueFalseQuestions"
           v-if="trueFalseQuestions.length"
         />
+        <TestLeftNavi
+          :type="QuestionType.Subjective"
+          :typedQuestions="subjectiveQuestions"
+          v-if="subjectiveQuestions.length"
+        />
       </div>
       <EditMain v-if="currentQuestion" v-model:refreshKey="refreshKey" />
     </div>
@@ -48,8 +53,14 @@ const testPaperStore = useTestPaperStore()
 const route = useRoute()
 const bank = ref<Bank | null>(null)
 const refreshKey = ref(1)
-const { questions, currentQuestion, singleQuestions, multiQuestions, trueFalseQuestions } =
-  storeToRefs(testPaperStore)
+const {
+  questions,
+  currentQuestion,
+  singleQuestions,
+  multiQuestions,
+  trueFalseQuestions,
+  subjectiveQuestions,
+} = storeToRefs(testPaperStore)
 
 const render = async () => {
   {
@@ -74,6 +85,7 @@ const render = async () => {
         singleAnswer: null,
         multiChoiceAnswer: [],
         trueFalseAnswer: null,
+        subjectiveAnswer: null,
         riskLevel: 2,
         createdTime: '',
         bankId: Number(route.params.id),
@@ -96,6 +108,7 @@ const render = async () => {
       singleQuestions.value[0] ??
       multiQuestions.value[0] ??
       trueFalseQuestions.value[0] ??
+      subjectiveQuestions.value[0] ??
       questions.value[0] ??
       null
   }

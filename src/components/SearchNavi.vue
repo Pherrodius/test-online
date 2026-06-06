@@ -75,11 +75,15 @@ import { ElMessage } from 'element-plus'
 import { computed, markRaw, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { CircleClose, Collection, SwitchButton, User } from '@element-plus/icons-vue'
-const userInfo = localStorage.getItem('userInfo')
-  ? JSON.parse(localStorage.getItem('userInfo')!)
-  : null
-const isLogin = computed(() => !!userInfo)
-const avatar = new URL('@/assets/images/def-head.png', import.meta.url).href
+const userInfo = computed(() =>
+  localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')!) : null,
+)
+const avatar = computed(() =>
+  userInfo.value.avatarUrl
+    ? new URL(userInfo.value.avatarUrl, import.meta.url).href
+    : new URL('@/assets/images/def-head.png', import.meta.url).href,
+)
+const isLogin = computed(() => !!userInfo.value)
 const router = useRouter()
 const menuItems = ref([
   {

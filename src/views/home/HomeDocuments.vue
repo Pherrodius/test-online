@@ -28,6 +28,12 @@
                 <span>{{ dayjs(document.createdTime).format('YYYY-MM-DD') }}</span>
               </div>
             </div>
+            <el-button
+              class="outline-btn"
+              @click="previewDocument(document.url)"
+              v-if="document.mimeType === 'application/pdf'"
+              >预览</el-button
+            >
             <el-button class="outline-btn" @click="downloadDocument(document.id)">下载</el-button>
           </div>
         </div>
@@ -85,7 +91,9 @@ const formatFileSize = (size: number) => {
 const downloadDocument = (id: number) => {
   window.location.href = `/api/files/download/${id}`
 }
-
+const previewDocument = (url: string) => {
+  window.open(`${url}`, '_blank')
+}
 onMounted(async () => {
   documents.value = await getFiles()
 })

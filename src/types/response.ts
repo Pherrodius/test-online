@@ -12,6 +12,7 @@ import type {
   Resolution,
   SingleAnswer,
   TrueFalseAnswer,
+  SubjectiveAnswer,
   TestHistory,
   BankCollection,
   User,
@@ -25,7 +26,7 @@ export interface CreateQuestionResponse {
   options: { key: Answer; text: string }[]
   bank: string
   discipline: string
-  answer: Answer | Answer[]
+  answer: Answer | Answer[] | string
 }
 
 export interface CreateManyQuestionsResponse {
@@ -49,6 +50,7 @@ export interface GetQuestionDetailResponse {
   singleAnswer: SingleAnswer | null
   multiChoiceAnswer: MultiChoiceAnswer[]
   trueFalseAnswer: TrueFalseAnswer | null
+  subjectiveAnswer: SubjectiveAnswer | null
 }
 
 export type GetQuestionListResponse = Omit<

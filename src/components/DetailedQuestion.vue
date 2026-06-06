@@ -4,7 +4,7 @@
       <div class="q-content">
         <div class="index" v-if="index !== undefined">{{ index + 1 }}、</div>
         <div class="label">{{ questionTypeMap[question?.type || QuestionType.SingleChoice] }}</div>
-        <div class="value">{{ question?.content || '' }}（ ）</div>
+        <div class="value">{{ question?.content || '' }}</div>
       </div>
       <div class="q-option" v-if="question?.type === QuestionType.MultiChoice">
         <div
@@ -68,6 +68,7 @@
           question?.singleAnswer?.answerKey ||
           question?.multiChoiceAnswer?.map((ans) => ans.answerKey).join(',') ||
           question?.trueFalseAnswer?.answerKey ||
+          question?.subjectiveAnswer?.reference ||
           ''
         }}</span>
       </div>
@@ -128,6 +129,7 @@ const questionTypeMap = ref({
   [QuestionType.SingleChoice]: '单选题',
   [QuestionType.MultiChoice]: '多选题',
   [QuestionType.TrueFalse]: '判断题',
+  [QuestionType.Subjective]: '主观题',
 })
 const handleCollect = async () => {
   if (isCollected.value?.isNoted) {

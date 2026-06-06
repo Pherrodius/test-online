@@ -150,8 +150,8 @@ const handleDialogClose = (done: () => void) => {
 
 const stats = ref([
   {
-    label: '累计练习',
-    value: computed(() => `${overview.value?.practiceCount || 0}题`),
+    label: '累计测试',
+    value: computed(() => `${overview.value?.practiceCount || 0}次`),
     icon: markRaw(EditPen),
     color: '#409eff',
   },

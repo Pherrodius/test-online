@@ -17,7 +17,7 @@
         @click="router.push(`/question/${item.id}`)"
       >
         <div class="label">{{ questionTypeMap[item.type] }}</div>
-        <div class="value">{{ item.content }}（ ）</div>
+        <div class="value">{{ item.content }}</div>
       </div>
     </div>
     <el-empty description="暂无相关题目" v-if="!filteredQuestions.length" />
@@ -42,11 +42,13 @@ const questionTypes = ref([
   { label: '单选', index: QuestionType.SingleChoice },
   { label: '多选', index: QuestionType.MultiChoice },
   { label: '判断', index: QuestionType.TrueFalse },
+  { label: '主观', index: QuestionType.Subjective },
 ])
 const questionTypeMap = ref({
   [QuestionType.SingleChoice]: '单选题',
   [QuestionType.MultiChoice]: '多选题',
   [QuestionType.TrueFalse]: '判断题',
+  [QuestionType.Subjective]: '主观题',
 })
 const props = defineProps<{
   questions: {

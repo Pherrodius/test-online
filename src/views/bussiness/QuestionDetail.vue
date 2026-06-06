@@ -15,7 +15,7 @@
           >
             <div class="q-content">
               <div class="label">{{ questionTypeMap[item.type] }}</div>
-              <div class="value">{{ item.content }}（）</div>
+              <div class="value">{{ item.content }}</div>
             </div>
             <div class="option">
               <div v-for="(option, index) in item.options" :key="index" class="option-item">
@@ -50,6 +50,7 @@ const questionTypeMap = ref({
   [QuestionType.SingleChoice]: '单选题',
   [QuestionType.MultiChoice]: '多选题',
   [QuestionType.TrueFalse]: '判断题',
+  [QuestionType.Subjective]: '主观题',
 })
 const initialize = async () => {
   question.value = await getQuestionDetail(Number(route.params.id))
@@ -61,7 +62,6 @@ const initialize = async () => {
 }
 const reloadQuestion = async (id: number) => {
   await router.push(`/question/${id}`)
-  location.reload()
 }
 onMounted(async () => {
   await initialize()

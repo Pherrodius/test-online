@@ -41,10 +41,14 @@ export function createManyQuestions(data: CreateQuestionRequest[]) {
   return request.post<unknown, CreateManyQuestionsResponse>('/question', data)
 }
 export function checkAnswer(data: CheckAnswerRequest) {
-  return request.post<unknown, CheckAnswerResponse>('/question/check', data)
+  return request.post<unknown, CheckAnswerResponse>('/question/check', data, {
+    timeout: 5 * 60 * 1000,
+  })
 }
 export function submitTest(data: SubmitTestRequest) {
-  return request.post<unknown, SubmitTestResponse>('/question/submit', data)
+  return request.post<unknown, SubmitTestResponse>('/question/submit', data, {
+    timeout: 50 * 60 * 1000,
+  })
 }
 export function isCollectionExist(questionId: number) {
   return request.get<unknown, isCollectionExistResponse>(`/question/collection/exist`, {

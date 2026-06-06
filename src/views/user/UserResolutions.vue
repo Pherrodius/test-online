@@ -23,12 +23,16 @@
         </el-table-column>
         <el-table-column label="题目" class="question-content">
           <template #default="{ row }">
-            {{ row.question.content }}
+            <div class="a-label" @click="$router.push(`/question/${row.questionId}`)">
+              {{ row.question.content }}
+            </div>
           </template>
         </el-table-column>
         <el-table-column label="题库" width="150">
           <template #default="{ row }">
-            {{ row.question.bank.name }}
+            <div class="a-label" @click="$router.push(`/bank/${row.question.bankId}`)">
+              {{ row.question.bank.name }}
+            </div>
           </template>
         </el-table-column>
         <el-table-column label="学科" width="150">
@@ -41,7 +45,7 @@
             {{ row.isCorrect ? '正确' : '错误' }}
           </template>
         </el-table-column>
-        <el-table-column prop="takenTime" label="正确答案" width="120">
+        <el-table-column prop="takenTime" label="正确答案" show-overflow-tooltip width="120">
           <template #default="{ row }">
             {{
               Array.isArray(JSON.parse(row.correctAnswer))
@@ -50,7 +54,7 @@
             }}
           </template>
         </el-table-column>
-        <el-table-column label="我的答案" width="120">
+        <el-table-column label="我的答案" width="120" show-overflow-tooltip>
           <template #default="{ row }">
             {{
               Array.isArray(JSON.parse(row.yourAnswer))
@@ -131,7 +135,13 @@ onMounted(async () => {
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(31, 45, 61, 0.06);
 }
-
+.a-label {
+  margin: 0;
+  cursor: pointer;
+  &:hover {
+    color: #409eff;
+  }
+}
 .page-header {
   display: flex;
   justify-content: space-between;

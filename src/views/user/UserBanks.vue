@@ -31,7 +31,7 @@
             </div>
           </div>
           <p>{{ item.description }}</p>
-          <el-progress :percentage="(100 * item.progress) / item.count || 0" />
+          <el-progress :percentage="((100 * item.progress) / item.count || 0).toFixed(0)" />
           <div class="bank-foot">
             <span>{{ item.count }} 道题</span>
             <div class="bank-actions">

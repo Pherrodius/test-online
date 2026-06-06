@@ -54,6 +54,7 @@ const questionTypeLabels: Record<QuestionType, string> = {
   [QuestionType.SingleChoice]: '单选题',
   [QuestionType.MultiChoice]: '多选题',
   [QuestionType.TrueFalse]: '判断题',
+  [QuestionType.Subjective]: '主观题',
 }
 
 onMounted(async () => {

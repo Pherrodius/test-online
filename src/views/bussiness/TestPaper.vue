@@ -1,5 +1,5 @@
 <template>
-  <div class="test-paper">
+  <div class="test-paper" v-loading="loading">
     <div class="path">
       <el-breadcrumb separator="/" class="breadcrumb" :separator-icon="ArrowRight">
         <el-icon color="#999">
@@ -52,9 +52,14 @@
               :typedQuestions="trueFalseQuestions"
               v-if="trueFalseQuestions.length"
             />
+            <TestLeftNavi
+              :type="QuestionType.Subjective"
+              :typedQuestions="subjectiveQuestions"
+              v-if="subjectiveQuestions.length"
+            />
           </el-scrollbar>
         </div>
-        <div class="question-count">
+        <div class="question-count" v-if="result.length > 0">
           <p class="result">
             <span
               >答对:
@@ -71,7 +76,8 @@
           </p>
           <p>
             正确率：{{
-              ((result.filter((item) => item.isCorrect).length / result.length) * 100).toFixed(2)
+              ((result.filter((item) => item.isCorrect).length / result.length) * 100).toFixed(2) ||
+              0
             }}%
           </p>
         </div>
@@ -107,64 +113,75 @@ const {
   singleQuestions,
   multiQuestions,
   trueFalseQuestions,
+  subjectiveQuestions,
   practicedQuestions,
   result,
   answerSheet,
+  loading,
 } = storeToRefs(testPaperStore)
 onMounted(async () => {
-  // 获取测试信息
-  testInfo.value = {
-    bankId: Number(route.query.bankId as string),
-    disciplineId: Number(route.query.disciplineId as string) || undefined,
-    isDay: Number(route.query.isDay as string) || 0,
-    collectionType: route.query.collectionType as CollectionType,
-    questionType: route.query.questionType as string,
-    model: route.query.model as TestModel,
-  }
-
-  const payload = filterAttributes({
-    bankId: testInfo.value.bankId,
-    disciplineId: testInfo.value.disciplineId,
-    type: testInfo.value.collectionType as CollectionType,
-    isDay: testInfo.value.isDay !== 0 ? 1 : 0,
-    questionType: testInfo.value.questionType as QuestionType,
-    number: testInfo.value.model === TestModel.Test ? testConfig.value?.amount : null,
-  })
-  // 获取题目
-  if (testInfo.value.collectionType) {
-    await getCollectionList(payload).then((res) => {
-      const data = res.records
-      questions.value = practiceConfig.value?.random ? data.sort(() => Math.random() - 0.5) : data
-    })
-  } else {
-    await getQuestionList(payload).then((res) => {
-      questions.value =
-        practiceConfig.value?.random && testInfo.value?.model === TestModel.Practice
-          ? res.sort(() => Math.random() - 0.5)
-          : res
-    })
-  }
-  currentQuestion.value =
-    singleQuestions.value[0] || multiQuestions.value[0] || trueFalseQuestions.value[0] || null
-  // 获取练习记录
-  if (
-    testInfo.value.model === TestModel.Practice &&
-    practiceConfig.value?.random === false &&
-    !testInfo.value.collectionType
-  ) {
-    practicedQuestions.value = await getResolutions(payload)
-    if (practicedQuestions.value.length > 0) {
-      currentQuestion.value =
-        questions.value.find((q) => q.id === practicedQuestions.value![0]!.questionId) ??
-        currentQuestion.value
-      answerSheet.value = practicedQuestions.value.map((q) => {
-        return {
-          questionId: q.questionId,
-          answer: JSON.parse(q.yourAnswer) as Answer | Answer[],
-        }
-      })
-      result.value = practicedQuestions.value
+  loading.value = true
+  try {
+    // 获取测试信息
+    testInfo.value = {
+      bankId: Number(route.query.bankId as string),
+      disciplineId: Number(route.query.disciplineId as string) || undefined,
+      isDay: Number(route.query.isDay as string) || 0,
+      collectionType: route.query.collectionType as CollectionType,
+      questionType: route.query.questionType as string,
+      model: route.query.model as TestModel,
     }
+
+    const payload = filterAttributes({
+      bankId: testInfo.value.bankId,
+      disciplineId: testInfo.value.disciplineId,
+      type: testInfo.value.collectionType as CollectionType,
+      isDay: testInfo.value.isDay !== 0 ? 1 : 0,
+      questionType: testInfo.value.questionType as QuestionType,
+      number: testInfo.value.model === TestModel.Test ? testConfig.value?.amount : null,
+    })
+    // 获取题目
+    if (testInfo.value.collectionType) {
+      await getCollectionList(payload).then((res) => {
+        const data = res.records
+        questions.value = practiceConfig.value?.random ? data.sort(() => Math.random() - 0.5) : data
+      })
+    } else {
+      await getQuestionList(payload).then((res) => {
+        questions.value =
+          practiceConfig.value?.random && testInfo.value?.model === TestModel.Practice
+            ? res.sort(() => Math.random() - 0.5)
+            : res
+      })
+    }
+    currentQuestion.value =
+      singleQuestions.value[0] ||
+      multiQuestions.value[0] ||
+      trueFalseQuestions.value[0] ||
+      subjectiveQuestions.value[0] ||
+      null
+    // 获取练习记录
+    if (
+      testInfo.value.model === TestModel.Practice &&
+      practiceConfig.value?.random === false &&
+      !testInfo.value.collectionType
+    ) {
+      practicedQuestions.value = await getResolutions(payload)
+      if (practicedQuestions.value.length > 0) {
+        currentQuestion.value =
+          questions.value.find((q) => q.id === practicedQuestions.value![0]!.questionId) ??
+          currentQuestion.value
+        answerSheet.value = practicedQuestions.value.map((q) => {
+          return {
+            questionId: q.questionId,
+            answer: JSON.parse(q.yourAnswer) as Answer | Answer[] | string,
+          }
+        })
+        result.value = practicedQuestions.value
+      }
+    }
+  } finally {
+    loading.value = false
   }
 })
 onUnmounted(() => testPaperStore.resetStore())
@@ -172,7 +189,7 @@ onUnmounted(() => testPaperStore.resetStore())
 <style scoped lang="scss">
 .test-paper {
   background-color: #f5f5f5;
-
+  flex: 1;
   .path {
     padding: 8px;
     margin: 0 auto;
@@ -199,12 +216,15 @@ onUnmounted(() => testPaperStore.resetStore())
     padding: 0;
     margin: 0 auto;
     display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
     max-width: 1200px;
     padding-bottom: 24px;
 
     .left {
       position: relative;
-      width: 240px;
+      flex: 0 0 240px;
+      height: min(75svh, 800px);
       display: flex;
       flex-direction: column;
       overflow: auto;

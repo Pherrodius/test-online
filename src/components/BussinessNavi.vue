@@ -84,14 +84,15 @@ import { SearchType } from '@/types/prisma'
 const searchStore = useSearchStore()
 const { currentType, currentInput } = storeToRefs(searchStore)
 const { handleSearch, setSearchType } = searchStore
-const userInfo = localStorage.getItem('userInfo')
-  ? JSON.parse(localStorage.getItem('userInfo')!)
-  : null
-const isLogin = computed(() => !!userInfo)
-const avatar = new URL(
-  JSON.parse(localStorage.getItem('userInfo') || '').avatarUrl,
-  import.meta.url,
-).href
+const userInfo = computed(() =>
+  localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')!) : null,
+)
+const avatar = computed(() =>
+  userInfo.value.avatarUrl
+    ? new URL(userInfo.value.avatarUrl, import.meta.url).href
+    : new URL('@/assets/images/def-head.png', import.meta.url).href,
+)
+const isLogin = computed(() => !!userInfo.value)
 const router = useRouter()
 const menuItems = ref([
   {

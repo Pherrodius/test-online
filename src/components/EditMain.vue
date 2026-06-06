@@ -28,6 +28,7 @@
               <el-option label="单选题" :value="QuestionType.SingleChoice" />
               <el-option label="多选题" :value="QuestionType.MultiChoice" />
               <el-option label="判断题" :value="QuestionType.TrueFalse" />
+              <el-option label="主观题" :value="QuestionType.Subjective" />
             </el-select>
           </div>
           <el-input
@@ -61,6 +62,13 @@
               <el-input v-model="item.text" />
             </div>
           </el-radio-group>
+          <el-input
+            v-else-if="currentQuestion.type === QuestionType.Subjective"
+            v-model="subjectiveReference"
+            type="textarea"
+            :rows="6"
+            placeholder="请输入参考答案"
+          />
           <el-radio-group
             v-else-if="currentQuestion.type === QuestionType.TrueFalse"
             v-model="trueFalseAnswerKey"
@@ -130,6 +138,7 @@
                 <el-option label="单选题" :value="QuestionType.SingleChoice" />
                 <el-option label="多选题" :value="QuestionType.MultiChoice" />
                 <el-option label="判断题" :value="QuestionType.TrueFalse" />
+                <el-option label="主观题" :value="QuestionType.Subjective" />
               </el-select>
             </div>
             <el-input
@@ -165,6 +174,13 @@
                 <el-input v-model="item.text" placeholder="请输入选项内容" />
               </div>
             </el-radio-group>
+            <el-input
+              v-else-if="createForm.type === QuestionType.Subjective"
+              v-model="createForm.subjectiveAnswer"
+              type="textarea"
+              :rows="6"
+              placeholder="请输入参考答案"
+            />
 
             <el-radio-group
               v-else-if="createForm.type === QuestionType.TrueFalse"
@@ -237,6 +253,15 @@ const createForm = reactive({
   singleAnswer: undefined as Answer | undefined,
   multiChoiceAnswer: [] as Answer[],
   trueFalseAnswer: undefined as Answer | undefined,
+  subjectiveAnswer: '',
+})
+
+const subjectiveReference = computed({
+  get: () => currentQuestion.value?.subjectiveAnswer?.reference ?? '',
+  set: (reference: string) => {
+    if (!currentQuestion.value) return
+    currentQuestion.value.subjectiveAnswer = { questionId: currentQuestion.value.id, reference }
+  },
 })
 
 const singleAnswerKey = computed({
@@ -288,6 +313,8 @@ const correctAnswerText = computed(() => {
       return currentQuestion.value.multiChoiceAnswer?.map((ans) => ans.answerKey).join(',')
     case QuestionType.TrueFalse:
       return currentQuestion.value.trueFalseAnswer?.answerKey
+    case QuestionType.Subjective:
+      return currentQuestion.value.subjectiveAnswer?.reference
     default:
       return ''
   }
@@ -300,6 +327,8 @@ const questionTypeText = computed(() => {
       return '多选题'
     case QuestionType.TrueFalse:
       return '判断题'
+    case QuestionType.Subjective:
+      return '主观题'
     default:
       return ''
   }
@@ -312,6 +341,8 @@ const createCorrectAnswerText = computed(() => {
       return createForm.multiChoiceAnswer.join(',')
     case QuestionType.TrueFalse:
       return createForm.trueFalseAnswer
+    case QuestionType.Subjective:
+      return createForm.subjectiveAnswer
     default:
       return ''
   }
@@ -321,6 +352,7 @@ const resetCreateAnswer = () => {
   createForm.singleAnswer = undefined
   createForm.multiChoiceAnswer = []
   createForm.trueFalseAnswer = undefined
+  createForm.subjectiveAnswer = ''
 }
 
 const resetCreateForm = () => {
@@ -361,6 +393,8 @@ const getCreateAnswer = () => {
       return createForm.multiChoiceAnswer
     case QuestionType.TrueFalse:
       return createForm.trueFalseAnswer
+    case QuestionType.Subjective:
+      return createForm.subjectiveAnswer
     default:
       return createForm.singleAnswer
   }
@@ -374,7 +408,10 @@ const createNewQuestion = async () => {
     return
   }
 
-  if (createForm.options.some((option) => !option.text.trim())) {
+  if (
+    createForm.type !== QuestionType.Subjective &&
+    createForm.options.some((option) => !option.text.trim())
+  ) {
     ElMessage.error('请填写完整选项')
     return
   }
@@ -387,10 +424,13 @@ const createNewQuestion = async () => {
   const payload: CreateQuestionRequest = {
     type: createForm.type,
     content: createForm.content,
-    options: createForm.options.map((option) => ({
-      key: option.key,
-      text: option.text,
-    })),
+    options:
+      createForm.type === QuestionType.Subjective
+        ? []
+        : createForm.options.map((option) => ({
+            key: option.key,
+            text: option.text,
+          })),
     answer,
     bankId: Number(route.params.id as string) || 0,
     disciplineId: Number(route.query.disciplineId as string) || 0,
@@ -420,6 +460,7 @@ const saveEdit = async () => {
     singleAnswer: currentQuestion.value.singleAnswer?.answerKey,
     multiChoiceAnswer: currentQuestion.value.multiChoiceAnswer?.map((ans) => ans.answerKey),
     trueFalseAnswer: currentQuestion.value.trueFalseAnswer?.answerKey,
+    subjectiveAnswer: currentQuestion.value.subjectiveAnswer?.reference,
   }
   await editQuestion(currentQuestion.value.id, payload)
   ElMessage.success('保存成功')

@@ -2,6 +2,7 @@ export enum QuestionType {
   SingleChoice = 'SingleChoice',
   MultiChoice = 'MultiChoice',
   TrueFalse = 'TrueFalse',
+  Subjective = 'Subjective',
 }
 
 export enum Answer {
@@ -71,6 +72,11 @@ export interface TrueFalseAnswer {
   answerKey: Answer
 }
 
+export interface SubjectiveAnswer {
+  questionId: number
+  reference: string
+}
+
 export interface Question {
   id: number
   type: QuestionType
@@ -84,6 +90,7 @@ export interface Question {
   singleAnswer?: SingleAnswer | null
   multiChoiceAnswer?: MultiChoiceAnswer[]
   trueFalseAnswer?: TrueFalseAnswer | null
+  subjectiveAnswer?: SubjectiveAnswer | null
 }
 
 export interface Bank {

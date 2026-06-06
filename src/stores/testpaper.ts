@@ -31,6 +31,7 @@ export const useTestPaperStore = defineStore('testpaper', () => {
   const currentQuestion = ref<(Question & { isCollected?: boolean; options: Option[] }) | null>(
     null,
   )
+  const loading = ref(false)
   const questions = ref<GetQuestionListResponse[] | GetQuestionDetailResponse[]>([])
   const practicedQuestions = ref<GetResolutionsResponse>()
   const answerSheet = ref<CheckAnswerRequest[]>([])
@@ -78,7 +79,11 @@ export const useTestPaperStore = defineStore('testpaper', () => {
   const trueFalseQuestions = computed(() =>
     questions.value.filter((item) => item.type === QuestionType.TrueFalse),
   )
+  const subjectiveQuestions = computed(() =>
+    questions.value.filter((item) => item.type === QuestionType.Subjective),
+  )
   const resetStore = () => {
+    loading.value = false
     currentQuestion.value = null
     questions.value = []
     answerSheet.value = []
@@ -135,11 +140,25 @@ export const useTestPaperStore = defineStore('testpaper', () => {
     }
     if (
       practiceConfig.value.autoCheck &&
-      currentQuestion.value?.type !== QuestionType.MultiChoice
+      (currentQuestion.value?.type === QuestionType.SingleChoice ||
+        currentQuestion.value?.type === QuestionType.TrueFalse)
     ) {
       checkPracticeAnswer()
     }
     console.log(answerSheet.value)
+  }
+  const setSubjectiveAnswer = (answer: string) => {
+    if (!currentQuestion.value || currentQuestion.value.type !== QuestionType.Subjective) return
+    const existing = answerSheet.value.find((item) => item.questionId === currentQuestion.value?.id)
+    if (!answer.trim()) {
+      answerSheet.value = answerSheet.value.filter(
+        (item) => item.questionId !== currentQuestion.value?.id,
+      )
+    } else if (existing) {
+      existing.answer = answer
+    } else {
+      answerSheet.value.push({ questionId: currentQuestion.value.id, answer })
+    }
   }
   const submitAnswerSheet = async () => {
     if (testResult.value) {
@@ -154,17 +173,25 @@ export const useTestPaperStore = defineStore('testpaper', () => {
         cancelButtonText: '取消',
       },
     ).then(async () => {
-      testResult.value = await submitTest({
-        answerSheet: answerSheet.value,
-        disciplineId: testInfo.value?.disciplineId || 0,
-        bankId: testInfo.value?.bankId || 0,
-        takenTime: takenTime.value * 1000,
-        length: questions.value.length,
-      })
-      result.value = testResult.value.results
-      ElMessage.success('提交成功')
-      dialogVisible.value = true
-      localStorage.removeItem('answerSheet')
+      loading.value = true
+      try {
+        testResult.value = await submitTest({
+          answerSheet: answerSheet.value,
+          disciplineId: testInfo.value?.disciplineId || 0,
+          bankId: testInfo.value?.bankId || 0,
+          takenTime: takenTime.value * 1000,
+          length: questions.value.length,
+        })
+        loading.value = false
+        result.value = testResult.value.results
+        ElMessage.success('提交成功')
+        dialogVisible.value = true
+        localStorage.removeItem('answerSheet')
+      } catch (error) {
+        console.log(error)
+        ElMessage.error('提交失败')
+        loading.value = false
+      }
     })
   }
   const checkPracticeAnswer = async () => {
@@ -176,9 +203,15 @@ export const useTestPaperStore = defineStore('testpaper', () => {
       ElMessage.error('请先作答！')
       return
     }
-    await checkAnswer(item).then((data) => {
-      result.value.push(data)
-    })
+    loading.value = true
+    await checkAnswer(item)
+      .then((data) => {
+        result.value.push(data)
+        loading.value = false
+      })
+      .catch(() => {
+        loading.value = false
+      })
   }
   const prevQuestion = () => {
     let index: number
@@ -207,6 +240,16 @@ export const useTestPaperStore = defineStore('testpaper', () => {
             singleQuestions.value[singleQuestions.value.length - 1] ??
             currentQuestion.value
         }
+        break
+      case QuestionType.Subjective:
+        index =
+          subjectiveQuestions.value.findIndex((item) => item.id === currentQuestion.value?.id) - 1
+        currentQuestion.value =
+          subjectiveQuestions.value[index] ??
+          trueFalseQuestions.value[trueFalseQuestions.value.length - 1] ??
+          multiQuestions.value[multiQuestions.value.length - 1] ??
+          singleQuestions.value[singleQuestions.value.length - 1] ??
+          currentQuestion.value
         break
       default:
         currentQuestion.value = null
@@ -239,9 +282,16 @@ export const useTestPaperStore = defineStore('testpaper', () => {
         if (index < trueFalseQuestions.value.length) {
           currentQuestion.value = trueFalseQuestions.value[index] ?? currentQuestion.value
         } else {
-          currentQuestion.value =
-            trueFalseQuestions.value[trueFalseQuestions.value.length - 1] ?? currentQuestion.value
+          currentQuestion.value = subjectiveQuestions.value[0] ?? currentQuestion.value
         }
+        break
+      case QuestionType.Subjective:
+        index =
+          subjectiveQuestions.value.findIndex((item) => item.id === currentQuestion.value?.id) + 1
+        currentQuestion.value =
+          subjectiveQuestions.value[index] ??
+          subjectiveQuestions.value[subjectiveQuestions.value.length - 1] ??
+          currentQuestion.value
         break
       default:
         currentQuestion.value = null
@@ -256,13 +306,16 @@ export const useTestPaperStore = defineStore('testpaper', () => {
     singleQuestions,
     multiQuestions,
     trueFalseQuestions,
+    subjectiveQuestions,
     testResult,
     result,
     testInfo,
     dialogVisible,
     practicedQuestions,
+    loading,
     resetStore,
     pushAnswer,
+    setSubjectiveAnswer,
     submitAnswerSheet,
     prevQuestion,
     nextQuestion,

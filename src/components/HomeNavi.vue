@@ -117,14 +117,16 @@ const searchStore = useSearchStore()
 const { currentType, currentInput, searchTabs } = storeToRefs(searchStore)
 const { handleSearch, setSearchType } = searchStore
 const router = useRouter()
-const avatar = new URL(
-  JSON.parse(localStorage.getItem('userInfo') || '').avatarUrl,
-  import.meta.url,
-).href
-const userInfo = localStorage.getItem('userInfo')
-  ? JSON.parse(localStorage.getItem('userInfo')!)
-  : null
-const isLogin = computed(() => !!userInfo)
+
+const userInfo = computed(() =>
+  localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')!) : null,
+)
+const avatar = computed(() =>
+  userInfo.value.avatarUrl
+    ? new URL(userInfo.value.avatarUrl, import.meta.url).href
+    : new URL('@/assets/images/def-head.png', import.meta.url).href,
+)
+const isLogin = computed(() => !!userInfo.value)
 const menutabs = ref([
   { key: '/home', label: '全部' },
   { key: '/bank/category', label: '专业题库' },

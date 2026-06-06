@@ -23,6 +23,11 @@
         <template v-else-if="props.type === QuestionType.TrueFalse">
           {{ index + 1 + singleQuestions.length + multiQuestions.length }}
         </template>
+        <template v-else-if="props.type === QuestionType.Subjective">
+          {{
+            index + 1 + singleQuestions.length + multiQuestions.length + trueFalseQuestions.length
+          }}
+        </template>
       </div>
     </div>
   </div>
@@ -33,8 +38,14 @@ import { useTestPaperStore } from '@/stores/testpaper'
 import { storeToRefs } from 'pinia'
 import { QuestionType } from '@/types/prisma'
 const testPaperStore = useTestPaperStore()
-const { currentQuestion, answerSheet, singleQuestions, multiQuestions, result } =
-  storeToRefs(testPaperStore)
+const {
+  currentQuestion,
+  answerSheet,
+  singleQuestions,
+  multiQuestions,
+  trueFalseQuestions,
+  result,
+} = storeToRefs(testPaperStore)
 
 const props = defineProps<{
   type: QuestionType
@@ -44,6 +55,7 @@ const typeMap = {
   [QuestionType.SingleChoice]: '单选题',
   [QuestionType.MultiChoice]: '多选题',
   [QuestionType.TrueFalse]: '判断题',
+  [QuestionType.Subjective]: '主观题',
 }
 </script>
 
@@ -95,12 +107,6 @@ const typeMap = {
       scale: 0.95;
     }
 
-    &.active {
-      background-color: #007bff;
-      color: #fff;
-      font-size: 16px;
-    }
-
     &.is-correct {
       background-color: #6cb77b;
       color: #fff;
@@ -109,6 +115,11 @@ const typeMap = {
     &.is-incorrect {
       background-color: #e57155;
       color: #fff;
+    }
+    &.active {
+      background-color: #007bff;
+      color: #fff;
+      font-size: 16px;
     }
   }
 }

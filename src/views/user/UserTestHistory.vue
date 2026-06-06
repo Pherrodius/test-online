@@ -23,7 +23,9 @@
         </el-table-column>
         <el-table-column label="题库" width="150">
           <template #default="{ row }">
-            {{ row.bank.name }}
+            <div class="a-label" @click="$router.push(`/bank/${row.bankId}`)">
+              {{ row.bank.name }}
+            </div>
           </template>
         </el-table-column>
         <el-table-column label="学科" width="150">
@@ -119,7 +121,13 @@ onMounted(async () => {
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(31, 45, 61, 0.06);
 }
-
+.a-label {
+  margin: 0;
+  cursor: pointer;
+  &:hover {
+    color: #409eff;
+  }
+}
 .page-header {
   display: flex;
   justify-content: space-between;
