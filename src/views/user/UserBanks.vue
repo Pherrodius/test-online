@@ -25,13 +25,13 @@
             <div class="bank-tags">
               <el-tag type="success" v-if="item.created">已创建</el-tag>
               <el-tag type="warning" v-if="item.collected">已收藏</el-tag>
-              <el-tag :type="typeMap(item.progress / item.count)" v-if="item.progress > 0"
-                >{{ statusMap(item.progress / item.count) }}
+              <el-tag :type="typeMap((100 * item.progress) / item.count)" v-if="item.progress > 0"
+                >{{ statusMap((100 * item.progress) / item.count) }}
               </el-tag>
             </div>
           </div>
           <p>{{ item.description }}</p>
-          <el-progress :percentage="item.progress" />
+          <el-progress :percentage="(100 * item.progress) / item.count || 0" />
           <div class="bank-foot">
             <span>{{ item.count }} 道题</span>
             <div class="bank-actions">
@@ -74,7 +74,7 @@ const typeMap = (rate: number) => {
   return 'danger'
 }
 const statusMap = (rate: number) => {
-  if (rate >= 100) return '完成了！'
+  if (rate >= 100) return '已完成'
   if (rate > 0) return '练习中'
 }
 const fillterIndex = ref(0)

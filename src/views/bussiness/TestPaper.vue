@@ -35,21 +35,46 @@
     </div>
     <div class="container">
       <div class="left">
-        <TestLeftNavi
-          :type="QuestionType.SingleChoice"
-          :typedQuestions="singleQuestions"
-          v-if="singleQuestions.length"
-        />
-        <TestLeftNavi
-          :type="QuestionType.MultiChoice"
-          :typedQuestions="multiQuestions"
-          v-if="multiQuestions.length"
-        />
-        <TestLeftNavi
-          :type="QuestionType.TrueFalse"
-          :typedQuestions="trueFalseQuestions"
-          v-if="trueFalseQuestions.length"
-        />
+        <div class="question-blank">
+          <el-scrollbar>
+            <TestLeftNavi
+              :type="QuestionType.SingleChoice"
+              :typedQuestions="singleQuestions"
+              v-if="singleQuestions.length"
+            />
+            <TestLeftNavi
+              :type="QuestionType.MultiChoice"
+              :typedQuestions="multiQuestions"
+              v-if="multiQuestions.length"
+            />
+            <TestLeftNavi
+              :type="QuestionType.TrueFalse"
+              :typedQuestions="trueFalseQuestions"
+              v-if="trueFalseQuestions.length"
+            />
+          </el-scrollbar>
+        </div>
+        <div class="question-count">
+          <p class="result">
+            <span
+              >答对:
+              <span class="correct">
+                {{ result.filter((item) => item.isCorrect).length }}题</span
+              ></span
+            >
+            <span
+              >答错:
+              <span class="incorrect">
+                {{ result.filter((item) => item.isCorrect === false).length }}题</span
+              >
+            </span>
+          </p>
+          <p>
+            正确率：{{
+              ((result.filter((item) => item.isCorrect).length / result.length) * 100).toFixed(2)
+            }}%
+          </p>
+        </div>
       </div>
       <TestMain />
     </div>
@@ -178,12 +203,39 @@ onUnmounted(() => testPaperStore.resetStore())
     padding-bottom: 24px;
 
     .left {
+      position: relative;
       width: 240px;
-      height: 62vh;
+      display: flex;
+      flex-direction: column;
       overflow: auto;
       margin-right: 24px;
       background-color: #fff;
       box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+      .question-count {
+        border-top: #ddd 1px solid;
+        padding: 0 12px;
+        flex: 0 0 64px;
+        font-size: 14px;
+        color: #666;
+        .result {
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          gap: 30%;
+          .correct {
+            margin-left: 6px;
+            color: #82b481;
+          }
+          .incorrect {
+            margin-left: 6px;
+            color: #ff4d4f;
+          }
+        }
+      }
+      .question-blank {
+        flex: 1;
+        overflow: hidden;
+      }
     }
   }
 }

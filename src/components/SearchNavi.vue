@@ -88,7 +88,7 @@ const menuItems = ref([
   },
   {
     name: '题目',
-    path: '/question',
+    path: '/questions',
   },
   {
     name: '题库',
@@ -96,7 +96,7 @@ const menuItems = ref([
   },
   {
     name: '文档',
-    path: '/document',
+    path: '/documents',
   },
   {
     name: '联系我们',

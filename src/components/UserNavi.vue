@@ -2,6 +2,13 @@
   <div class="header">
     <div class="container">
       <div class="menu">
+        <el-image
+          class="logo"
+          style="width: 200px; height: 64px"
+          :src="logo"
+          fit="cover"
+          @click="$router.push('/')"
+        />
         <div
           v-for="item in menuItems"
           :key="item.path"
@@ -44,21 +51,11 @@
         <div v-else>
           <el-dropdown>
             <div class="login-box" @click="$router.push('/user')">
-              <el-avatar :src="avatar" size="small" />
+              <el-avatar :src="avatar" />
               <span class="user-name">{{ userInfo!.name }}</span>
             </div>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item
-                  v-for="item in dropdownItems"
-                  :key="item.path"
-                  @click="router.push(item.path)"
-                >
-                  <el-icon>
-                    <component :is="item.icon" />
-                  </el-icon>
-                  {{ item.name }}
-                </el-dropdown-item>
                 <el-dropdown-item @click="handleLogout">
                   <el-icon>
                     <SwitchButton />
@@ -75,13 +72,14 @@
 </template>
 <script setup lang="ts">
 import { ElMessage } from 'element-plus'
-import { computed, markRaw, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { CircleClose, Collection, SwitchButton, User } from '@element-plus/icons-vue'
+import { SwitchButton } from '@element-plus/icons-vue'
 import { useSearchStore } from '@/stores/search'
 import { storeToRefs } from 'pinia'
 import { SearchType } from '@/types/prisma'
 const searchStore = useSearchStore()
+const logo = new URL('@/assets/images/GPTLOGO.png', import.meta.url).href
 const { currentType, currentInput } = storeToRefs(searchStore)
 const { handleSearch, setSearchType } = searchStore
 const userInfo = localStorage.getItem('userInfo')
@@ -92,12 +90,9 @@ const avatar = new URL(
   JSON.parse(localStorage.getItem('userInfo') || '').avatarUrl,
   import.meta.url,
 ).href
+console.log(JSON.parse(localStorage.getItem('userInfo') || '').avatarUrl)
 const router = useRouter()
 const menuItems = ref([
-  {
-    name: '首页',
-    path: '/',
-  },
   {
     name: '题目',
     path: '/questions',
@@ -113,23 +108,6 @@ const menuItems = ref([
   {
     name: '联系我们',
     path: '/contact',
-  },
-])
-const dropdownItems = ref([
-  {
-    name: '个人中心',
-    path: '/user/profile',
-    icon: markRaw(User),
-  },
-  {
-    name: '我的题库',
-    path: '/user/banks',
-    icon: markRaw(Collection),
-  },
-  {
-    name: '全部错题',
-    path: '/user/mistakes',
-    icon: markRaw(CircleClose),
   },
 ])
 const handleLogout = () => {
@@ -148,13 +126,14 @@ html,
 
 .header {
   width: 100%;
-  height: 48px;
+  height: 64px;
   background-color: #fff;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 2px solid #e5e5e5;
 
   .container {
-    max-width: 1200px;
+    width: 100%;
     height: 100%;
+    padding: 0 36px 0 12px;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
@@ -164,9 +143,11 @@ html,
       display: flex;
       justify-content: flex-start;
       align-items: center;
-
+      .logo {
+        cursor: pointer;
+      }
       .menu-item {
-        font-size: 14px;
+        font-size: 16px;
         font-weight: 350;
         padding: 12px 16px;
         cursor: pointer;
@@ -226,6 +207,20 @@ html,
     align-items: center;
     gap: 8px;
     cursor: pointer;
+    .user-name {
+      padding-left: 12px;
+      font-size: 16px;
+      font-weight: 500;
+    }
+  }
+}
+@media (max-width: 767px) {
+  .header {
+    .container {
+      .menu {
+        display: none;
+      }
+    }
   }
 }
 </style>

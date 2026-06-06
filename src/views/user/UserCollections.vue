@@ -1,5 +1,5 @@
 <template>
-  <div class="user-page">
+  <div class="user-page" :key="Number(isNote)" v-loading="loading">
     <div class="page-header">
       <div>
         <h2>{{ isNote ? '我的收藏' : '我的错题' }}</h2>
@@ -94,14 +94,15 @@ import { getGroupedCollections } from '@/api/user'
 import { CollectionType, QuestionType, type Bank, type Question } from '@/types/prisma'
 import { RefreshRight } from '@element-plus/icons-vue'
 import type { GetGroupedCollectionsRes } from '@/types/response'
-import { onMounted, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { dayjs, ElMessage, ElMessageBox } from 'element-plus'
 import { useRoute } from 'vue-router'
 import { deleteAllCollections } from '@/api/question'
 const route = useRoute()
+const loading = ref(false)
 const notes = ref<GetGroupedCollectionsRes[]>([])
-const type = route.params.type as CollectionType
-const isNote = type === CollectionType.Note
+const type = computed(() => route.params.type as CollectionType)
+const isNote = computed(() => type.value === CollectionType.Note)
 const questionTypeMap = {
   [QuestionType.SingleChoice]: '单选题',
   [QuestionType.MultiChoice]: '多选题',
@@ -110,34 +111,40 @@ const questionTypeMap = {
 
 const getQuestionTypeText = (type: QuestionType) => questionTypeMap[type] ?? type
 const handleDelete = (row: Question) => {
-  ElMessageBox.confirm(`确定删除该${isNote ? '收藏' : '错题'}吗？`, '提示', {
+  ElMessageBox.confirm(`确定删除该${isNote.value ? '收藏' : '错题'}吗？`, '提示', {
     cancelButtonText: '取消',
     confirmButtonText: '确定',
   }).then(() => {
     deleteAllCollections({
       questionId: row.id,
-      type,
+      type: type.value,
     }).catch(() => {
       ElMessage.error('删除失败')
     })
   })
 }
 const handleClear = (row: Bank) => {
-  ElMessageBox.confirm(`确定删除所有'${row.name}'${isNote ? '收藏' : '错题'}吗？`, '提示', {
+  ElMessageBox.confirm(`确定删除所有'${row.name}'${isNote.value ? '收藏' : '错题'}吗？`, '提示', {
     cancelButtonText: '取消',
     confirmButtonText: '确定',
   }).then(() => {
     deleteAllCollections({
       bankId: row.id,
-      type,
+      type: type.value,
     }).catch(() => {
       ElMessage.error('删除失败')
     })
   })
 }
-onMounted(async () => {
-  notes.value = await getGroupedCollections(type)
-})
+watch(
+  type,
+  async () => {
+    loading.value = true
+    notes.value = await getGroupedCollections(type.value)
+    loading.value = false
+  },
+  { immediate: true },
+)
 </script>
 
 <style scoped lang="scss">

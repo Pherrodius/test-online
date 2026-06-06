@@ -7,7 +7,9 @@
             <p class="eyebrow">资料中心</p>
             <h2>可下载学习文档</h2>
           </div>
-          <el-button class="outline-btn" @click="$router.push('/search/document')">搜索文档</el-button>
+          <el-button class="outline-btn" @click="$router.push('/search/document')"
+            >搜索文档</el-button
+          >
         </div>
 
         <div class="document-list">
@@ -91,7 +93,7 @@ onMounted(async () => {
 
 <style scoped lang="scss">
 .home-documents {
-  min-height: 560px;
+  flex: 1;
   background-color: #f5f5f5;
 }
 

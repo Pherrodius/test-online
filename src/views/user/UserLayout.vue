@@ -1,22 +1,28 @@
 <template>
-  <el-row class="user-layout">
-    <el-col :xs="24" :sm="6" :md="4" :lg="3">
-      <el-menu :default-active="activeMenu" class="el-menu-vertical" @select="handleSelect">
-        <el-menu-item v-for="item in menuList" :key="item.path" :index="item.path">
-          <el-icon>
-            <component :is="item.icon" />
-          </el-icon>
-          {{ item.name }}
-        </el-menu-item>
-      </el-menu>
-    </el-col>
-    <el-col :xs="24" :sm="18" :md="20" :lg="21">
-      <router-view />
-    </el-col>
-  </el-row>
+  <div class="common-layout">
+    <user-navi />
+    <el-row class="user-layout">
+      <el-col :xs="24" :sm="6" :md="4" :lg="3">
+        <el-menu :default-active="activeMenu" class="el-menu-vertical" @select="handleSelect">
+          <el-menu-item v-for="item in menuList" :key="item.path" :index="item.path">
+            <el-icon>
+              <component :is="item.icon" />
+            </el-icon>
+            {{ item.name }}
+          </el-menu-item>
+        </el-menu>
+      </el-col>
+      <el-col :xs="24" :sm="18" :md="20" :lg="21" class="content">
+        <el-scrollbar>
+          <router-view />
+        </el-scrollbar>
+      </el-col>
+    </el-row>
+  </div>
 </template>
 
 <script lang="ts" setup>
+import UserNavi from '@/components/UserNavi.vue'
 import {
   Clock,
   CloseBold,
@@ -54,21 +60,25 @@ const handleSelect = (path: string) => {
 </script>
 
 <style scoped>
+.common-layout {
+  height: 100%;
+  overflow: hidden;
+}
 .user-layout {
-  min-height: 90vh;
+  height: 100%;
   background-color: #f5f7fb;
 }
-
+.content {
+  height: 100%;
+}
 .el-menu-vertical {
-  height: 90vh;
+  height: 100%;
   border-right: 1px solid #eee;
 }
 
 @media (max-width: 767px) {
   .el-menu-vertical {
-    height: auto;
-    border-right: 0;
-    border-bottom: 1px solid #eee;
+    display: none;
   }
 }
 </style>

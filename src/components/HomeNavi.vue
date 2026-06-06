@@ -2,8 +2,8 @@
   <div class="header">
     <div class="header-container">
       <div class="clear-fix">
-        <div class="logo">
-          <el-image :src="logoImg" alt="" fit="contain" style="width: 148px; height: 80px" />
+        <div class="logo" @click="$router.push('/')">
+          <el-image :src="logoImg" alt="" fit="contain" style="width: 210px; height: 80px" />
         </div>
         <div class="search-container">
           <div class="search-tab">
@@ -117,7 +117,10 @@ const searchStore = useSearchStore()
 const { currentType, currentInput, searchTabs } = storeToRefs(searchStore)
 const { handleSearch, setSearchType } = searchStore
 const router = useRouter()
-const avatar = new URL('@/assets/images/def-head.png', import.meta.url).href
+const avatar = new URL(
+  JSON.parse(localStorage.getItem('userInfo') || '').avatarUrl,
+  import.meta.url,
+).href
 const userInfo = localStorage.getItem('userInfo')
   ? JSON.parse(localStorage.getItem('userInfo')!)
   : null
@@ -148,10 +151,7 @@ const dropdownItems = ref([
     icon: markRaw(Star),
   },
 ])
-const logoImg = new URL(
-  'https://resource-cdn.kaoshibao.com/pc/logo/www.kaoshibao.com2.svg',
-  import.meta.url,
-).href
+const logoImg = new URL('@/assets/images/GPTLOGO.png', import.meta.url).href
 const handleLogout = () => {
   localStorage.removeItem('userInfo')
   localStorage.removeItem('token')
@@ -216,7 +216,9 @@ $color-bg: #f5f5f5;
       position: relative;
       display: flex;
       align-items: center;
-
+      .logo {
+        cursor: pointer;
+      }
       .search-container {
         padding: 12px 0 12px 172px;
 

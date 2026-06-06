@@ -184,7 +184,7 @@ const isOwned = computed(() => {
 const options = reactive({
   sequential: {
     icon: new URL('@/assets/icon/sequential.png', import.meta.url).href,
-    label: '顺序练习',
+    label: '练习模式',
     path: '/test',
     query: {
       model: TestModel.Practice,
@@ -199,7 +199,7 @@ const options = reactive({
   },
   random: {
     icon: new URL('@/assets/icon/random.png', import.meta.url).href,
-    label: '随机测试',
+    label: '模拟测试',
     path: '/test',
     query: {
       model: TestModel.Test,

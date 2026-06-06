@@ -120,6 +120,7 @@ const handleLogin = async () => {
             id: res.id,
             name: res.name,
             phone: res.phone,
+            avatarUrl: res.avatarUrl,
           }),
         )
         localStorage.setItem('token', res.accessToken)

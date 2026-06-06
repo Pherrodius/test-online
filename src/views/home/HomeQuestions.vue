@@ -7,7 +7,9 @@
             <p class="eyebrow">题目广场</p>
             <h2>最新练习题目</h2>
           </div>
-          <el-button class="outline-btn" @click="$router.push('/search/question')">搜索题目</el-button>
+          <el-button class="outline-btn" @click="$router.push('/search/question')"
+            >搜索题目</el-button
+          >
         </div>
 
         <div class="question-list">
@@ -63,6 +65,7 @@ onMounted(async () => {
 <style scoped lang="scss">
 .home-questions {
   min-height: 560px;
+  height: 100%;
   background-color: #f5f5f5;
 }
 

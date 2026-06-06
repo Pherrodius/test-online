@@ -144,6 +144,7 @@ export interface LoginResponse {
   name: string
   phone: string
   accessToken: string
+  avatarUrl?: string
   tokenType: 'Bearer'
 }
 

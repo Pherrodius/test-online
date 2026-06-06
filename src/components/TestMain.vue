@@ -15,14 +15,14 @@
           {{ questionTypeMap[currentQuestion?.type || QuestionType.SingleChoice] }}
         </div>
         <div class="value">
-          <span v-if="currentQuestion?.type === QuestionType.SingleChoice"
-            >{{ singleQuestions.indexOf(currentQuestion) + 1 }}、</span
+          <span v-if="currentQuestion?.type === QuestionType.SingleChoice" class="index"
+            >{{ singleQuestions.indexOf(currentQuestion) + 1 }}/{{ questions.length }}、</span
           >
-          <span v-else-if="currentQuestion?.type === QuestionType.MultiChoice"
-            >{{ multiQuestions.indexOf(currentQuestion) + 1 }}、</span
+          <span v-else-if="currentQuestion?.type === QuestionType.MultiChoice" class="index"
+            >{{ multiQuestions.indexOf(currentQuestion) + 1 }}/{{ questions.length }}、</span
           >
-          <span v-else-if="currentQuestion?.type === QuestionType.TrueFalse"
-            >{{ trueFalseQuestions.indexOf(currentQuestion) + 1 }}、</span
+          <span v-else-if="currentQuestion?.type === QuestionType.TrueFalse" class="index"
+            >{{ trueFalseQuestions.indexOf(currentQuestion) + 1 }}/{{ questions.length }}、</span
           >
           <span>{{ currentQuestion?.content || '' }}（ ）</span>
         </div>
@@ -97,12 +97,21 @@
         >重新测试</el-button
       >
       <el-button
-        v-else-if="testInfo?.model === TestModel.Practice"
-        :disabled="!!result.find((r) => r.questionId === currentQuestion?.id)"
+        v-else-if="
+          testInfo?.model === TestModel.Practice &&
+          !result.find((r) => r.questionId === currentQuestion?.id)
+        "
         class="btn submit-btn"
         @click="checkPracticeAnswer"
         size="large"
         >检查答案</el-button
+      >
+      <el-button
+        v-else-if="!!result.find((r) => r.questionId === currentQuestion?.id)"
+        class="btn submit-btn"
+        @click="handleRestart(currentQuestion?.id!)"
+        size="large"
+        >再次练习</el-button
       >
       <el-button v-else class="btn submit-btn" @click="checkPracticeAnswer" size="large" loading
         >加载中</el-button
@@ -132,6 +141,7 @@ import { storeToRefs } from 'pinia'
 import { TestModel, useTestPaperStore } from '@/stores/testpaper'
 import { createCollection, deleteCollection, isCollectionExist } from '@/api/question'
 import { ElMessageBox, ElMessage } from 'element-plus'
+import { fetchEventSource } from '@microsoft/fetch-event-source'
 const reTest = () => {
   ElMessageBox.confirm('确定重新测试吗?', '提示', {
     confirmButtonText: '确定',
@@ -145,7 +155,7 @@ const testPaperStore = useTestPaperStore()
 const { currentQuestion, answerSheet, result } = storeToRefs(testPaperStore)
 const { pushAnswer, submitAnswerSheet, prevQuestion, nextQuestion, checkPracticeAnswer } =
   testPaperStore
-const { testInfo, singleQuestions, multiQuestions, trueFalseQuestions, testResult } =
+const { testInfo, singleQuestions, multiQuestions, trueFalseQuestions, testResult, questions } =
   storeToRefs(testPaperStore)
 const questionTypeMap = ref({
   [QuestionType.SingleChoice]: '单选题',
@@ -221,11 +231,85 @@ const isIncorrect = (item: Option) => {
   }
   return false
 }
+const handleRestart = (id: number) => {
+  result.value = result.value.filter((r) => r.questionId !== id)
+  answerSheet.value = answerSheet.value.filter((r) => r.questionId !== id)
+}
+const aiResponse = ref<string>('')
+const inputMessage = ref<string>('')
+const controller: AbortController = new AbortController()
+const AiConsultation = async () => {
+  try {
+    inputMessage.value = await ElMessageBox.prompt('', 'AI助手在线答疑', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      inputPlaceholder: '请输入疑惑内容',
+    })
+  } catch (e) {
+    return e
+  }
+
+  let retryCount = 0
+  await fetchEventSource('/api/question/chat', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(
+      `问题情况如下：${{
+        content: currentQuestion.value?.content,
+        options: currentQuestion.value?.options.map((o) => o.text),
+        myAnswer: result.value?.find((r) => r.questionId === currentQuestion.value?.id)?.yourAnswer,
+        correctAnswer: result.value?.find((r) => r.questionId === currentQuestion.value?.id)
+          ?.correctAnswer,
+      }}\n
+      我想咨询：${inputMessage.value}\n
+      `,
+    ),
+    signal: controller.signal,
+    onmessage: (event) => {
+      const raw = event.data
+      // event.data may be a plain string (e.g. '[DONE]') or a JSON string with a `type` field
+      if (raw === '[DONE]') {
+        controller.abort()
+        return
+      }
+      try {
+        const data = JSON.parse(raw)
+        if (data?.type === '[DONE]') {
+          controller.abort()
+          return
+        }
+        if (data?.type === 'delta' && data?.content) {
+          aiResponse.value += data.content
+        }
+      } catch (e) {
+        console.error('Invalid JSON in event data', e)
+      }
+    },
+    onclose() {
+      controller.abort()
+    },
+    onerror(err) {
+      if (retryCount < 3) {
+        retryCount++
+        return 3000
+      }
+      controller.abort()
+      throw new Error(err)
+    },
+  }).finally(() => {
+    retryCount = 0
+  })
+}
 </script>
 <style scoped lang="scss">
 .main {
   padding: 24px;
-  height: calc(62vh - 48px);
+  max-height: calc(100svh - 86px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   overflow: auto;
   width: calc(100% - 264px);
   background-color: #fff;
@@ -251,14 +335,18 @@ const isIncorrect = (item: Option) => {
   }
 
   .question {
+    flex: 1;
     padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
   }
 
   .q-content {
+    flex: 1;
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
-    height: 48px;
     margin: 12px 0;
     max-width: 85%;
 
@@ -275,15 +363,18 @@ const isIncorrect = (item: Option) => {
     }
 
     .value {
-      font-size: 22px;
-      line-height: 22px;
+      font-size: 20px;
+      font-weight: normal;
+      line-height: 20px;
+      .index {
+        font-weight: 550;
+      }
     }
   }
 
   .option {
     padding: 12px;
     font-size: 20px;
-    height: 330.667px;
     cursor: pointer;
 
     .option-text {

@@ -112,10 +112,6 @@ const bussinessRoutes = [
 ]
 const userRoutes = [
   {
-    path: '/mine',
-    redirect: '/user',
-  },
-  {
     path: '/user',
     component: () => import('@/views/user/UserLayout.vue'),
     meta: {
@@ -165,6 +161,7 @@ const searchRoutes = [
     meta: {
       home: false,
       auth: false,
+      search: true,
     },
     children: [
       {
@@ -173,6 +170,7 @@ const searchRoutes = [
         meta: {
           home: false,
           auth: false,
+          search: true,
           type: SearchType.Question,
         },
       },
@@ -182,6 +180,7 @@ const searchRoutes = [
         meta: {
           home: false,
           auth: false,
+          search: true,
           type: SearchType.Bank,
         },
       },
@@ -191,6 +190,7 @@ const searchRoutes = [
         meta: {
           home: false,
           auth: false,
+          search: true,
           type: SearchType.Document,
         },
       },
@@ -200,6 +200,7 @@ const searchRoutes = [
         meta: {
           home: false,
           auth: false,
+          search: true,
           type: SearchType.User,
         },
       },
@@ -210,12 +211,12 @@ const routes = [
   {
     path: '/',
     component: () => import('@/components/LayoutComponent.vue'),
-    children: [...homeRoutes, ...bussinessRoutes, ...authRoutes, ...userRoutes],
+    children: [...homeRoutes, ...bussinessRoutes, ...authRoutes],
   },
 ]
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [...routes, ...searchRoutes],
+  routes: [...routes, ...searchRoutes, ...userRoutes],
 })
 router.beforeEach((to) => {
   NProgress.start()

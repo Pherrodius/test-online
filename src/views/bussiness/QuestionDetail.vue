@@ -49,7 +49,7 @@ const relatedQuestions = ref<GetQuestionListResponse[]>([])
 const questionTypeMap = ref({
   [QuestionType.SingleChoice]: '单选题',
   [QuestionType.MultiChoice]: '多选题',
-  [QuestionType.TrueFalse]: 'TrueFalse',
+  [QuestionType.TrueFalse]: '判断题',
 })
 const initialize = async () => {
   question.value = await getQuestionDetail(Number(route.params.id))

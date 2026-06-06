@@ -22,7 +22,7 @@ export type Filter = Omit<
 export const useSearchStore = defineStore('search', () => {
   const route = useRoute()
   const router = useRouter()
-  const isHome = computed(() => route.meta.home)
+  const isSearch = computed(() => route.meta.search)
   const page = ref<number>(1)
   const searchTabs = ref([
     {
@@ -47,7 +47,7 @@ export const useSearchStore = defineStore('search', () => {
   const currentInput = ref<string>((route.query.keyword as string) || '')
   const setSearchType = (type: SearchType) => {
     currentType.value = type
-    if (!isHome.value) {
+    if (isSearch.value) {
       page.value = 1
       result.value = null
       filterOptions.value = null

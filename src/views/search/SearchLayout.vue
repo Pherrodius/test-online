@@ -50,7 +50,7 @@
           </div>
         </div>
       </el-main>
-      <el-footer>Footer</el-footer>
+      <CommonFooter />
     </el-container>
   </div>
 </template>
@@ -59,6 +59,7 @@ import SearchNavi from '@/components/SearchNavi.vue'
 import { useSearchStore } from '@/stores/search'
 import { storeToRefs } from 'pinia'
 import searchSideIllustration from '@/assets/images/search-side-illustration.png'
+import CommonFooter from '@/components/CommonFooter.vue'
 const searchStore = useSearchStore()
 const { searchTabs, currentType, currentInput, page, total, hasPagination } =
   storeToRefs(searchStore)
@@ -80,7 +81,7 @@ const { setSearchType, handleSearchFromFirstPage, handlePageChange } = searchSto
 }
 .container {
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 0 auto 40px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;

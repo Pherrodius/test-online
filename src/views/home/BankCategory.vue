@@ -29,7 +29,13 @@
           </div>
         </div>
         <el-pagination
-          style=" display: flex; justify-content: center;background-color : #fff;padding: 20px 0;border-radius: 4px;"
+          style="
+            display: flex;
+            justify-content: center;
+            background-color: #fff;
+            padding: 20px 0;
+            border-radius: 4px;
+          "
           layout="  prev,pager, next,total"
           :total="courseList?.length || 0"
           v-model:current-page="pagination.page"
@@ -100,6 +106,7 @@ onMounted(() => {
 
 .question-bank {
   background-color: #f5f5f5;
+  height: 100%;
 }
 
 .container {
@@ -121,7 +128,7 @@ onMounted(() => {
 
     .left-bottom {
       margin-top: 16px;
-        background-color: #fff;
+      background-color: #fff;
       padding: 0;
       min-height: 400px;
       .list-item {
