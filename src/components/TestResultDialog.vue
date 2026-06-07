@@ -30,7 +30,7 @@
 
         <section class="stats-panel">
           <div v-for="item in stats" :key="item.label" class="stat-card">
-            <div class="stat-icon" :style="{ color: item.color, backgroundColor: item.bg }">
+            <div class="stat-icon" :class="item.iconClass">
               <el-icon>
                 <component :is="item.icon" />
               </el-icon>
@@ -116,20 +116,18 @@ const resultTitle = computed(() => {
 })
 const takenTimeText = computed(() => formatDuration(takenTime.value * 1000))
 const stats = computed(() => [
-  { label: '正确', value: correctCount.value, color: '#2fb06f', bg: '#eaf8f1', icon: CircleCheck },
-  { label: '错误', value: wrongCount.value, color: '#e35d5d', bg: '#fff0f0', icon: CircleClose },
+  { label: '正确', value: correctCount.value, iconClass: 'is-correct', icon: CircleCheck },
+  { label: '错误', value: wrongCount.value, iconClass: 'is-wrong', icon: CircleClose },
   {
     label: '未答',
     value: unansweredCount.value,
-    color: '#8b95a5',
-    bg: '#f1f4f8',
+    iconClass: 'is-unanswered',
     icon: MoreFilled,
   },
   {
     label: '正确率',
     value: accuracyText.value,
-    color: '#548ef7',
-    bg: '#edf4ff',
+    iconClass: 'is-accuracy',
     icon: TrendCharts,
   },
 ])
@@ -350,6 +348,26 @@ onUnmounted(() => {
   border-radius: 8px;
   font-size: 18px;
   flex: 0 0 auto;
+}
+
+.stat-icon.is-correct {
+  color: #2fb06f;
+  background-color: #eaf8f1;
+}
+
+.stat-icon.is-wrong {
+  color: #e35d5d;
+  background-color: #fff0f0;
+}
+
+.stat-icon.is-unanswered {
+  color: #8b95a5;
+  background-color: #f1f4f8;
+}
+
+.stat-icon.is-accuracy {
+  color: #548ef7;
+  background-color: #edf4ff;
 }
 
 .stat-value {

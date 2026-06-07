@@ -3,7 +3,7 @@
     <div class="header-container">
       <div class="clear-fix">
         <div class="logo" @click="$router.push('/')">
-          <el-image :src="logoImg" alt="" fit="contain" style="width: 210px; height: 80px" />
+          <el-image class="logo-image" :src="logoImg" alt="" fit="contain" />
         </div>
         <div class="search-container">
           <div class="search-tab">
@@ -21,20 +21,19 @@
             <div class="input-content">
               <el-input placeholder="请输入搜索内容" />
             </div>
-            <el-button
-              type="primary"
-              style="height: 32px; width: 64px; border-radius: 0 4px 4px 0"
-              color="#008CFF"
-              @click="handleSearch(currentInput)"
+            <el-button type="primary" color="#008CFF" @click="handleSearch(currentInput)"
               >搜索</el-button
             >
           </div>
         </div>
         <div class="login-box flex-box" v-if="!isLogin">
-          <el-button class="btn login-btn" @click="$router.push('/auth/login')">登录</el-button>
+          <el-button class="btn login-btn" :size="buttonSize" @click="$router.push('/auth/login')"
+            >登录</el-button
+          >
           <el-button
             class="btn register-btn"
             type="primary"
+            :size="buttonSize"
             color="#008CFF"
             @click="$router.push('/auth/register')"
             >注册</el-button
@@ -62,11 +61,7 @@
               <span>个人中心</span>
             </div>
             <el-dropdown>
-              <el-avatar
-                :src="avatar"
-                style="width: 36px; height: 36px; cursor: pointer"
-                @click="$router.push('/user')"
-              />
+              <el-avatar :src="avatar" class="user-avatar" @click="$router.push('/user')" />
               <template #dropdown>
                 <el-dropdown-menu class="drop-item">
                   <el-dropdown-item
@@ -91,13 +86,7 @@
           </div>
         </div>
       </div>
-      <el-menu
-        class="menu"
-        mode="horizontal"
-        default-active="/home"
-        active-index="$route.path"
-        router
-      >
+      <el-menu class="menu" mode="horizontal" :default-active="activeMenu" router>
         <el-menu-item class="menu-item" v-for="tab in menutabs" :key="tab.key" :index="tab.key">{{
           tab.label
         }}</el-menu-item>
@@ -109,32 +98,35 @@
 <script setup lang="ts">
 import { computed, markRaw, ref } from 'vue'
 import { CircleClose, Collection, Star, SwitchButton } from '@element-plus/icons-vue'
-import { ElMessage } from 'element-plus'
-import { useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useSearchStore } from '@/stores/search'
+import { useUserSessionStore } from '@/stores/userSession'
 import { storeToRefs } from 'pinia'
 const searchStore = useSearchStore()
+const userSessionStore = useUserSessionStore()
 const { currentType, currentInput, searchTabs } = storeToRefs(searchStore)
+const { avatar, isLogin, buttonSize } = storeToRefs(userSessionStore)
 const { handleSearch, setSearchType } = searchStore
-const router = useRouter()
+const { logout: handleLogout } = userSessionStore
+const route = useRoute()
 
-const userInfo = computed(() =>
-  localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')!) : null,
-)
-const avatar = computed(() =>
-  userInfo.value.avatarUrl
-    ? new URL(userInfo.value.avatarUrl, import.meta.url).href
-    : new URL('@/assets/images/def-head.png', import.meta.url).href,
-)
-const isLogin = computed(() => !!userInfo.value)
 const menutabs = ref([
   { key: '/home', label: '全部' },
   { key: '/bank/category', label: '专业题库' },
   { key: '/questions', label: '题目集市' },
   { key: '/documents', label: '文档下载' },
   { key: '/user/documents', label: 'AI导题' },
-  { key: '/user/collections/Mistake', label: '查看错题' },
+  { key: '/user', label: '个人空间' },
 ])
+
+const activeMenu = computed(() => {
+  if (route.path === '/') return '/home'
+
+  return (
+    menutabs.value.find((tab) => route.path === tab.key || route.path.startsWith(`${tab.key}/`))
+      ?.key ?? ''
+  )
+})
 
 const dropdownItems = ref([
   {
@@ -154,12 +146,6 @@ const dropdownItems = ref([
   },
 ])
 const logoImg = new URL('@/assets/images/GPTLOGO.png', import.meta.url).href
-const handleLogout = () => {
-  localStorage.removeItem('userInfo')
-  localStorage.removeItem('token')
-  ElMessage.success('退出登录成功')
-  router.push('/auth/login')
-}
 </script>
 
 <style scoped lang="scss">
@@ -191,6 +177,15 @@ $color-bg: #f5f5f5;
   justify-content: space-between;
   align-items: center;
   gap: 8px;
+}
+.logo-image {
+  width: 210px;
+  height: 80px;
+}
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
 }
 .header {
   border-bottom: 1px solid #e5e5e5;
@@ -255,6 +250,11 @@ $color-bg: #f5f5f5;
               border: $color-blue;
             }
           }
+          :deep(.el-button) {
+            height: 32px;
+            width: 64px;
+            border-radius: 0 4px 4px 0;
+          }
         }
       }
 
@@ -289,6 +289,36 @@ $color-bg: #f5f5f5;
             color: #fff;
           }
         }
+      }
+    }
+  }
+}
+@media (max-width: 767px) {
+  .login-box {
+    display: none;
+  }
+  .clear-fix {
+    padding-top: 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .search-container {
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding-left: 0 !important;
+      .input-box {
+        width: 100svw;
+        justify-content: center;
+      }
+      :deep(.el-input__wrapper) {
+        width: 75svw !important;
+      }
+      :deep(.el-button) {
+        width: 10svw !important;
       }
     }
   }

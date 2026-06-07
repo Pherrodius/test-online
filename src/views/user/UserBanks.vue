@@ -17,7 +17,7 @@
         >{{ item.label }}</el-menu-item
       >
     </el-menu>
-    <el-row :gutter="16" style="margin-top: 12px">
+    <el-row class="bank-grid" :gutter="16">
       <el-col v-for="item in filterBanks" :key="item.name" :xs="24" :md="12" :xl="8">
         <article class="bank-card">
           <div class="bank-top">
@@ -25,13 +25,13 @@
             <div class="bank-tags">
               <el-tag type="success" v-if="item.created">已创建</el-tag>
               <el-tag type="warning" v-if="item.collected">已收藏</el-tag>
-              <el-tag :type="typeMap((100 * item.progress) / item.count)" v-if="item.progress > 0"
-                >{{ statusMap((100 * item.progress) / item.count) }}
+              <el-tag :type="typeMap(getProgress(item))" v-if="item.progress > 0"
+                >{{ statusMap(getProgress(item)) }}
               </el-tag>
             </div>
           </div>
           <p>{{ item.description }}</p>
-          <el-progress :percentage="((100 * item.progress) / item.count || 0).toFixed(0)" />
+          <el-progress :percentage="getProgress(item)" />
           <div class="bank-foot">
             <span>{{ item.count }} 道题</span>
             <div class="bank-actions">
@@ -68,6 +68,11 @@ import type { GetMyBanksRes } from '@/types/response'
 import EditBankDialog from '@/components/EditBankDialog.vue'
 const dialogVisible = ref(false)
 const banks = ref<GetMyBanksRes[]>()
+const getProgress = (bank: GetMyBanksRes) => {
+  if (bank.count <= 0) return 0
+
+  return Math.min(Math.max(Math.round((100 * bank.progress) / bank.count), 0), 100)
+}
 const typeMap = (rate: number) => {
   if (rate >= 80) return 'success'
   if (rate >= 50) return 'warning'
@@ -139,6 +144,10 @@ onMounted(async () => {
 <style scoped lang="scss">
 .user-page {
   padding: 24px;
+}
+
+.bank-grid {
+  margin-top: 12px;
 }
 
 .page-header,

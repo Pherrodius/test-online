@@ -24,18 +24,27 @@
           <el-icon size="24" color="#67c23a">
             <CircleCheck />
           </el-icon>
-          <span>智能学习分析</span>
+          <span>AI助手在线答疑</span>
         </div>
         <div class="feature-item">
           <el-icon size="24" color="#f5a623">
             <CircleCheck />
           </el-icon>
-          <span>个性化推荐</span>
+          <span>一键导入题库</span>
         </div>
       </div>
     </div>
     <div class="auth-right">
       <div class="form-container">
+        <div class="mobile-auth-header">
+          <div class="mobile-brand">
+            <el-icon>
+              <Collection />
+            </el-icon>
+            <span>题库宝</span>
+          </div>
+          <p>随时随地，开启高效学习</p>
+        </div>
         <router-view></router-view>
       </div>
     </div>
@@ -50,8 +59,8 @@ const bgImageUrl = new URL('@/assets/images/1.webp', import.meta.url).href
 
 <style scoped lang="scss">
 .auth-layout {
+  flex: 1;
   display: flex;
-  min-height: 100vh;
   width: 100%;
 }
 
@@ -65,7 +74,9 @@ const bgImageUrl = new URL('@/assets/images/1.webp', import.meta.url).href
   justify-content: center;
   position: relative;
   overflow: hidden;
-
+  @media (max-width: 767px) {
+    display: none;
+  }
   &::before {
     content: '';
     position: absolute;
@@ -156,5 +167,47 @@ const bgImageUrl = new URL('@/assets/images/1.webp', import.meta.url).href
   border-radius: 16px;
   padding: 40px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.mobile-auth-header {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .auth-right {
+    align-items: center;
+    padding: 24px 16px;
+  }
+
+  .form-container {
+    max-width: 100%;
+    padding: 28px 24px;
+  }
+
+  .mobile-auth-header {
+    display: block;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #edf1f7;
+
+    .mobile-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #409eff;
+      font-size: 22px;
+      font-weight: 700;
+
+      .el-icon {
+        font-size: 28px;
+      }
+    }
+
+    p {
+      margin: 8px 0 0;
+      color: #8a94a6;
+      font-size: 13px;
+    }
+  }
 }
 </style>

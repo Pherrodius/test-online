@@ -47,6 +47,7 @@ export interface User {
   direction?: string | null
   area?: string | null
   gender?: Gender | null
+  tags?: string[]
 }
 
 export interface Option {

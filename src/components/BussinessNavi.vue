@@ -28,16 +28,27 @@
             </template>
             <template #append>
               <el-button color="primary" @click="handleSearch(currentInput)">
-                <el-icon style="color: black">
+                <el-icon class="search-icon">
                   <Search />
                 </el-icon>
               </el-button>
             </template>
           </el-input>
         </div>
+        <div class="search-icon" @click="$router.push('/search/bank')">
+          <el-icon>
+            <Search />
+          </el-icon>
+        </div>
         <div class="login-box" v-if="!isLogin">
-          <el-button class="login-btn" @click="router.push('/auth/login')">登录</el-button>
-          <el-button type="primary" class="register-btn" @click="router.push('/auth/register')"
+          <el-button class="login-btn" :size="buttonSize" @click="router.push('/auth/login')"
+            >登录</el-button
+          >
+          <el-button
+            type="primary"
+            class="register-btn"
+            :size="buttonSize"
+            @click="router.push('/auth/register')"
             >注册</el-button
           >
         </div>
@@ -74,25 +85,19 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ElMessage } from 'element-plus'
-import { computed, markRaw, ref } from 'vue'
+import { markRaw, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { CircleClose, Collection, SwitchButton, User } from '@element-plus/icons-vue'
 import { useSearchStore } from '@/stores/search'
+import { useUserSessionStore } from '@/stores/userSession'
 import { storeToRefs } from 'pinia'
 import { SearchType } from '@/types/prisma'
 const searchStore = useSearchStore()
+const userSessionStore = useUserSessionStore()
 const { currentType, currentInput } = storeToRefs(searchStore)
+const { userInfo, avatar, isLogin, buttonSize } = storeToRefs(userSessionStore)
 const { handleSearch, setSearchType } = searchStore
-const userInfo = computed(() =>
-  localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')!) : null,
-)
-const avatar = computed(() =>
-  userInfo.value.avatarUrl
-    ? new URL(userInfo.value.avatarUrl, import.meta.url).href
-    : new URL('@/assets/images/def-head.png', import.meta.url).href,
-)
-const isLogin = computed(() => !!userInfo.value)
+const { logout: handleLogout } = userSessionStore
 const router = useRouter()
 const menuItems = ref([
   {
@@ -133,12 +138,6 @@ const dropdownItems = ref([
     icon: markRaw(CircleClose),
   },
 ])
-const handleLogout = () => {
-  localStorage.removeItem('userInfo')
-  localStorage.removeItem('token')
-  ElMessage.success('退出登录成功')
-  router.push('/auth/login')
-}
 </script>
 
 <style scoped lang="scss">
@@ -146,7 +145,10 @@ html,
 * {
   box-sizing: border-box;
 }
-
+.search-icon {
+  cursor: pointer;
+  display: none;
+}
 .header {
   width: 100%;
   height: 48px;
@@ -156,6 +158,7 @@ html,
   .container {
     max-width: 1200px;
     height: 100%;
+    padding-right: 12px;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
@@ -167,10 +170,14 @@ html,
       align-items: center;
 
       .menu-item {
+        white-space: nowrap;
         font-size: 14px;
         font-weight: 350;
         padding: 12px 16px;
         cursor: pointer;
+        @media screen and (max-width: 767px) {
+          padding: 8px 12px;
+        }
       }
     }
 
@@ -179,6 +186,10 @@ html,
       justify-content: flex-end;
       align-items: center;
       gap: 32px;
+
+      .search-icon {
+        color: #000;
+      }
 
       &:deep(.el-input__inner) {
         padding-left: 0px;
@@ -227,6 +238,16 @@ html,
     align-items: center;
     gap: 8px;
     cursor: pointer;
+  }
+}
+@media (max-width: 767px) {
+  .header {
+    .search-box {
+      display: none;
+    }
+    .search-icon {
+      display: block;
+    }
   }
 }
 </style>

@@ -13,7 +13,7 @@
       >
     </div>
     <section class="panel">
-      <el-table :data="notes" row-key="id" style="width: 100%">
+      <el-table class="full-width-table" :data="notes" row-key="id">
         <el-table-column type="expand">
           <template #default="{ row }">
             <div class="question-list">
@@ -151,6 +151,10 @@ watch(
 <style scoped lang="scss">
 .user-page {
   padding: 24px;
+}
+
+.full-width-table {
+  width: 100%;
 }
 
 .page-header,

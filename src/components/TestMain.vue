@@ -2,8 +2,13 @@
   <div class="right">
     <div class="main">
       <div class="collect">
-        <el-button type="primary" size="large" @click="handleCollect" :loading="!currentQuestion">
-          <el-icon style="font-size: 24px">
+        <el-button
+          type="primary"
+          :size="buttonSize"
+          @click="handleCollect"
+          :loading="!currentQuestion"
+        >
+          <el-icon class="collect-icon">
             <Check v-if="currentQuestion?.isCollected" />
             <Star v-else />
           </el-icon>
@@ -238,6 +243,11 @@ import {
 } from '@/api/consultation'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { fetchEventSource } from '@microsoft/fetch-event-source'
+const buttonSize = computed(() => {
+  if (window.innerWidth <= 767) return 'small'
+  if (window.innerWidth <= 1200) return 'medium'
+  return 'large'
+})
 const reTest = () => {
   ElMessageBox.confirm('确定重新测试吗?', '提示', {
     confirmButtonText: '确定',
@@ -489,6 +499,13 @@ const AiConsultation = async () => {
 }
 </script>
 <style scoped lang="scss">
+.collect-icon {
+  font-size: 24px;
+  @media screen and (max-width: 768px) {
+    font-size: 20px;
+  }
+}
+
 .right {
   width: calc(100% - 264px);
   display: flex;

@@ -29,13 +29,7 @@
           </div>
         </div>
         <el-pagination
-          style="
-            display: flex;
-            justify-content: center;
-            background-color: #fff;
-            padding: 20px 0;
-            border-radius: 4px;
-          "
+          class="bank-pagination"
           layout="  prev,pager, next,total"
           :total="courseList?.length || 0"
           v-model:current-page="pagination.page"
@@ -194,6 +188,14 @@ onMounted(() => {
         background-color: #ecf7fe;
       }
     }
+
+    .bank-pagination {
+      display: flex;
+      justify-content: center;
+      background-color: #fff;
+      padding: 20px 0;
+      border-radius: 4px;
+    }
   }
 
   .right {
@@ -204,6 +206,20 @@ onMounted(() => {
       height: 566px;
       border-radius: 4px;
       background-color: #fff;
+    }
+  }
+}
+@media (max-width: 767px) {
+  .container {
+    width: 100%;
+    .left {
+      .left-top {
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: 1fr;
+      }
+    }
+    .right {
+      display: none;
     }
   }
 }

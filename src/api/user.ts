@@ -4,6 +4,8 @@ import type {
   LoginByPhoneRequest,
   RegisterRequest,
   UpdateUserRequest,
+  ChangePasswordRequest,
+  ChangePhoneRequest,
 } from '@/types/reqeust'
 import type {
   getOverviewResponse,
@@ -44,6 +46,12 @@ export function getProfile() {
 }
 export function updateProfile(data: UpdateUserRequest) {
   return request.put<unknown, User>('/user/profile', data)
+}
+export function changePassword(data: ChangePasswordRequest) {
+  return request.put<unknown, { success: boolean }>('/user/password', data)
+}
+export function changePhone(data: ChangePhoneRequest) {
+  return request.put<unknown, User>('/user/phone', data)
 }
 export function uploadAvatar(file: File) {
   const formData = new FormData()

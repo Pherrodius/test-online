@@ -204,4 +204,16 @@ const { setSearchType, handleSearchFromFirstPage, handlePageChange } = searchSto
     display: block;
   }
 }
+@media (max-width: 767px) {
+  .container {
+    width: 100%;
+    .left {
+      width: 100%;
+      padding: 0;
+    }
+    .right {
+      display: none;
+    }
+  }
+}
 </style>

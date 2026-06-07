@@ -111,6 +111,16 @@ export interface UpdateUserRequest {
   direction?: string
   area?: string
   gender?: Gender | null
+  tags?: string[]
+}
+export interface ChangePasswordRequest {
+  currentPassword: string
+  newPassword: string
+  confirmPassword: string
+}
+export interface ChangePhoneRequest {
+  password: string
+  phone: string
 }
 export interface deleteResolutionRequest {
   id?: number

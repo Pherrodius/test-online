@@ -83,6 +83,55 @@
         </div>
       </div>
       <TestMain />
+      <div class="bottom">
+        <div class="question-blank">
+          <div class="question-count" v-if="result.length > 0">
+            <p class="result">
+              <span
+                >答对:
+                <span class="correct">
+                  {{ result.filter((item) => item.isCorrect).length }}题</span
+                ></span
+              >
+              <span
+                >答错:
+                <span class="incorrect">
+                  {{ result.filter((item) => item.isCorrect === false).length }}题</span
+                >
+              </span>
+              <span>
+                正确率：{{
+                  ((result.filter((item) => item.isCorrect).length / result.length) * 100).toFixed(
+                    2,
+                  ) || 0
+                }}%
+              </span>
+            </p>
+          </div>
+          <el-scrollbar>
+            <TestLeftNavi
+              :type="QuestionType.SingleChoice"
+              :typedQuestions="singleQuestions"
+              v-if="singleQuestions.length"
+            />
+            <TestLeftNavi
+              :type="QuestionType.MultiChoice"
+              :typedQuestions="multiQuestions"
+              v-if="multiQuestions.length"
+            />
+            <TestLeftNavi
+              :type="QuestionType.TrueFalse"
+              :typedQuestions="trueFalseQuestions"
+              v-if="trueFalseQuestions.length"
+            />
+            <TestLeftNavi
+              :type="QuestionType.Subjective"
+              :typedQuestions="subjectiveQuestions"
+              v-if="subjectiveQuestions.length"
+            />
+          </el-scrollbar>
+        </div>
+      </div>
     </div>
   </div>
   <TestResultDialog />
@@ -211,7 +260,9 @@ onUnmounted(() => testPaperStore.resetStore())
       }
     }
   }
-
+  .bottom {
+    display: none;
+  }
   .container {
     padding: 0;
     margin: 0 auto;
@@ -255,6 +306,64 @@ onUnmounted(() => testPaperStore.resetStore())
       .question-blank {
         flex: 1;
         overflow: hidden;
+      }
+    }
+  }
+}
+@media (max-width: 767px) {
+  .test-paper {
+    .container {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 0 12px 12px;
+      flex-direction: column;
+
+      .left {
+        display: none;
+      }
+
+      :deep(.right) {
+        width: 100%;
+        margin: 0;
+      }
+      .bottom {
+        margin-top: 36px;
+        position: relative;
+        width: 100%;
+        height: 400px;
+        display: flex;
+        flex-direction: column;
+        overflow: auto;
+        margin-right: 24px;
+        background-color: #fff;
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+        .question-count {
+          position: sticky;
+          top: 4px;
+          background-color: #fff;
+          z-index: 1;
+          border-bottom: #ddd 1px solid;
+          padding: 0 12px;
+          font-size: 14px;
+          color: #666;
+          .result {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 20%;
+            white-space: nowrap;
+            .correct {
+              white-space: nowrap;
+              margin-left: 6px;
+              color: #82b481;
+            }
+            .incorrect {
+              white-space: nowrap;
+              margin-left: 6px;
+              color: #ff4d4f;
+            }
+          }
+        }
       }
     }
   }

@@ -253,4 +253,116 @@ onMounted(async () => {
     }
   }
 }
+
+@media (max-width: 767px) {
+  .question-detail {
+    padding: 12px;
+
+    .container {
+      width: 100%;
+    }
+
+    :deep(.main-section),
+    :deep(.bank),
+    .relatedQuestions {
+      padding: 16px;
+    }
+
+    :deep(.q-content) {
+      align-items: flex-start;
+      gap: 8px;
+
+      .label {
+        flex: 0 0 auto;
+        margin-right: 0;
+      }
+
+      .value {
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+    }
+
+    :deep(.q-option) {
+      .checkbox,
+      .radio {
+        align-items: flex-start;
+        line-height: 24px;
+      }
+
+      .checkbox__label,
+      .radio__label {
+        flex: 0 0 auto;
+        margin-top: 3px;
+      }
+    }
+
+    :deep(.log) {
+      align-items: stretch;
+      flex-direction: column;
+
+      > div:first-child {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+
+        .el-button {
+          flex: 1;
+          margin-left: 0;
+        }
+      }
+
+      .right {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+      }
+    }
+
+    :deep(.bank .lower) {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 4px;
+
+      .front {
+        max-width: 100%;
+      }
+    }
+
+    .relatedQuestions {
+      margin-top: 12px;
+
+      .q-content {
+        align-items: flex-start;
+        gap: 8px;
+
+        .label {
+          flex: 0 0 auto;
+          margin-right: 0;
+        }
+
+        .value {
+          overflow-wrap: anywhere;
+        }
+      }
+
+      .option {
+        margin-top: 0;
+        gap: 12px;
+
+        .option-item {
+          overflow-wrap: anywhere;
+        }
+      }
+
+      .btn {
+        margin-top: 16px;
+
+        :deep(.el-button) {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
 </style>

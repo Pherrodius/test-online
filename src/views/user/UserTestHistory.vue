@@ -15,7 +15,7 @@
     </div>
 
     <section class="panel">
-      <el-table :data="filteredTestHistory" style="width: 100%">
+      <el-table class="full-width-table" :data="filteredTestHistory">
         <el-table-column prop="createdTime" label="日期" width="220">
           <template #default="{ row }">
             {{ dayjs(row.createdTime).format('YYYY-MM-DD HH:mm') }}
@@ -148,6 +148,9 @@ onMounted(async () => {
 
 .panel {
   padding: 20px;
+}
+.full-width-table {
+  width: 100%;
 }
 .del-btn {
   &:hover {

@@ -31,14 +31,12 @@
         <h3>学习偏好</h3>
       </div>
       <el-space wrap>
-        <el-tag>随机练习</el-tag>
-        <el-tag type="success">错题重练</el-tag>
-        <el-tag type="warning">每日提醒</el-tag>
-        <el-tag type="info">章节复习</el-tag>
+        <el-tag v-for="tag in profile.tags" :key="tag">{{ tag }}</el-tag>
+        <span v-if="!profile.tags.length" class="empty-tags">暂无学习偏好</span>
       </el-space>
     </section>
 
-    <el-dialog v-model="profileDialogVisible" title="编辑资料" width="520px">
+    <el-dialog v-model="profileDialogVisible" title="编辑资料" width="520px" class="profile-dialog">
       <el-form :model="profileForm" label-width="82px" class="profile-form">
         <el-form-item label="头像">
           <el-upload
@@ -76,6 +74,17 @@
           <el-input v-model="profileForm.direction" maxlength="30" show-word-limit />
         </el-form-item>
 
+        <el-form-item label="学习偏好">
+          <el-select
+            v-model="profileForm.tags"
+            multiple
+            filterable
+            allow-create
+            default-first-option
+            placeholder="输入偏好后按回车添加"
+          />
+        </el-form-item>
+
         <el-form-item label="所在地区">
           <el-input v-model="profileForm.area" maxlength="20" />
         </el-form-item>
@@ -105,6 +114,9 @@ import { Gender } from '@/types/prisma'
 import { ElMessage } from 'element-plus'
 import type { UploadFile } from 'element-plus'
 import { onMounted, reactive, ref } from 'vue'
+import { useUserSessionStore } from '@/stores/userSession'
+
+const userSessionStore = useUserSessionStore()
 
 const profile = reactive({
   avatarUrl: '',
@@ -115,10 +127,12 @@ const profile = reactive({
   area: '',
   createdTime: '',
   introduction: '',
+  tags: [] as string[],
 })
 
 const profileForm = reactive({
   ...profile,
+  tags: [...profile.tags],
   bio: profile.introduction,
 })
 const profileDialogVisible = ref(false)
@@ -145,6 +159,7 @@ const syncProfile = (data: {
   area?: string | null
   introduction?: string | null
   createdTime?: string
+  tags?: string[]
 }) => {
   profile.avatarUrl = data.avatarUrl || ''
   profile.name = data.name || '学习用户'
@@ -154,11 +169,13 @@ const syncProfile = (data: {
   profile.area = data.area || ''
   profile.createdTime = data.createdTime ? formatDate(data.createdTime) : ''
   profile.introduction = data.introduction || '暂无个人简介'
+  profile.tags = data.tags || []
 }
 
 const openProfileDialog = () => {
   Object.assign(profileForm, {
     ...profile,
+    tags: [...profile.tags],
     bio: profile.introduction === '暂无个人简介' ? '' : profile.introduction,
   })
   avatarFile.value = null
@@ -201,18 +218,16 @@ const saveProfile = async () => {
       direction: profileForm.direction || undefined,
       area: profileForm.area || undefined,
       introduction: profileForm.bio || undefined,
+      tags: profileForm.tags,
     })
 
     syncProfile(updatedUser)
-    localStorage.setItem(
-      'userInfo',
-      JSON.stringify({
-        id: updatedUser.id,
-        name: updatedUser.name,
-        phone: updatedUser.phone,
-        avatarUrl: updatedUser.avatarUrl,
-      }),
-    )
+    userSessionStore.setUser({
+      id: updatedUser.id,
+      name: updatedUser.name,
+      phone: updatedUser.phone,
+      avatarUrl: updatedUser.avatarUrl,
+    })
     profileDialogVisible.value = false
     ElMessage.success('资料已更新')
   } finally {
@@ -229,6 +244,7 @@ onMounted(async () => {
 <style scoped lang="scss">
 .user-page {
   padding: 24px;
+  flex: 1;
 }
 
 .panel {
@@ -290,5 +306,21 @@ onMounted(async () => {
   color: #409eff;
   font-size: 13px;
   line-height: 1;
+}
+
+.empty-tags {
+  color: #a8abb2;
+  font-size: 14px;
+}
+
+:deep(.profile-form .el-select) {
+  width: 100%;
+}
+
+@media (max-width: 767px) {
+  :global(.profile-dialog) {
+    width: calc(100vw - 24px);
+    margin-top: 4vh;
+  }
 }
 </style>

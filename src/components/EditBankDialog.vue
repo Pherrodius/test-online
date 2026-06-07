@@ -1,5 +1,10 @@
 <template>
-  <el-dialog width="560px" class="edit-bank-dialog" @close="handleDialogClose">
+  <el-dialog
+    :width="dialogWidth"
+    class="edit-bank-dialog"
+    @close="handleDialogClose"
+    :draggable="true"
+  >
     <template #header v-if="form.id !== 0">编辑 {{ form.name }}</template>
     <template #header v-else>新建题库</template>
     <template #footer>
@@ -62,7 +67,12 @@ import { createBank, updateBank } from '@/api/bank'
 import type { Bank, Discipline } from '@/types/prisma'
 import type { CreateBankRequest } from '@/types/reqeust'
 import { ElMessage } from 'element-plus'
-import { onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
+const dialogWidth = computed(() => {
+  if (window.innerWidth <= 767) return '92vw'
+  if (window.innerWidth <= 1200) return '70vw'
+  return '600px'
+})
 const resetForm = () => ({
   id: 0,
   name: '',

@@ -69,9 +69,11 @@ import { loginRequest } from '@/api/user'
 import type { LoginByNameRequest, LoginByPhoneRequest } from '@/types/reqeust'
 import { ref, reactive } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useUserSessionStore } from '@/stores/userSession'
 const loginByName = ref(true)
 const router = useRouter()
 const route = useRoute()
+const userSessionStore = useUserSessionStore()
 const loginFormRef = ref()
 const isLoading = ref(false)
 
@@ -114,16 +116,15 @@ const handleLogin = async () => {
           payload.phone = loginForm.phone
         }
         const res = await loginRequest(payload as LoginByNameRequest | LoginByPhoneRequest)
-        localStorage.setItem(
-          'userInfo',
-          JSON.stringify({
+        userSessionStore.setSession(
+          {
             id: res.id,
             name: res.name,
             phone: res.phone,
             avatarUrl: res.avatarUrl,
-          }),
+          },
+          res.accessToken,
         )
-        localStorage.setItem('token', res.accessToken)
         router.push(String(route.query.redirect || '/'))
         isLoading.value = false
       } catch (error) {

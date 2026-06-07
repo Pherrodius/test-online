@@ -1,7 +1,7 @@
 <template>
   <div class="carousel-container">
-    <el-carousel trigger="click" arrow="never" style="height: 394px">
-      <el-carousel-item v-for="item in images" :key="item" style="height: 394px">
+    <el-carousel class="home-carousel" trigger="click" arrow="never">
+      <el-carousel-item v-for="item in images" :key="item">
         <el-image :src="item" object-fit="cover" fit="cover" />
       </el-carousel-item>
     </el-carousel>
@@ -10,12 +10,7 @@
         <div v-for="item in navlist" :key="item.key" class="nav-item">
           <div class="left-section">
             <h4>
-              <el-image
-                :src="item.icon"
-                object-fit="cover"
-                fit="cover"
-                style="width: 20px; height: 20px; margin-top: 4px"
-              />
+              <el-image :src="item.icon" object-fit="cover" fit="cover" class="nav-icon" />
               {{ item.label }}
             </h4>
             <p class="detail">
@@ -59,7 +54,7 @@
         :key="item.title"
         @click="$router.push(item.path)"
       >
-        <el-image style="width: 50px; height: 50px" :src="item.icon" fit="cover" />
+        <el-image class="bottom-nav-icon" :src="item.icon" fit="cover" />
         <div class="text">
           <p class="title">{{ item.title }}</p>
           <p class="desc">{{ item.desc }}</p>
@@ -328,6 +323,21 @@ const featureCards = [
 ]
 </script>
 <style scoped lang="scss">
+.home-carousel {
+  height: 394px;
+}
+
+.nav-icon {
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+}
+
+.bottom-nav-icon {
+  width: 50px;
+  height: 50px;
+}
+
 :deep(.el-carousel__item) {
   height: 394px;
 }
@@ -477,21 +487,26 @@ const featureCards = [
 .bottom-nav-container {
   background-color: #f3f8fe;
   margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .bottom-navi {
-  margin: 0 auto;
   width: 1200px;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  justify-items: center;
+  align-items: center;
   gap: 0;
 }
 
 .bottom-navi-item {
+  box-sizing: border-box;
   padding: 0 16px;
-  flex: 1;
   text-align: center;
   height: 110px;
-  width: 100px;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -847,6 +862,36 @@ const featureCards = [
 
   .feature-grid {
     gap: 32px;
+  }
+}
+@media (max-width: 767px) {
+  .feature-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .feature-card {
+    height: 180px;
+  }
+  .online-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .home-carousel {
+    height: 200px;
+  }
+  .carousel-nav {
+    display: none;
+  }
+  .bottom-navi {
+    grid-template-columns: repeat(2, 1fr);
+    .bottom-navi-item {
+      padding-left: 36px;
+      height: 80px;
+    }
+  }
+  :deep(.el-carousel__item img) {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
   }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="visible" title="用户信息" width="460px">
+  <el-dialog v-model="visible" title="用户信息" width="460px" class="user-info-dialog">
     <div v-if="user" class="user-dialog">
       <el-avatar :size="72" :src="user.avatarUrl || undefined" class="dialog-avatar">
         {{ user.name.slice(0, 1) }}
@@ -124,6 +124,13 @@ const visible = defineModel<boolean>({ required: true })
 
   :deep(.el-descriptions__content) {
     color: #303133;
+  }
+}
+
+@media (max-width: 767px) {
+  :global(.user-info-dialog) {
+    width: calc(100vw - 24px);
+    margin-top: 4vh;
   }
 }
 </style>

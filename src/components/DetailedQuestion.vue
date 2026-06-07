@@ -64,7 +64,7 @@
     <div class="explain">
       <div class="correct-answer">
         <span class="title">正确答案：</span
-        ><span style="color: #63be64">{{
+        ><span class="correct-answer-value">{{
           question?.singleAnswer?.answerKey ||
           question?.multiChoiceAnswer?.map((ans) => ans.answerKey).join(',') ||
           question?.trueFalseAnswer?.answerKey ||
@@ -81,14 +81,14 @@
     <div class="log">
       <div>
         <el-button type="warning" size="large" @click="handleCollect">
-          <el-icon style="font-size: 24px">
+          <el-icon class="action-icon">
             <Check v-if="isCollected?.isNoted" />
             <Star v-else />
           </el-icon>
           <span>{{ isCollected?.isNoted ? '已收藏' : '加入收藏' }}</span>
         </el-button>
         <el-button type="danger" size="large" @click="handleMistake" v-if="isCollected?.isMistake">
-          <el-icon style="font-size: 24px">
+          <el-icon class="action-icon">
             <Close />
           </el-icon>
           <span>删除错题</span>
@@ -182,6 +182,14 @@ onMounted(() => {
 })
 </script>
 <style scoped lang="scss">
+.correct-answer-value {
+  color: #63be64;
+}
+
+.action-icon {
+  font-size: 24px;
+}
+
 .main-section {
   background-color: #fff;
   padding: 24px;

@@ -230,4 +230,16 @@ onMounted(async () => {
     color: #fff !important;
   }
 }
+@media (max-width: 767px) {
+  .container {
+    width: 100%;
+    .left {
+      width: 100%;
+      padding: 0;
+    }
+    .right {
+      display: none;
+    }
+  }
+}
 </style>

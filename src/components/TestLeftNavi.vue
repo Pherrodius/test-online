@@ -123,4 +123,10 @@ const typeMap = {
     }
   }
 }
+@media (max-width: 767px) {
+  .left-section-content {
+    grid-template-columns: repeat(10, 1fr) !important;
+    gap: 6px;
+  }
+}
 </style>

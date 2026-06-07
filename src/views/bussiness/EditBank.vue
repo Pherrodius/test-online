@@ -36,6 +36,28 @@
         />
       </div>
       <EditMain v-if="currentQuestion" v-model:refreshKey="refreshKey" />
+      <div class="bottom">
+        <TestLeftNavi
+          :type="QuestionType.SingleChoice"
+          :typedQuestions="singleQuestions"
+          v-if="singleQuestions.length"
+        />
+        <TestLeftNavi
+          :type="QuestionType.MultiChoice"
+          :typedQuestions="multiQuestions"
+          v-if="multiQuestions.length"
+        />
+        <TestLeftNavi
+          :type="QuestionType.TrueFalse"
+          :typedQuestions="trueFalseQuestions"
+          v-if="trueFalseQuestions.length"
+        />
+        <TestLeftNavi
+          :type="QuestionType.Subjective"
+          :typedQuestions="subjectiveQuestions"
+          v-if="subjectiveQuestions.length"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -125,7 +147,8 @@ onUnmounted(() => testPaperStore.resetStore())
 <style scoped lang="scss">
 .test-paper {
   background-color: #f5f5f5;
-
+  width: 100%;
+  flex: 1;
   .path {
     padding: 8px;
     margin: 0 auto;
@@ -151,6 +174,7 @@ onUnmounted(() => testPaperStore.resetStore())
   .container {
     padding: 0;
     margin: 0 auto;
+    height: 100%;
     display: flex;
     max-width: 1200px;
     padding-bottom: 24px;
@@ -162,6 +186,28 @@ onUnmounted(() => testPaperStore.resetStore())
       background-color: #fff;
       box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
     }
+    .bottom {
+      display: none;
+    }
+  }
+}
+@media screen and (max-width: 767px) {
+  .test-paper {
+    padding: 12px;
+    .container {
+      flex-direction: column;
+      .bottom {
+        display: block;
+        width: 100%;
+        overflow: auto;
+        margin-top: 24px;
+        background-color: #fff;
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+  .left {
+    display: none;
   }
 }
 </style>

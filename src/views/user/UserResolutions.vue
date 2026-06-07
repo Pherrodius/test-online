@@ -15,13 +15,13 @@
     </div>
 
     <section class="panel">
-      <el-table :data="filteredResolutions" style="width: 100%">
+      <el-table class="full-width-table" :data="filteredResolutions">
         <el-table-column prop="updatedTime" label="日期" width="220">
           <template #default="{ row }">
             {{ dayjs(row.createdTime).format('YYYY-MM-DD HH:mm') }}
           </template>
         </el-table-column>
-        <el-table-column label="题目" class="question-content">
+        <el-table-column label="题目" class="question-content" show-overflow-tooltip>
           <template #default="{ row }">
             <div class="a-label" @click="$router.push(`/question/${row.questionId}`)">
               {{ row.question.content }}
@@ -127,6 +127,7 @@ onMounted(async () => {
 <style scoped lang="scss">
 .user-page {
   padding: 24px;
+  flex: 1;
 }
 
 .page-header,
@@ -162,6 +163,9 @@ onMounted(async () => {
 
 .panel {
   padding: 20px;
+}
+.full-width-table {
+  width: 100%;
 }
 .del-btn {
   &:hover {

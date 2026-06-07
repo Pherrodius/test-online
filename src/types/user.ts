@@ -16,4 +16,5 @@ export interface UpdateUserRequest {
   direction?: string
   area?: string
   gender?: Gender | null
+  tags?: string[]
 }

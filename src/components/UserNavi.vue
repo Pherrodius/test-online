@@ -2,13 +2,7 @@
   <div class="header">
     <div class="container">
       <div class="menu">
-        <el-image
-          class="logo"
-          style="width: 200px; height: 64px"
-          :src="logo"
-          fit="cover"
-          @click="$router.push('/')"
-        />
+        <el-image class="logo" :src="logo" fit="cover" @click="$router.push('/')" />
         <div
           v-for="item in menuItems"
           :key="item.path"
@@ -17,6 +11,7 @@
         >
           {{ item.name }}
         </div>
+        <div class="expand" @click="expandVisible = !expandVisible"><span></span></div>
       </div>
       <div class="right">
         <div class="search-box">
@@ -35,7 +30,7 @@
             </template>
             <template #append>
               <el-button color="primary" @click="handleSearch(currentInput)">
-                <el-icon style="color: black">
+                <el-icon class="search-icon">
                   <Search />
                 </el-icon>
               </el-button>
@@ -43,8 +38,14 @@
           </el-input>
         </div>
         <div class="login-box" v-if="!isLogin">
-          <el-button class="login-btn" @click="router.push('/auth/login')">登录</el-button>
-          <el-button type="primary" class="register-btn" @click="router.push('/auth/register')"
+          <el-button class="login-btn" :size="buttonSize" @click="router.push('/auth/login')"
+            >登录</el-button
+          >
+          <el-button
+            type="primary"
+            class="register-btn"
+            :size="buttonSize"
+            @click="router.push('/auth/register')"
             >注册</el-button
           >
         </div>
@@ -67,32 +68,49 @@
           </el-dropdown>
         </div>
       </div>
+      <div v-if="expandVisible" class="expand-menu">
+        <el-menu :default-active="activeMenu" class="el-menu-vertical" @select="handleSelect">
+          <el-menu-item v-for="item in menuList" :key="item.path" :index="item.path">
+            <el-icon>
+              <component :is="item.icon" />
+            </el-icon>
+            {{ item.name }}
+          </el-menu-item>
+        </el-menu>
+      </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { ElMessage } from 'element-plus'
-import { computed, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { SwitchButton } from '@element-plus/icons-vue'
+import { computed, markRaw, ref } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import {
+  Clock,
+  CloseBold,
+  Collection,
+  Document,
+  Setting,
+  Star,
+  User,
+  House,
+  EditPen,
+  SwitchButton,
+} from '@element-plus/icons-vue'
 import { useSearchStore } from '@/stores/search'
+import { useUserSessionStore } from '@/stores/userSession'
 import { storeToRefs } from 'pinia'
 import { SearchType } from '@/types/prisma'
+import { ElMessageBox } from 'element-plus'
+const expandVisible = ref(false)
 const searchStore = useSearchStore()
+const userSessionStore = useUserSessionStore()
 const logo = new URL('@/assets/images/GPTLOGO.png', import.meta.url).href
 const { currentType, currentInput } = storeToRefs(searchStore)
+const { userInfo, avatar, isLogin, buttonSize } = storeToRefs(userSessionStore)
 const { handleSearch, setSearchType } = searchStore
-const userInfo = computed(() =>
-  localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')!) : null,
-)
-const avatar = computed(() =>
-  userInfo.value.avatarUrl
-    ? new URL(userInfo.value.avatarUrl, import.meta.url).href
-    : new URL('@/assets/images/def-head.png', import.meta.url).href,
-)
-const isLogin = computed(() => !!userInfo.value)
-console.log(JSON.parse(localStorage.getItem('userInfo') || '').avatarUrl)
+const { logout: handleLogout } = userSessionStore
 const router = useRouter()
+const route = useRoute()
 const menuItems = ref([
   {
     name: '题目',
@@ -111,11 +129,33 @@ const menuItems = ref([
     path: '/contact',
   },
 ])
-const handleLogout = () => {
-  localStorage.removeItem('userInfo')
-  localStorage.removeItem('token')
-  ElMessage.success('退出登录成功')
-  router.push('/auth/login')
+
+const menuList = ref([
+  { name: '首页', path: '/user', icon: markRaw(House) },
+  { name: '我的题库', path: '/user/banks', icon: markRaw(Collection) },
+  { name: '我的文件', path: '/user/documents', icon: markRaw(Document) },
+  { name: '全部错题', path: '/user/collections/Mistake', icon: markRaw(CloseBold) },
+  { name: '我的收藏', path: '/user/collections/Note', icon: markRaw(Star) },
+  { name: '测试记录', path: '/user/testHistory', icon: markRaw(Clock) },
+  { name: '斩题记录', path: '/user/resolutions', icon: markRaw(EditPen) },
+  { name: '个人信息', path: '/user/profile', icon: markRaw(User) },
+  { name: '设置', path: '/user/settings', icon: markRaw(Setting) },
+  { name: '退出登录', path: '/logout', icon: markRaw(SwitchButton) },
+])
+
+const activeMenu = computed(() => route.path)
+
+const handleSelect = async (path: string) => {
+  if (path === '/logout') {
+    await ElMessageBox.confirm('确定退出登录吗?', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
+    return
+  }
+  router.push(path)
+  expandVisible.value = false
 }
 </script>
 
@@ -145,13 +185,54 @@ html,
       justify-content: flex-start;
       align-items: center;
       .logo {
+        width: 200px;
+        height: 64px;
         cursor: pointer;
       }
       .menu-item {
+        white-space: nowrap;
         font-size: 16px;
         font-weight: 350;
         padding: 12px 16px;
         cursor: pointer;
+      }
+      .expand {
+        display: none;
+        @media (max-width: 767px) {
+          position: absolute;
+          width: 40px;
+          height: 40px;
+          cursor: pointer;
+          border-radius: 50%;
+          background-color: #fff;
+          box-shadow: #dddfe5 0 0 8px 0;
+          border: 0.0625rem solid rgba(17, 24, 39, 0.08);
+          right: 12px;
+          display: block;
+        }
+        ::before {
+          position: absolute;
+          content: '';
+          display: block;
+          top: 33%;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 20px;
+          height: 3px;
+          background-color: #333;
+          border-radius: 2px;
+        }
+        ::after {
+          position: absolute;
+          content: '';
+          bottom: 33%;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 20px;
+          height: 3px;
+          background-color: #333;
+          border-radius: 2px;
+        }
       }
     }
 
@@ -160,6 +241,10 @@ html,
       justify-content: flex-end;
       align-items: center;
       gap: 32px;
+
+      .search-icon {
+        color: #000;
+      }
 
       &:deep(.el-input__inner) {
         padding-left: 0px;
@@ -218,10 +303,26 @@ html,
 @media (max-width: 767px) {
   .header {
     .container {
-      .menu {
+      .menu-item {
+        padding: 8px 12px !important;
+      }
+      .right {
         display: none;
       }
     }
+  }
+  .expand-menu {
+    transition: all 0.3s ease;
+  }
+  .el-menu-vertical {
+    z-index: 999;
+    position: absolute;
+    top: 62px;
+    right: 0;
+    height: calc(100svh - 62px);
+    width: 100svw;
+    border-left: 2px solid #eee;
+    border-top: 1px solid #eee;
   }
 }
 </style>

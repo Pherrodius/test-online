@@ -60,14 +60,14 @@
           <template #reference>
             <el-icon color="#fff" size="18"><QuestionFilled /></el-icon>
           </template>
-          <h3 style="margin: 8px">
+          <h3 class="popover-copy">
             {{
               type === CollectionType.Mistake
                 ? '错误率=实时错题数/历史已做题'
                 : '收藏率=实时收藏数/历史已做题'
             }}
           </h3>
-          <p style="margin: 8px">
+          <p class="popover-copy">
             清空{{ type === CollectionType.Mistake ? '错题' : '收藏' }}后{{
               type === CollectionType.Mistake ? '错误率' : '收藏率'
             }}为0%
@@ -126,7 +126,7 @@
     width="50%"
     top="5vh"
     :loading="loading"
-    style="height: 90svh; overflow: auto"
+    class="detail-dialog"
     @close="((dialogVisible = false), (currentList = []), render())"
   >
     <DetailedQuestion
@@ -214,6 +214,23 @@ const categoryList = ref([
     iconSize: 18,
     questionType: QuestionType.MultiChoice,
   },
+  {
+    type: 'subject',
+    name: '主观题',
+    list: computed(
+      () =>
+        collectionList.value?.records?.filter((item) => item.type === QuestionType.Subjective) ||
+        [],
+    ),
+    count: computed(
+      () =>
+        collectionList.value?.records?.filter((item) => item.type === QuestionType.Subjective)
+          .length || 0,
+    ),
+    icon: new URL('@/assets/icon/questionType/q4.png', import.meta.url).href,
+    iconSize: 18,
+    questionType: QuestionType.MultiChoice,
+  },
 ])
 enum TimeType {
   All = 0,
@@ -287,6 +304,15 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="scss">
+.popover-copy {
+  margin: 8px;
+}
+
+:global(.detail-dialog) {
+  height: 90svh;
+  overflow: auto;
+}
+
 .collection {
   background-color: #f5f5f5;
   min-height: 100vh;
@@ -316,7 +342,8 @@ onMounted(async () => {
 }
 
 .top-stats {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 16px;
   margin-bottom: 24px;
   max-width: 1200px;
@@ -327,6 +354,7 @@ onMounted(async () => {
 .stat-card {
   flex: 1;
   padding: 20px;
+  height: 66px;
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -503,7 +531,8 @@ onMounted(async () => {
 }
 
 .category-list {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 16px;
 }
 

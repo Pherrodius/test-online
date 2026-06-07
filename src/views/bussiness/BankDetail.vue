@@ -10,13 +10,13 @@
             type="primary"
             size="small"
             color="#548EF7"
-            style="font-size: 16px; margin: auto 12px 12px"
+            class="discipline-button"
             @click="dialogVisible = true"
           >
-            <el-icon style="color: #fff">
+            <el-icon class="white-icon">
               <Switch />
             </el-icon>
-            <span style="color: #fff">{{ bank?.disciplines?.length || 0 }}个科目</span>
+            <span class="white-text">{{ bank?.disciplines?.length || 0 }}个科目</span>
           </el-button>
         </div>
         <div class="info">
@@ -32,41 +32,49 @@
         </div>
         <div class="desc">题库简介：{{ bank?.description || 'loading...' }}</div>
         <div class="btn-box">
-          <el-button type="warning" size="large" @click="handleCollectBank">
-            <el-icon style="font-size: 24px">
-              <Check v-if="isCollected" />
-              <Star v-else />
-            </el-icon>
-            <span>{{ isCollected ? '已收藏' : '收藏' }}</span>
-          </el-button>
-          <el-button type="success" size="large" @click="handleShare">
-            <el-icon style="font-size: 24px">
-              <Promotion />
-            </el-icon>
-            <span>分享</span>
-          </el-button>
-          <el-button
-            type="primary"
-            size="large"
-            @click="
-              $router.push({
-                path: `/bank/edit/${bank?.id}`,
-                query: { disciplineId: currentDiscipline?.id },
-              })
-            "
-            v-if="isOwned"
-          >
-            <el-icon style="font-size: 24px">
-              <Edit />
-            </el-icon>
-            <span>编辑题目</span>
-          </el-button>
-          <el-button type="danger" size="large" @click="dialogVisible3 = true" v-if="isOwned">
-            <el-icon style="font-size: 24px">
-              <EditPen />
-            </el-icon>
-            <span>编辑基本信息</span>
-          </el-button>
+          <div class="btn">
+            <el-button type="warning" size="large" @click="handleCollectBank">
+              <el-icon class="action-icon">
+                <Check v-if="isCollected" />
+                <Star v-else />
+              </el-icon>
+              <span>{{ isCollected ? '已收藏' : '收藏' }}</span>
+            </el-button>
+          </div>
+          <div class="btn">
+            <el-button type="success" size="large" @click="handleShare">
+              <el-icon class="action-icon">
+                <Promotion />
+              </el-icon>
+              <span>分享</span>
+            </el-button>
+          </div>
+          <div class="btn">
+            <el-button
+              type="primary"
+              size="large"
+              @click="
+                $router.push({
+                  path: `/bank/edit/${bank?.id}`,
+                  query: { disciplineId: currentDiscipline?.id },
+                })
+              "
+              v-if="isOwned"
+            >
+              <el-icon class="action-icon">
+                <Edit />
+              </el-icon>
+              <span>编辑题目</span>
+            </el-button>
+          </div>
+          <div class="btn">
+            <el-button type="danger" size="large" @click="dialogVisible3 = true" v-if="isOwned">
+              <el-icon class="action-icon">
+                <EditPen />
+              </el-icon>
+              <span>编辑基本信息</span>
+            </el-button>
+          </div>
         </div>
       </div>
       <div class="section">
@@ -83,7 +91,7 @@
               })
             "
           >
-            <el-image :src="item.icon" style="width: 40px; height: 40px" />
+            <el-image :src="item.icon" class="option-icon" />
             <div>
               <p class="label">{{ item.label }}</p>
               <p class="value">{{ item.value }}</p>
@@ -108,7 +116,7 @@
         </div>
       </div>
       <div class="section">
-        <p class="sub-title" style="border-bottom: none; padding: 0; margin: 0">题库预览</p>
+        <p class="sub-title preview-title">题库预览</p>
         <QuestionList
           :questions="
             bank?.questions.filter((item) => item.disciplineId === currentDiscipline?.id) || []
@@ -119,7 +127,7 @@
     <el-dialog
       v-model="dialogVisible"
       title="提示"
-      width="30%"
+      width="400px"
       :before-close="() => (dialogVisible = false)"
     >
       <template #header>
@@ -133,11 +141,7 @@
         title="双击选择该科目"
       >
         <div class="value">
-          <el-image
-            :src="bankIcon"
-            fit="contain"
-            style="width: 32px; height: 32px; margin-right: 8px"
-          />
+          <el-image :src="bankIcon" fit="contain" class="discipline-icon" />
           <div class="text">
             <div class="upper">
               {{ item.name || '' }}
@@ -373,7 +377,46 @@ watch(
 )
 </script>
 <style scoped lang="scss">
+.discipline-button {
+  margin: auto 12px 12px;
+  font-size: 16px;
+}
+
+.white-icon,
+.white-text {
+  color: #fff;
+}
+
+.action-icon {
+  font-size: 24px;
+}
+
+.option-icon {
+  width: 40px;
+  height: 40px;
+}
+
+.preview-title {
+  margin: 0;
+  padding: 0;
+  border-bottom: none !important;
+}
+
+.discipline-icon {
+  width: 32px;
+  height: 32px;
+  margin-right: 8px;
+}
+.btn-box {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 160px);
+  justify-content: flex-start;
+  justify-items: flex-start;
+  align-items: center;
+  gap: 16px;
+}
 .bank-detail {
+  flex: 1;
   background-color: #f5f5f5;
   .desc {
     font-size: 15px;
@@ -403,14 +446,18 @@ watch(
       }
 
       .option-box {
-        display: flex;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         justify-content: center;
         align-items: center;
         gap: 0px;
-
         .delete-btn {
           :deep(.el-button--small) {
-            font-size: 16px;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 2%;
+            font-size: 14px;
             background-color: transparent;
             color: #f56c6c;
             border: none;
@@ -422,6 +469,7 @@ watch(
         }
 
         .option-item {
+          position: relative;
           flex: 1;
           padding: 16px 24px;
           margin-top: 20px;
@@ -450,6 +498,7 @@ watch(
 
           .value {
             margin: 4px 0 0 0;
+            text-align: left;
             line-height: 22px;
             font-size: 14px;
             color: #8c8c8c;
@@ -561,6 +610,17 @@ watch(
       font-weight: bolder;
       line-height: 24px;
       color: #333;
+    }
+  }
+}
+@media (max-width: 768px) {
+  .bank-detail {
+    width: 100%;
+    padding: 0;
+  }
+  .option-item {
+    &:nth-child(2) {
+      border-right: none !important;
     }
   }
 }

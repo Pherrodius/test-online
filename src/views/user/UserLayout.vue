@@ -33,7 +33,9 @@ import {
   User,
   House,
   EditPen,
+  SwitchButton,
 } from '@element-plus/icons-vue'
+import { ElMessageBox } from 'element-plus'
 import { computed, markRaw, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -50,18 +52,27 @@ const menuList = ref([
   { name: '斩题记录', path: '/user/resolutions', icon: markRaw(EditPen) },
   { name: '个人信息', path: '/user/profile', icon: markRaw(User) },
   { name: '设置', path: '/user/settings', icon: markRaw(Setting) },
+  { name: '退出登录', path: '/logout', icon: markRaw(SwitchButton) },
 ])
 
 const activeMenu = computed(() => route.path)
 
-const handleSelect = (path: string) => {
+const handleSelect = async (path: string) => {
+  if (path === '/logout') {
+    await ElMessageBox.confirm('确定退出登录吗?', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
+    return
+  }
   router.push(path)
 }
 </script>
 
 <style scoped>
 .common-layout {
-  height: 100%;
+  flex: 1;
   overflow: hidden;
 }
 .user-layout {

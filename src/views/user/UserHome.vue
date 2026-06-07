@@ -29,7 +29,7 @@
             <h3>最近的测试</h3>
             <el-button text>查看全部</el-button>
           </div>
-          <el-table :data="overview?.recentRecords" style="width: 100%">
+          <el-table class="full-width-table" :data="overview?.recentRecords">
             <el-table-column label="题库">
               <template #default="{ row }">
                 {{ row.bank.name }}
@@ -103,7 +103,13 @@
         </section>
       </el-col>
     </el-row>
-    <el-dialog v-model="dialogVisible" title="Tips" width="500px" :before-close="handleDialogClose">
+    <el-dialog
+      v-model="dialogVisible"
+      title="Tips"
+      width="500px"
+      class="practice-dialog"
+      :before-close="handleDialogClose"
+    >
       <template #header>
         <h3>从收藏的题库开始吧</h3>
       </template>
@@ -264,6 +270,10 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="scss">
+.full-width-table {
+  width: 100%;
+}
+
 .user-page {
   padding: 24px;
 }
@@ -409,6 +419,14 @@ onMounted(async () => {
   &:hover {
     box-shadow: 2px 4px 8px 2px rgba(84, 142, 247, 0.2);
     scale: 1.02;
+  }
+}
+
+@media (max-width: 767px) {
+  :global(.practice-dialog) {
+    width: calc(100vw - 24px);
+    margin-top: 4vh;
+    padding: 12px;
   }
 }
 </style>

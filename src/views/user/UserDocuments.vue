@@ -22,13 +22,7 @@
       <div class="panel-title">
         <h3>文件列表</h3>
       </div>
-      <el-table
-        :data="files"
-        stripe
-        empty-text="暂无上传文件"
-        class="file-table"
-        style="width: 100%"
-      >
+      <el-table :data="files" stripe empty-text="暂无上传文件" class="file-table">
         <el-table-column label="文件名" min-width="280">
           <template #default="{ row }">
             <div class="file-cell" @click="handlePreview(row)">
@@ -64,7 +58,7 @@
             {{ dayjs(row.createdTime).format('YYYY/MM/DD HH:mm') }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="180">
+        <el-table-column label="操作" width="180" fixed="right">
           <template #default="{ row }">
             <div class="action">
               <p
@@ -80,7 +74,7 @@
         </el-table-column>
       </el-table>
     </section>
-    <el-dialog v-model="dialogVisible" title="Tips" width="640" class="llm-dialog">
+    <el-dialog v-model="dialogVisible" title="Tips" width="640px" class="llm-dialog">
       <template #header>大模型通过解析文件生成题目并导入到指定题库的指定学科分类下</template>
       <div v-loading="loading2">
         <el-form :model="form" label-width="64px">
@@ -111,7 +105,7 @@
           </el-form-item>
           <el-form-item label="提示">
             <div class="tips">
-              1、AI出题需要消耗一定的时间，请耐心等待。<br />2、避免将所有题目导入同一个题库，这会拖慢ai助手的解析速度。<br />3、一次性最多导入100题，可重复解析文件以获得更多题目，ai助手会自行避开已有题目。
+              1、AI导题需要消耗一定的时间，可在状态属性查看进度。<br />2、避免将所有题目导入同一个题库，这会拖慢ai助手的解析速度。<br />3、一次性最多导入80题，可重复解析文件以获得更多题目，ai助手会自行避开已有题目。
             </div>
           </el-form-item>
         </el-form>
@@ -293,6 +287,7 @@ onMounted(async () => {
 <style scoped lang="scss">
 .user-page {
   padding: 24px;
+  flex: 1;
 }
 
 .page-header,
@@ -396,6 +391,9 @@ onMounted(async () => {
     text-decoration: underline;
   }
 }
+.file-table {
+  width: 100%;
+}
 .file-delete {
   flex: 0 0 auto;
   color: red;
@@ -419,5 +417,12 @@ onMounted(async () => {
 .tips {
   color: #606266;
   line-height: 1.7;
+}
+
+@media (max-width: 767px) {
+  :global(.llm-dialog) {
+    width: calc(100vw - 24px);
+    margin-top: 4vh;
+  }
 }
 </style>

@@ -23,8 +23,9 @@
     <el-empty description="暂无相关题目" v-if="!filteredQuestions.length" />
   </div>
   <el-pagination
-    style="margin-top: 24px; display: flex; justify-content: center"
-    layout="  prev,pager, next,total"
+    class="question-pagination"
+    layout="prev, pager, next, total"
+    :pager-count="5"
     v-model:total="pagination.total"
     v-model:current-page="pagination.page"
     v-model:page-size="pagination.size"
@@ -75,6 +76,13 @@ const paginatedQuestions = computed(() =>
 )
 </script>
 <style scoped lang="scss">
+.question-pagination {
+  display: flex;
+  justify-content: center;
+  max-width: 100%;
+  margin-top: 24px;
+}
+
 .question-list {
   background-color: #fff;
   min-height: 300px;
@@ -99,6 +107,7 @@ const paginatedQuestions = computed(() =>
       color: #fff;
       background-color: #548ef7;
       padding: 2px 4px;
+      white-space: nowrap;
       border-radius: 4px;
       margin-right: 8px;
     }
@@ -106,6 +115,30 @@ const paginatedQuestions = computed(() =>
     .value {
       font-size: 16px;
       line-height: 24px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .question-pagination {
+    justify-content: center;
+
+    :deep(.el-pagination__total) {
+      display: none;
+    }
+
+    :deep(.el-pager) {
+      gap: 0;
+    }
+
+    :deep(.btn-prev),
+    :deep(.btn-next),
+    :deep(.el-pager li) {
+      min-width: 28px;
+      margin: 0 1px;
     }
   }
 }

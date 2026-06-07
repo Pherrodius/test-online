@@ -12,8 +12,14 @@
         </div>
       </div>
       <div class="login-box" v-if="!isLogin">
-        <el-button class="login-btn" @click="router.push('/auth/login')">登录</el-button>
-        <el-button type="primary" class="register-btn" @click="router.push('/auth/register')"
+        <el-button class="login-btn" :size="buttonSize" @click="router.push('/auth/login')"
+          >登录</el-button
+        >
+        <el-button
+          type="primary"
+          class="register-btn"
+          :size="buttonSize"
+          @click="router.push('/auth/register')"
           >注册</el-button
         >
       </div>
@@ -39,11 +45,7 @@
             <span>个人中心</span>
           </div>
           <el-dropdown>
-            <el-avatar
-              :src="avatar"
-              style="width: 36px; height: 36px; cursor: pointer"
-              @click="$router.push('/user')"
-            />
+            <el-avatar :src="avatar" class="user-avatar" @click="$router.push('/user')" />
             <template #dropdown>
               <el-dropdown-menu class="drop-item">
                 <el-dropdown-item
@@ -71,19 +73,14 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ElMessage } from 'element-plus'
-import { computed, markRaw, ref } from 'vue'
+import { markRaw, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { CircleClose, Collection, SwitchButton, User } from '@element-plus/icons-vue'
-const userInfo = computed(() =>
-  localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')!) : null,
-)
-const avatar = computed(() =>
-  userInfo.value.avatarUrl
-    ? new URL(userInfo.value.avatarUrl, import.meta.url).href
-    : new URL('@/assets/images/def-head.png', import.meta.url).href,
-)
-const isLogin = computed(() => !!userInfo.value)
+import { useUserSessionStore } from '@/stores/userSession'
+import { storeToRefs } from 'pinia'
+const userSessionStore = useUserSessionStore()
+const { avatar, isLogin, buttonSize } = storeToRefs(userSessionStore)
+const { logout: handleLogout } = userSessionStore
 const router = useRouter()
 const menuItems = ref([
   {
@@ -124,12 +121,6 @@ const dropdownItems = ref([
     icon: markRaw(CircleClose),
   },
 ])
-const handleLogout = () => {
-  localStorage.removeItem('userInfo')
-  localStorage.removeItem('token')
-  ElMessage.success('退出登录成功')
-  router.push('/auth/login')
-}
 </script>
 
 <style scoped lang="scss">
@@ -214,7 +205,7 @@ html,
 
   .login-box {
     position: absolute;
-    right: 0;
+    right: 12px;
     bottom: 12px;
     width: 142px;
     height: 32px;
@@ -266,5 +257,10 @@ html,
   justify-content: space-between;
   align-items: center;
   gap: 8px;
+}
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
 }
 </style>
