@@ -5,7 +5,7 @@
       <BussinessNavi v-else />
     </header>
     <div class="main">
-      <router-view :key="$route.path"></router-view>
+      <router-view></router-view>
     </div>
     <CommonFooter />
   </div>

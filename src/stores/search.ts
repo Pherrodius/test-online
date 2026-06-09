@@ -15,6 +15,7 @@ import type {
   SearchQuestionsRes,
   SearchUsersRes,
 } from '@/types/response'
+import { ElMessage } from 'element-plus'
 export type Filter = Omit<
   SearchBanksReq & SearchQuestionsReq & SearchDocumentsReq & SearchUsersReq,
   'page' | 'keyword'
@@ -60,7 +61,16 @@ export const useSearchStore = defineStore('search', () => {
   >(null)
   const total = computed(() => result.value?.total ?? 0)
   const hasPagination = computed(() => total.value > 0)
+  const timer = ref<number | null>(null)
   const handleSearch = async (payload?: number | string) => {
+    if (typeof timer.value === 'number') {
+      clearTimeout(timer.value)
+    }
+    timer.value = setTimeout(() => {
+      search(payload)
+    }, 1000)
+  }
+  const search = async (payload?: number | string) => {
     if (typeof payload === 'number') {
       page.value = payload
     }

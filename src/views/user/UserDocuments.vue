@@ -155,7 +155,7 @@ const statusMap = {
     label: '解析失败',
     type: 'danger',
   },
-}
+} as const
 const currentFileId = ref<number>(0)
 const loading = ref(false)
 const loading2 = ref(false)

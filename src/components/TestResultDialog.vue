@@ -87,13 +87,17 @@
 import { useTestPaperStore } from '@/stores/testpaper'
 import type { Answer } from '@/types/prisma'
 import { CircleCheck, CircleClose, MoreFilled, Timer, TrendCharts } from '@element-plus/icons-vue'
+import { PieChart } from 'echarts/charts'
+import { init, use, type EChartsType } from 'echarts/core'
+import { CanvasRenderer } from 'echarts/renderers'
 import { storeToRefs } from 'pinia'
 import { computed, nextTick, onUnmounted, ref, shallowRef } from 'vue'
-import * as echarts from 'echarts'
+
+use([PieChart, CanvasRenderer])
 
 const { dialogVisible, testResult, questions, takenTime } = storeToRefs(useTestPaperStore())
 const pieChartRef = ref<HTMLDivElement>()
-const pieChart = shallowRef<echarts.ECharts>()
+const pieChart = shallowRef<EChartsType>()
 
 const totalCount = computed(() => questions.value.length)
 const correctCount = computed(() => testResult.value?.correctCount ?? 0)
@@ -173,7 +177,7 @@ function initChart() {
   if (!pieChartRef.value) return
 
   pieChart.value?.dispose()
-  pieChart.value = echarts.init(pieChartRef.value)
+  pieChart.value = init(pieChartRef.value)
   pieChart.value.setOption({
     color: ['#548ef7', '#2fb06f'],
     series: [

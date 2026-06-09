@@ -61,13 +61,19 @@ import { storeToRefs } from 'pinia'
 import searchSideIllustration from '@/assets/images/search-side-illustration.png'
 import CommonFooter from '@/components/CommonFooter.vue'
 const searchStore = useSearchStore()
-const { searchTabs, currentType, currentInput, page, total, hasPagination } =
+const { searchTabs, currentType, currentInput, page, total, hasPagination, result } =
   storeToRefs(searchStore)
 const { setSearchType, handleSearchFromFirstPage, handlePageChange } = searchStore
+onMounted(() => {
+  if (!result.value) handleSearchFromFirstPage()
+})
 </script>
 <style scoped lang="scss">
 .common-layout {
   background-color: #f5f5f5;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
 }
 .el-header,
 .el-main,
@@ -78,6 +84,7 @@ const { setSearchType, handleSearchFromFirstPage, handlePageChange } = searchSto
 
 .el-main {
   overflow: visible;
+  flex: 1;
 }
 .container {
   max-width: 1200px;

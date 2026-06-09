@@ -66,6 +66,7 @@
 import { createBank, updateBank } from '@/api/bank'
 import type { Bank, Discipline } from '@/types/prisma'
 import type { CreateBankRequest } from '@/types/reqeust'
+import { Close, Plus } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { computed, onMounted, ref, watch } from 'vue'
 const dialogWidth = computed(() => {

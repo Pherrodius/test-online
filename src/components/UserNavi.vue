@@ -94,6 +94,7 @@ import {
   User,
   House,
   EditPen,
+  Search,
   SwitchButton,
 } from '@element-plus/icons-vue'
 import { useSearchStore } from '@/stores/search'
@@ -151,7 +152,7 @@ const handleSelect = async (path: string) => {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning',
-    })
+    }).then(() => handleLogout())
     return
   }
   router.push(path)

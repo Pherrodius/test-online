@@ -19,7 +19,7 @@
           </div>
           <div class="input-box flex-box">
             <div class="input-content">
-              <el-input placeholder="请输入搜索内容" />
+              <el-input v-model="currentInput" placeholder="请输入搜索内容" />
             </div>
             <el-button type="primary" color="#008CFF" @click="handleSearch(currentInput)"
               >搜索</el-button

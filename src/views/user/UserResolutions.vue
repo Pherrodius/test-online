@@ -79,6 +79,7 @@
 
 <script setup lang="ts">
 import type { Resolution } from '@/types/prisma'
+import { Delete } from '@element-plus/icons-vue'
 import { dayjs, ElMessage, ElMessageBox } from 'element-plus'
 import { computed, onMounted, ref } from 'vue'
 import { deleteResolution, getResolutions } from '@/api/question'

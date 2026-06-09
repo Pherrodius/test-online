@@ -2,7 +2,7 @@
   <div class="common-layout">
     <user-navi />
     <el-row class="user-layout">
-      <el-col :xs="24" :sm="6" :md="4" :lg="3">
+      <el-col :xs="0" :sm="6" :md="4" :lg="3">
         <el-menu :default-active="activeMenu" class="el-menu-vertical" @select="handleSelect">
           <el-menu-item v-for="item in menuList" :key="item.path" :index="item.path">
             <el-icon>
@@ -38,7 +38,10 @@ import {
 import { ElMessageBox } from 'element-plus'
 import { computed, markRaw, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useUserSessionStore } from '@/stores/userSession'
 
+const userSessionStore = useUserSessionStore()
+const { logout: handleLogout } = userSessionStore
 const router = useRouter()
 const route = useRoute()
 
@@ -63,7 +66,7 @@ const handleSelect = async (path: string) => {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning',
-    })
+    }).then(() => handleLogout())
     return
   }
   router.push(path)
@@ -72,14 +75,23 @@ const handleSelect = async (path: string) => {
 
 <style scoped>
 .common-layout {
-  flex: 1;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 }
 .user-layout {
-  height: 100%;
+  flex: 1 0 auto;
+  min-height: 0;
+  display: flex;
   background-color: #f5f7fb;
 }
 .content {
+  flex: 1 0 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+.content > .el-scrollbar {
   height: 100%;
 }
 .el-menu-vertical {

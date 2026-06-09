@@ -43,9 +43,7 @@
             <span>{{ dayjs(user.createdTime).format('YYYY-MM-DD') }}</span>
           </div>
         </div>
-        <el-button class="detail-btn" @click="openUserDialog(user)">
-          查看用户
-        </el-button>
+        <el-button class="detail-btn" @click="openUserDialog(user)"> 查看用户 </el-button>
       </div>
     </div>
 
@@ -91,7 +89,6 @@ watch(
   },
   {
     deep: true,
-    immediate: true,
   },
 )
 </script>
@@ -284,5 +281,4 @@ watch(
     color: #fff;
   }
 }
-
 </style>

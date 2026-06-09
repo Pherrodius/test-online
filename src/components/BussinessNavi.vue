@@ -35,7 +35,7 @@
             </template>
           </el-input>
         </div>
-        <div class="search-icon" @click="$router.push('/search/bank')">
+        <div class="search-icon-hidden" @click="$router.push('/search/bank')">
           <el-icon>
             <Search />
           </el-icon>
@@ -87,7 +87,7 @@
 <script setup lang="ts">
 import { markRaw, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { CircleClose, Collection, SwitchButton, User } from '@element-plus/icons-vue'
+import { CircleClose, Collection, Search, SwitchButton, User } from '@element-plus/icons-vue'
 import { useSearchStore } from '@/stores/search'
 import { useUserSessionStore } from '@/stores/userSession'
 import { storeToRefs } from 'pinia'
@@ -145,7 +145,7 @@ html,
 * {
   box-sizing: border-box;
 }
-.search-icon {
+.search-icon-hidden {
   cursor: pointer;
   display: none;
 }
@@ -245,7 +245,7 @@ html,
     .search-box {
       display: none;
     }
-    .search-icon {
+    .search-icon-hidden {
       display: block;
     }
   }

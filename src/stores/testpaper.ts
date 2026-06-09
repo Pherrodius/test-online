@@ -40,19 +40,6 @@ export const useTestPaperStore = defineStore('testpaper', () => {
   const dialogVisible = ref(false)
   const takenTime = ref(0)
   const testInfo = ref<TestInfo | null>(null)
-  watch(
-    () => answerSheet.value,
-    (newVal) => {
-      localStorage.setItem(
-        'answerSheet',
-        JSON.stringify({
-          testInfo: testInfo.value,
-          answerSheet: newVal,
-        }),
-      )
-    },
-    { deep: true },
-  )
   const timer = ref<number | null>(null)
   watch(
     () => testInfo.value?.model,
@@ -139,6 +126,7 @@ export const useTestPaperStore = defineStore('testpaper', () => {
       })
     }
     if (
+      testInfo.value?.model === TestModel.Practice &&
       practiceConfig.value.autoCheck &&
       (currentQuestion.value?.type === QuestionType.SingleChoice ||
         currentQuestion.value?.type === QuestionType.TrueFalse)

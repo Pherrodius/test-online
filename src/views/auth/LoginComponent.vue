@@ -35,11 +35,6 @@
         />
       </el-form-item>
 
-      <el-form-item class="form-options">
-        <el-checkbox v-model="loginForm.rememberMe" class="remember-checkbox"> 记住我 </el-checkbox>
-        <a href="#" class="forgot-link">忘记密码？</a>
-      </el-form-item>
-
       <el-form-item class="submit-item">
         <el-button type="primary" class="login-btn" :loading="isLoading" @click="handleLogin">
           登录
@@ -67,7 +62,7 @@
 <script setup lang="ts">
 import { loginRequest } from '@/api/user'
 import type { LoginByNameRequest, LoginByPhoneRequest } from '@/types/reqeust'
-import { ref, reactive } from 'vue'
+import { Iphone, User } from '@element-plus/icons-vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useUserSessionStore } from '@/stores/userSession'
 const loginByName = ref(true)

@@ -232,6 +232,7 @@
 <script setup lang="ts">
 import { CollectionType, QuestionType } from '@/types/prisma'
 import type { Option } from '@/types/prisma'
+import { Back, Check, Right, Star } from '@element-plus/icons-vue'
 import { computed, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { TestModel, useTestPaperStore } from '@/stores/testpaper'
@@ -245,7 +246,7 @@ import { ElMessageBox, ElMessage } from 'element-plus'
 import { fetchEventSource } from '@microsoft/fetch-event-source'
 const buttonSize = computed(() => {
   if (window.innerWidth <= 767) return 'small'
-  if (window.innerWidth <= 1200) return 'medium'
+  if (window.innerWidth <= 1200) return 'default'
   return 'large'
 })
 const reTest = () => {

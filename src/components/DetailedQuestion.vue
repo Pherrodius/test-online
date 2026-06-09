@@ -115,6 +115,7 @@
 </template>
 <script setup lang="ts">
 import { QuestionType } from '@/types/prisma'
+import { Check, Clock, Close, Star, User } from '@element-plus/icons-vue'
 import { onMounted, ref } from 'vue'
 import type { GetQuestionDetailResponse, isCollectionExistResponse } from '@/types/response'
 import { dayjs, ElMessage, ElMessageBox } from 'element-plus'

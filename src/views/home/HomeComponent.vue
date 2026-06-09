@@ -7,7 +7,7 @@
     </el-carousel>
     <div class="carousel-nav">
       <div class="navigator">
-        <div v-for="item in navlist" :key="item.key" class="nav-item">
+        <div v-for="item in navlist" :key="item.label" class="nav-item">
           <div class="left-section">
             <h4>
               <el-image :src="item.icon" object-fit="cover" fit="cover" class="nav-icon" />
@@ -28,13 +28,13 @@
               <h3>{{ child.title }}</h3>
               <span
                 v-for="item in child.children"
-                :key="item.key"
+                :key="item.label"
                 @click="$router.push(`/bank/${item.key}`)"
                 >{{ item.label }}</span
               >
             </div>
             <div class="right-item">
-              <p class="more" @click="router.push('/bank/category')"><span>查看更多</span></p>
+              <p class="more" @click="$router.push('/bank/category')"><span>查看更多</span></p>
             </div>
           </div>
         </div>
@@ -92,8 +92,6 @@
 </template>
 
 <script setup lang="ts">
-import router from '@/router'
-
 const images = [
   new URL('@/assets/images/1.webp', import.meta.url).href,
   new URL('@/assets/images/2.webp', import.meta.url).href,
@@ -106,119 +104,230 @@ const images = [
 ]
 const navlist = [
   {
-    key: '考研学科',
-    label: '考研学科',
+    key: '0',
+    label: '考研升学',
     children: [
-      {
-        key: '1',
-        label: '计算机',
-      },
-      {
-        key: '2',
-        label: '数一',
-      },
+      { key: '1', label: '计算机' },
+      { key: '0', label: '考研数学' },
+      { key: '0', label: '考研英语' },
+      { key: '0', label: '教育学' },
     ],
     icon: new URL('@/assets/icon/navi/1.png', import.meta.url).href,
     grandChildren: [
       {
-        title: '计算机',
+        title: '公共课',
         children: [
-          {
-            key: '1',
-            label: '计算机',
-          },
-          {
-            key: '2',
-            label: '数一',
-          },
+          { key: '0', label: '考研政治' },
+          { key: '0', label: '考研英语一' },
+          { key: '0', label: '考研英语二' },
+          { key: '0', label: '数学一' },
+          { key: '0', label: '数学二' },
+          { key: '0', label: '数学三' },
         ],
       },
       {
-        title: '计算机',
+        title: '热门专业课',
         children: [
-          {
-            key: '1',
-            label: '计算机',
-          },
-          {
-            key: '2',
-            label: '数一',
-          },
+          { key: '0', label: '计算机综合 408' },
+          { key: '0', label: '教育学综合' },
+          { key: '0', label: '心理学综合' },
+          { key: '0', label: '管理类联考' },
+          { key: '0', label: '法律硕士' },
+          { key: '0', label: '西医综合' },
+        ],
+      },
+      {
+        title: '复试与升学',
+        children: [
+          { key: '0', label: '考研复试' },
+          { key: '0', label: '专升本' },
+          { key: '0', label: '同等学力申硕' },
+          { key: '0', label: '博士研究生入学' },
         ],
       },
     ],
   },
   {
-    key: '高考刷题',
-    label: '高考刷题',
+    key: '0',
+    label: '中小学题库',
     children: [
-      {
-        key: '4',
-        label: '物理',
-      },
-      {
-        key: '5',
-        label: '化学',
-      },
-      {
-        key: '6',
-        label: '生物',
-      },
+      { key: '0', label: '高中数学' },
+      { key: '0', label: '高中物理' },
+      { key: '0', label: '初中英语' },
+      { key: '0', label: '小学语文' },
     ],
     icon: new URL('@/assets/icon/navi/2.png', import.meta.url).href,
+    grandChildren: [
+      {
+        title: '高中题库',
+        children: [
+          { key: '0', label: '高中语文' },
+          { key: '0', label: '高中数学' },
+          { key: '0', label: '高中英语' },
+          { key: '0', label: '高中物理' },
+          { key: '0', label: '高中化学' },
+          { key: '0', label: '高中生物' },
+          { key: '0', label: '高中历史' },
+          { key: '0', label: '高中地理' },
+          { key: '0', label: '高中政治' },
+        ],
+      },
+      {
+        title: '初中题库',
+        children: [
+          { key: '0', label: '初中语文' },
+          { key: '0', label: '初中数学' },
+          { key: '0', label: '初中英语' },
+          { key: '0', label: '初中物理' },
+          { key: '0', label: '初中化学' },
+          { key: '0', label: '中考真题' },
+        ],
+      },
+      {
+        title: '小学题库',
+        children: [
+          { key: '0', label: '小学语文' },
+          { key: '0', label: '小学数学' },
+          { key: '0', label: '小学英语' },
+          { key: '0', label: '小升初真题' },
+        ],
+      },
+    ],
   },
   {
-    key: '编程语言',
-    label: '编程语言',
+    key: '0',
+    label: 'IT 与互联网',
     children: [
-      {
-        key: '7',
-        label: 'java',
-      },
-      {
-        key: '8',
-        label: 'python',
-      },
-      {
-        key: '9',
-        label: 'javascript',
-      },
+      { key: '0', label: 'Java' },
+      { key: '0', label: 'Python' },
+      { key: '0', label: '前端开发' },
+      { key: '0', label: '软考' },
     ],
     icon: new URL('@/assets/icon/navi/3.png', import.meta.url).href,
+    grandChildren: [
+      {
+        title: '编程语言',
+        children: [
+          { key: '0', label: 'Java' },
+          { key: '0', label: 'Python' },
+          { key: '0', label: 'C 语言' },
+          { key: '0', label: 'C++' },
+          { key: '0', label: 'JavaScript' },
+          { key: '0', label: 'Go' },
+          { key: '0', label: 'SQL' },
+        ],
+      },
+      {
+        title: '开发技术',
+        children: [
+          { key: '0', label: 'Vue' },
+          { key: '0', label: 'React' },
+          { key: '0', label: 'Spring Boot' },
+          { key: '0', label: 'Node.js' },
+          { key: '0', label: '数据库' },
+          { key: '0', label: 'Linux' },
+          { key: '0', label: '软件测试' },
+        ],
+      },
+      {
+        title: 'IT 认证与考试',
+        children: [
+          { key: '0', label: '软考初级' },
+          { key: '0', label: '软考中级' },
+          { key: '0', label: '软考高级' },
+          { key: '0', label: '计算机等级考试' },
+          { key: '0', label: '华为认证' },
+        ],
+      },
+    ],
   },
   {
-    key: '开发框架',
-    label: '开发框架',
+    key: '0',
+    label: '职业资格',
     children: [
-      {
-        key: '10',
-        label: 'springboot',
-      },
-      {
-        key: '11',
-        label: 'vue',
-      },
-      {
-        key: '12',
-        label: 'nestjs',
-      },
+      { key: '0', label: '教师资格' },
+      { key: '0', label: '财会金融' },
+      { key: '0', label: '建筑工程' },
+      { key: '0', label: '医药卫生' },
     ],
     icon: new URL('@/assets/icon/navi/4.png', import.meta.url).href,
-  },
-  {
-    key: '考公考编',
-    label: '考公考编',
-    children: [
+    grandChildren: [
       {
-        key: '13',
-        label: '公务员',
+        title: '教师与法律',
+        children: [
+          { key: '0', label: '幼儿教师资格' },
+          { key: '0', label: '小学教师资格' },
+          { key: '0', label: '中学教师资格' },
+          { key: '0', label: '法律职业资格' },
+        ],
       },
       {
-        key: '14',
-        label: '辅警招聘',
+        title: '财会金融',
+        children: [
+          { key: '0', label: '初级会计' },
+          { key: '0', label: '中级会计' },
+          { key: '0', label: '注册会计师' },
+          { key: '0', label: '税务师' },
+          { key: '0', label: '基金从业' },
+          { key: '0', label: '证券从业' },
+          { key: '0', label: '银行从业' },
+        ],
+      },
+      {
+        title: '工程与医药',
+        children: [
+          { key: '0', label: '一级建造师' },
+          { key: '0', label: '二级建造师' },
+          { key: '0', label: '消防工程师' },
+          { key: '0', label: '执业药师' },
+          { key: '0', label: '护士资格' },
+          { key: '0', label: '执业医师' },
+        ],
       },
     ],
+  },
+  {
+    key: '0',
+    label: '公职招录',
+    children: [
+      { key: '0', label: '国家公务员' },
+      { key: '0', label: '事业单位' },
+      { key: '0', label: '教师招聘' },
+      { key: '0', label: '军队文职' },
+    ],
     icon: new URL('@/assets/icon/navi/5.png', import.meta.url).href,
+    grandChildren: [
+      {
+        title: '公务员考试',
+        children: [
+          { key: '0', label: '国家公务员' },
+          { key: '0', label: '省级公务员' },
+          { key: '0', label: '行政职业能力测验' },
+          { key: '0', label: '申论' },
+          { key: '0', label: '公务员面试' },
+        ],
+      },
+      {
+        title: '事业单位与教师',
+        children: [
+          { key: '0', label: '事业单位联考' },
+          { key: '0', label: '事业单位面试' },
+          { key: '0', label: '教师招聘' },
+          { key: '0', label: '特岗教师' },
+          { key: '0', label: '三支一扶' },
+        ],
+      },
+      {
+        title: '其他招录',
+        children: [
+          { key: '0', label: '军队文职' },
+          { key: '0', label: '公安招警' },
+          { key: '0', label: '辅警招聘' },
+          { key: '0', label: '社区工作者' },
+          { key: '0', label: '国企招聘' },
+        ],
+      },
+    ],
   },
 ]
 const bottomNaviList = [

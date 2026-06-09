@@ -65,7 +65,7 @@
 import EditMain from '@/components/EditMain.vue'
 import { Answer, QuestionType, type Bank } from '@/types/prisma'
 import TestLeftNavi from '@/components/TestLeftNavi.vue'
-import { ArrowRight } from '@element-plus/icons-vue'
+import { ArrowRight, LocationInformation } from '@element-plus/icons-vue'
 import { onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useTestPaperStore } from '@/stores/testpaper'

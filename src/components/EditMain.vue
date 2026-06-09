@@ -222,6 +222,7 @@
 
 <script setup lang="ts">
 import { Answer, QuestionType } from '@/types/prisma'
+import { Back, Close, Plus, Right } from '@element-plus/icons-vue'
 import { computed, reactive, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { ElMessage, ElMessageBox } from 'element-plus'

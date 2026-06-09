@@ -220,6 +220,14 @@ const router = createRouter({
 })
 router.beforeEach((to) => {
   NProgress.start()
+  if (to.path === '/contact') {
+    ElMessage.warning('不要联系我')
+    return false
+  }
+  if (to.path === '/bank/0') {
+    ElMessage.warning('该题库尚未建设完毕~~')
+    return false
+  }
   if (!to.meta.auth) {
     return true
   } else {

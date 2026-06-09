@@ -172,6 +172,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { TestModel } from '@/stores/testpaper'
 import UserInfoDialog from '@/components/UserInfoDialog.vue'
 import EditBankDialog from '@/components/EditBankDialog.vue'
+import { Check, Edit, EditPen, Promotion, Star, Switch } from '@element-plus/icons-vue'
 
 const dialogVisible2 = ref(false)
 const dialogVisible3 = ref(false)

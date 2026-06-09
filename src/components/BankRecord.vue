@@ -29,6 +29,7 @@
 </template>
 <script setup lang="ts">
 import type { Bank } from '@/types/prisma'
+import { Clock, Document } from '@element-plus/icons-vue'
 import { dayjs } from 'element-plus'
 import { useRouter } from 'vue-router'
 const router = useRouter()

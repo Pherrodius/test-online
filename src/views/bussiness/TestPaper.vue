@@ -140,16 +140,13 @@
 import TestMain from '@/components/TestMain.vue'
 import { Answer, CollectionType, QuestionType } from '@/types/prisma'
 import TestLeftNavi from '@/components/TestLeftNavi.vue'
-import { ArrowRight } from '@element-plus/icons-vue'
-import TestResultDialog from '@/components/TestResultDialog.vue'
-import { onMounted, onUnmounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { ArrowRight, LocationInformation } from '@element-plus/icons-vue'
 import { getCollectionList, getQuestionList, getResolutions } from '@/api/question'
 import { TestModel, useTestPaperStore } from '@/stores/testpaper'
 import { useConfigStore } from '@/stores/config'
-import { storeToRefs } from 'pinia'
 import { dayjs } from 'element-plus'
 import { filterAttributes } from '@/hooks/useFilterAttributes'
+const TestResultDialog = defineAsyncComponent(() => import('@/components/TestResultDialog.vue'))
 const testPaperStore = useTestPaperStore()
 const configStore = useConfigStore()
 const { practiceConfig, testConfig } = storeToRefs(configStore)

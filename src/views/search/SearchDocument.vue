@@ -41,7 +41,9 @@
       <div class="list-item" v-for="document in documentRecords" :key="document.id">
         <div class="item-main">
           <div class="item-header">
-            <span class="type-tag">{{ getMimeLabel(document.mimeType, document.originalName) }}</span>
+            <span class="type-tag">{{
+              getMimeLabel(document.mimeType, document.originalName)
+            }}</span>
             <div class="item-title">{{ document.originalName }}</div>
           </div>
           <div class="item-description">
@@ -127,7 +129,6 @@ watch(
   },
   {
     deep: true,
-    immediate: true,
   },
 )
 </script>

@@ -65,6 +65,7 @@
 <script setup lang="ts">
 import { getTestHistory } from '@/api/user'
 import type { TestHistory } from '@/types/prisma'
+import { Delete } from '@element-plus/icons-vue'
 import { dayjs, ElMessage, ElMessageBox } from 'element-plus'
 import { deleteTestHistory } from '@/api/user'
 import { computed, onMounted, ref } from 'vue'
