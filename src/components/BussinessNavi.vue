@@ -27,7 +27,7 @@
               </el-select>
             </template>
             <template #append>
-              <el-button color="primary" @click="handleSearch(currentInput)">
+              <el-button color="primary" @click="handleSearch()">
                 <el-icon class="search-icon">
                   <Search />
                 </el-icon>

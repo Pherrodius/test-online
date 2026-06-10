@@ -73,7 +73,7 @@ const handleSelect = async (path: string) => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .common-layout {
   height: 100svh;
   display: flex;
@@ -81,14 +81,16 @@ const handleSelect = async (path: string) => {
   overflow: hidden;
 }
 .user-layout {
-  flex: 1 0 auto;
-  min-height: 0;
-  display: flex;
-  background-color: #f5f7fb;
+  flex: none;
+  width: 100%;
+  height: calc(100svh - 4rem);
+  overflow: hidden;
 }
+
 .content {
-  flex: 1 0 auto;
+  height: 100%;
   min-height: 0;
+  min-width: 0;
   overflow: hidden;
 }
 .content > .el-scrollbar {

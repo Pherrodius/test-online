@@ -63,6 +63,10 @@ export const useSearchStore = defineStore('search', () => {
   const hasPagination = computed(() => total.value > 0)
   const timer = ref<number | null>(null)
   const handleSearch = async (payload?: number | string) => {
+    if (!isSearch.value) {
+      router.push(`/search/${currentType.value.toLowerCase()}?keyword=${currentInput.value}`)
+      return
+    }
     if (typeof timer.value === 'number') {
       clearTimeout(timer.value)
     }

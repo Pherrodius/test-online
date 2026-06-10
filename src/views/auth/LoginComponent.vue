@@ -65,6 +65,7 @@ import type { LoginByNameRequest, LoginByPhoneRequest } from '@/types/reqeust'
 import { Iphone, User } from '@element-plus/icons-vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useUserSessionStore } from '@/stores/userSession'
+import { ElMessage } from 'element-plus'
 const loginByName = ref(true)
 const router = useRouter()
 const route = useRoute()
@@ -122,13 +123,12 @@ const handleLogin = async () => {
         )
         router.push(String(route.query.redirect || '/'))
         isLoading.value = false
-      } catch (error) {
-        console.error('登录失败', error)
+      } catch {
+        ElMessage.error('用户名或密码错误')
         isLoading.value = false
       }
     }
-  } catch (error) {
-    console.error('表单验证失败', error)
+  } catch {
     isLoading.value = false
   }
 }
