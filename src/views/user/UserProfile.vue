@@ -16,7 +16,9 @@
       </div>
       <el-descriptions :column="2" border>
         <el-descriptions-item label="昵称">{{ profile.name }}</el-descriptions-item>
-        <el-descriptions-item label="手机号">{{ profile.phone }}</el-descriptions-item>
+        <el-descriptions-item label="手机号">{{
+          `${profile.phone.slice(0, 3)}****${profile.phone.slice(-4)}`
+        }}</el-descriptions-item>
         <el-descriptions-item label="性别">{{ profile.gender || '保密' }}</el-descriptions-item>
         <el-descriptions-item label="学习方向">{{
           profile.direction || '未填写'

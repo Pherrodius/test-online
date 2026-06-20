@@ -61,6 +61,7 @@
           查看详情
         </el-button>
       </div>
+      <el-skeleton :rows="3" v-for="i in questionRecords.length > 0 ? 0 : 5" :key="i" animated />
     </div>
   </div>
 </template>

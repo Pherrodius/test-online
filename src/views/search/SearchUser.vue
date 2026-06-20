@@ -45,6 +45,7 @@
         </div>
         <el-button class="detail-btn" @click="openUserDialog(user)"> 查看用户 </el-button>
       </div>
+      <el-skeleton :rows="3" v-for="i in userRecords.length > 0 ? 0 : 5" :key="i" animated />
     </div>
 
     <UserInfoDialog v-model="dialogVisible" :user="selectedUser" />

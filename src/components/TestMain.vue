@@ -426,7 +426,6 @@ const AiConsultation = async () => {
   if (!message) return
 
   const controller = new AbortController()
-  let retryCount = 0
   isConsulting.value = true
   sessionMessages.value.push({
     id: new Date().getTime().toString() + '1',
@@ -472,29 +471,22 @@ const AiConsultation = async () => {
           return
         }
         if (data?.type === 'delta' && data?.content) {
-          aiResponse.content +=
-            typeof data.content === 'string' ? data.content : (data.content.content ?? '')
+          aiResponse.content += typeof data.content === 'string' ? data.content : ''
         }
-      } catch (e) {
+      } catch {
         if (aiResponse) aiResponse.content = 'Invalid JSON in event data'
-        console.error('Invalid JSON in event data', e)
       }
     },
     onclose() {
       controller.abort()
     },
     onerror(err) {
-      if (retryCount < 3) {
-        retryCount++
-        return 3000
-      }
-      if (aiResponse) aiResponse.content = err
+      if (aiResponse) aiResponse.content = '网络错误，等待一段时间后刷新可以重新加载历史会话'
       controller.abort()
       throw new Error(err)
     },
   }).finally(() => {
     controller.abort()
-    retryCount = 0
     isConsulting.value = false
   })
 }

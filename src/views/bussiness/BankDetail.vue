@@ -131,7 +131,7 @@
       :before-close="() => (dialogVisible = false)"
     >
       <template #header>
-        <div>科目选择</div>
+        <div>科目选择(双击)</div>
       </template>
       <div
         class="discipline"

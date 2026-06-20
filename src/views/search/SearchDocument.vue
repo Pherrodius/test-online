@@ -36,7 +36,6 @@
         </el-form-item>
       </el-form>
     </div>
-
     <div class="list">
       <div class="list-item" v-for="document in documentRecords" :key="document.id">
         <div class="item-main">
@@ -58,6 +57,7 @@
         </div>
         <el-button class="detail-btn" @click="downloadDocument(document.id)">下载文档</el-button>
       </div>
+      <el-skeleton :rows="3" v-for="i in documentRecords.length > 0 ? 0 : 5" :key="i" animated />
     </div>
   </div>
 </template>
